@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from "react";
 import { Box, Text } from "ink";
-import { types } from "scribbler-lib";
+import { isIterator, isIteratorEmpty } from "../types";
 
 export function Section(props: PropsWithChildren<{title: string, emptyMessage: string}>) {
-    const showChildren = props.children && (types.isIterator(props.children) ? !types.isIteratorEmpty(props.children) : true)
+    const showChildren = props.children && (isIterator(props.children) ? !isIteratorEmpty(props.children) : true)
     return (
         <Box padding={1} flexDirection={"column"} borderStyle={'single'}>
             <Box marginBottom={1} >

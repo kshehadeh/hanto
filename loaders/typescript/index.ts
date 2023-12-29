@@ -1,8 +1,6 @@
 import path from 'path';
-import { Loader } from '@/project/loaders';
-import { IProject } from '@/shared';
-import { resolveImportedFile } from '@/lib/files';
-import { TypescriptFile } from '@/project/loaders/typescript/lib/file';
+import { IProject, Loader, resolveImportedFile } from 'scribbler-core';
+import { TypescriptFile } from './lib/file';
 
 class TypescriptLoader extends Loader {
     private _startingFile: TypescriptFile | null;

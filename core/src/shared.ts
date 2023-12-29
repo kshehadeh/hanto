@@ -25,17 +25,18 @@ export interface PropertyDefinition {
 }
 
 export interface IProject {
-    getLoader(name: string): ILoader | undefined;
-    addLoader(loader: ILoader): void;
-    load(): Promise<void>;
     readonly id: string;
     readonly path: string;
     readonly loaders: ILoader[];
+
+    getLoader(name: string): ILoader | undefined;
+    addLoader(loader: ILoader): void;
+    load(): Promise<void>;
     findFile(
         pathToSearch: string,
         fileName: string,
         depth?: number,
-    ): Promise<string | null>;
+    ): Promise<string | null>;    
 }
 
 /**

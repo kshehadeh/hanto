@@ -1,7 +1,7 @@
 import fs from 'fs';
-import PackageJsonSchema from './schemas/package.schema';
 import z from 'zod';
-import { Loader } from '@/project/loaders';
+import PackageJsonSchema from './schemas/package.schema';
+import { Loader } from 'scribbler-core';
 
 class NpmLoader extends Loader {
     private _packageJson: z.infer<typeof PackageJsonSchema> | null = null;
@@ -124,7 +124,7 @@ class NpmLoader extends Loader {
     public async load() {
         this._packageJson = await this.loadPackageJson();
         if (this._packageJson) {
-            this.set('getDependencyVersion', name => {
+            this.set('getDependencyVersion', (name: string) => {
                 if (typeof name !== 'string') throw new Error('Invalid name');
 
                 if (this._packageJson?.dependencies?.[name]) {

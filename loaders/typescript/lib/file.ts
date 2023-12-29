@@ -1,10 +1,13 @@
-import { getImportDeclarations, parseFile } from '@/lib/ast';
 import {
+    getImportDeclarations, 
+    parseFile,
     isBuiltInNodeModule,
     isExternalFile,
     resolveImportedFile,
-} from '@/lib/files';
-import { ILoader, IProject } from '@/shared';
+    ILoader,
+    IProject,
+} from 'scribbler-core';
+
 import path from 'path';
 
 export class TypescriptFile {
@@ -46,7 +49,7 @@ export class TypescriptFile {
                     return source;
                 }
                 const resolvedFile = resolveImportedFile(
-                    this._project?.path || '',
+                    this._project?.path ?? '',
                     path.dirname(this._absolutePath),
                     source,
                 );

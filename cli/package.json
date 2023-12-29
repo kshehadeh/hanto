@@ -13,7 +13,9 @@
     "acorn-typescript": "^1.4.12",
     "ink": "^4.4.1",
     "react": "^18.2.0",
-    "scribbler-core": "../lib",
+    "scribbler-core": "../core",
+    "scribbler-plugin-npm": "../loaders/npm",
+    "scribbler-plugin-typescript": "../loaders/typescript",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
