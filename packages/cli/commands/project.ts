@@ -3,11 +3,11 @@ import { existsSync } from 'fs';
 import { ILoader, loadProject } from 'scribbler-core';
 import npmLoader from 'scribbler-plugin-npm';
 import typescriptLoader from 'scribbler-plugin-typescript';
-interface CommandArguments {
+export interface CommandArguments {
   directory: string,
 }
 
-interface CommandBuilderParameters {
+export interface CommandBuilderParameters {
   directory: yargs.Options,
 }
 

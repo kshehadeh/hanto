@@ -5,14 +5,7 @@ export {
     getProjects,
 } from './src/project';
 
-export {
-    ILoader,
-    IProject,
-    Issue,
-    PropertyDefinition,
-    PropertyValue,
-    PropertyFunction,
-} from './src/shared';
+export * from './src/shared';
 
 
 // SCRIBBLER PLUGIN DEVELOPERS

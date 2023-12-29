@@ -1,5 +1,5 @@
 {
-  "name": "scribbler",
+  "name": "scribbler-cli",
   "version": "1.0.0",
   "description": "A utility for understanding your typescript code",
   "main": "index.ts",
@@ -9,18 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "acorn": "^8.11.2",
-    "acorn-typescript": "^1.4.12",
-    "ink": "^4.4.1",
-    "react": "^18.2.0",
-    "scribbler-core": "../core",
-    "scribbler-plugin-npm": "../loaders/npm",
-    "scribbler-plugin-typescript": "../loaders/typescript",
+    "scribbler-core": "workspace:core",
+    "scribbler-plugin-npm": "workspace:loader-npm",
+    "scribbler-plugin-typescript": "workspace:loader-typescript",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@types/ink": "^2.0.3",
-    "@types/react": "^18.2.45",
     "@types/yargs": "^17.0.32",
     "bun-types": "latest"
   },

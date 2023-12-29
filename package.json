@@ -1,0 +1,16 @@
+{
+  "name": "scribbler-monorepo",  
+  "type": "module",
+  "workspaces": [
+    "packages/core",
+    "packages/cli",
+    "packages/loader-npm",
+    "packages/loader-typescript"
+  ],
+  "scripts": {    
+    "cli": "bun run ./packages/cli/index.ts",
+    "clean:modules": "rm -rf node_modules",
+    "clean:lock": "rm bun.lockb",
+    "clean": "bun run clean:modules && bun run clean:lock"
+  }
+}

@@ -5,10 +5,12 @@ Scribbler is a toy I created to see if I could create a pluggable static analysi
 
 ## Organization
 
-This a monorepo with two project.  
+This a monorepo organized into the core library, a cli and several plugins
 
-1. lib - The scribbler core which houses the majority of the functionality
+1. core - The scribbler core which houses the majority of the functionality
 2. cli - The scribbler cli for accessing the functionality in the core.
+3. loaders/npm - The NPM plugin
+4. loaders/typescript - The Typescript plugin
 
 ## Getting Started
 

@@ -8,8 +8,8 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "dependencies": {
-    "scribbler-core": "../../core",
+  "dependencies": {    
+    "scribbler-core": "workspace:core",
     "zod": "^3.22.4"
   }
 }

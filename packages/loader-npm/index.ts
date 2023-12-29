@@ -3,6 +3,32 @@ import z from 'zod';
 import PackageJsonSchema from './schemas/package.schema';
 import { Loader } from 'scribbler-core';
 
+function runNpm(cmd: string, cwd: string) {
+    return new Promise<string>((resolve, reject) => {
+        const child = require('child_process').spawn('npm', [cmd], {
+            cwd,
+        });
+
+        let output = '';
+
+        child.stdout.on('data', (data: string) => {
+            output += data;
+        });
+
+        child.stderr.on('data', (data: string) => {
+            output += data;
+        });
+
+        child.on('close', (code: number) => {
+            if (code !== 0) {
+                reject(new Error(output));
+            } else {
+                resolve(output);
+            }
+        });
+    });
+}
+
 class NpmLoader extends Loader {
     private _packageJson: z.infer<typeof PackageJsonSchema> | null = null;
 
@@ -26,6 +52,11 @@ class NpmLoader extends Loader {
             {
                 name: 'getDependencyVersion',
                 description: 'Gets the version of a dependency',
+                type: 'function',
+            },
+            {
+                name: 'resolveDependencyFolder',
+                description: 'Returns the folder of a given dependency for this project',
                 type: 'function',
             },
         ]);
@@ -121,20 +152,30 @@ class NpmLoader extends Loader {
         return null;
     }
 
+    public getDependencyVersion(dependencyName: string) {
+        if (typeof dependencyName !== 'string') throw new Error('Invalid name');
+
+        if (this._packageJson?.dependencies?.[dependencyName]) {
+            return this._packageJson.dependencies[dependencyName];
+        } else if (this._packageJson?.devDependencies?.[dependencyName]) {
+            return this._packageJson.devDependencies[dependencyName];
+        } else {
+            return null;
+        }
+    }
+
+    public resolveDependencyFolder(dependencyName: string) {
+        if (typeof dependencyName !== 'string') throw new Error('Invalid name');
+            const root = runNpm('root', this._project!.path);
+            
+        
+    }
+
     public async load() {
         this._packageJson = await this.loadPackageJson();
         if (this._packageJson) {
-            this.set('getDependencyVersion', (name: string) => {
-                if (typeof name !== 'string') throw new Error('Invalid name');
-
-                if (this._packageJson?.dependencies?.[name]) {
-                    return this._packageJson.dependencies[name];
-                } else if (this._packageJson?.devDependencies?.[name]) {
-                    return this._packageJson.devDependencies[name];
-                } else {
-                    return null;
-                }
-            });
+            this.set('getDependencyVersion', this.getDependencyVersion);
+            this.set('resolveDependencyFolder', this.resolveDependencyFolder);
 
             this.processDependencies(this._packageJson);
             this.processStartingFile(this._packageJson);
