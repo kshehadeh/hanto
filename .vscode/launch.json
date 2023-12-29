@@ -1,0 +1,29 @@
+{
+    // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+    // Pointez pour afficher la description des attributs existants.
+    // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "bun",
+            "internalConsoleOptions": "openOnFirstSessionStart",
+            "request": "launch",
+            "name": "Debug Project",
+            "program": "index.ts project -d ../lib",
+            "cwd": "${workspaceFolder}",
+            "stopOnEntry": true,
+            "watchMode": false
+        },
+        {
+          "name": "Debug Electron",
+          "type": "node",
+          "request": "launch",
+          "cwd": "${workspaceFolder}/app",
+          "runtimeExecutable": "${workspaceFolder}/app/node_modules/.bin/electron-forge-vscode-nix",
+          "runtimeArgs": [
+            ".", //swap this line and the next line
+            "--remote-debugging-port=9223"
+          ]
+        }
+    ]
+}
