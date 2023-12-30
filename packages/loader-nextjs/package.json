@@ -1,5 +1,5 @@
 {
-  "name": "scribbler-plugin-typescript",
+  "name": "scribbler-plugin-nextjs",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {

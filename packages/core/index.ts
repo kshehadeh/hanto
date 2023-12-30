@@ -1,30 +1,11 @@
-
 // SCRIBBLER CLIENT DEVELOPERS
-export {
-    loadProject,
-    getProjects,
-} from './src/project';
-
-export * from './src/shared';
-
+export { Project } from './src/lib/project';
 
 // SCRIBBLER PLUGIN DEVELOPERS
-export {
-    Loader,
-} from './src/project/loaders';
+export * from './src/interfaces';
 
-export {
-    Project,
-} from './src/project/project';
+// Plugin developers will derive new loaders from this base class
+export { Loader } from './src/lib/loader';
 
-export {
-    resolveImportedFile,
-    isExternalFile,
-    isBuiltInNodeModule,
-} from './src/lib/files';
-
-export {
-    parseFile,
-    getImportDeclarations,
-} from './src/lib/ast';
-
+// Plugin developers can use the parser for defining new validations
+export { parse } from './src/lib/parser';

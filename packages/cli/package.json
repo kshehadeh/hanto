@@ -11,7 +11,7 @@
   "dependencies": {
     "scribbler-core": "workspace:core",
     "scribbler-plugin-npm": "workspace:loader-npm",
-    "scribbler-plugin-typescript": "workspace:loader-typescript",
+    "scribbler-plugin-nextjs": "workspace:loader-nextjs",
     "yargs": "^17.7.2"
   },
   "devDependencies": {

@@ -37,27 +37,34 @@ class NpmLoader extends Loader {
             {
                 name: 'startingFile',
                 description: 'Starting file for the project',
-                type: 'string',
+                valueSchema: z.string(),
             },
             {
                 name: 'numberOfTopLevelDependencies',
                 description: 'Number of top level dependencies',
-                type: 'number',
+                valueSchema: z.number(),
             },
             {
                 name: 'numberOfTopLevelDevDependencies',
                 description: 'Number of top level dev dependencies',
-                type: 'number',
+                valueSchema: z.number(),
+
             },
             {
                 name: 'getDependencyVersion',
                 description: 'Gets the version of a dependency',
                 type: 'function',
+                optionsSchema: z.object({
+                    name: z.string(),
+                }),
             },
             {
                 name: 'resolveDependencyFolder',
                 description: 'Returns the folder of a given dependency for this project',
                 type: 'function',
+                optionsSchema: z.object({
+                    name: z.string(),
+                }),
             },
         ]);
     }
@@ -104,12 +111,13 @@ class NpmLoader extends Loader {
     }
 
     private async loadPackageJson() {
-        if (!this._project) throw new Error('Project not initialized');
+        const project = this.project;
+        if (!project) throw new Error('Loader not initialized');
 
         // first, see if we can find a package.json file.  This will help inform where
         //  to start looking for files.
-        const packageJson = await this._project.findFile(
-            this._project.path,
+        const packageJson = await project.findFile(
+            project.path,
             'package.json',
             0,
         );
@@ -165,8 +173,11 @@ class NpmLoader extends Loader {
     }
 
     public resolveDependencyFolder(dependencyName: string) {
+        const project = this.project;
+        if (!project) throw new Error('Loader not initialized');
+
         if (typeof dependencyName !== 'string') throw new Error('Invalid name');
-            const root = runNpm('root', this._project!.path);
+            const root = runNpm('root', project!.path);
             
         
     }

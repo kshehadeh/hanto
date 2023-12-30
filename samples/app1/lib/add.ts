@@ -1,4 +1,4 @@
 
-export function sum(...nums:number[]) {
+export function add(...nums:number[]) {
     return nums.reduce((a, b) => a + b, 0);
 }

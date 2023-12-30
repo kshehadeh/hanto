@@ -1,7 +1,8 @@
 import { v5 as uuidV5 } from 'uuid';
 import fs from 'fs';
 import path from 'path';
-import { ILoader, IProject } from '@/shared';
+import orchestrator from '@/lib/orchestrator';
+import { Loader } from './loader';
 
 /**
  * A project is a collection of files that are related to each other in some way.  For example, a project
@@ -19,15 +20,32 @@ import { ILoader, IProject } from '@/shared';
  * to find the starting file for the project.  If you add the typescript loader before the npm loader then
  * the typescript loader will not be able to find the starting file and will fail to load.
  */
-export class Project implements IProject {
+export class Project {
     private _id: string;
     private _path = '';
-    private _loaders: ILoader[] = [];
+    private _loaders: Loader[] = [];
 
-    constructor(path: string) {
+    private constructor(path: string) {
         // make sure we have a unique id for the project
         this._id = uuidV5('https://www.w3.org/', uuidV5.URL);
         this._path = path;
+    }
+
+    /**
+     * Creates a new project at the given path and loads it using the given loaders.
+     * @param path 
+     * @param loaders 
+     * @returns 
+     */
+    static async create(path: string, loaders: Loader[]) {
+        const project = new Project(path);        
+        await Promise.all(loaders.map(loader => project.addLoader(loader)));
+
+        orchestrator.addProject(project)
+
+        await project.load();
+
+        return project;
     }
 
     public get id() {
@@ -38,12 +56,12 @@ export class Project implements IProject {
         return this._path;
     }
 
-    public async addLoader<T extends ILoader>(loader: T) {
+    public async addLoader<T extends Loader>(loader: T) {
         if (this._loaders.find(l => l.name === loader.name)) {
             throw new Error(`Loader ${loader.name} already exists`);
         }
 
-        if (loader.initialize(this)) {
+        if (loader.initialize(this.id)) {
             this._loaders.push(loader);
         }
     }
@@ -103,4 +121,8 @@ export class Project implements IProject {
 
         return null;
     }
+}
+
+export async function createProject(path: string, loaders: Loader[]) {
+    return Project.create(path, loaders);
 }

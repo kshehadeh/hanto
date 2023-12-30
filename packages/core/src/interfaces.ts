@@ -1,3 +1,5 @@
+import { ZodSchema } from "zod";
+
 export interface Issue {
     message: string;
     path?: (string | number)[];
@@ -21,8 +23,13 @@ export type PropertyValue =
 export interface PropertyDefinition {
     name: string;
     description: string;
-    type: 'string' | 'number' | 'boolean' | 'array' | 'function';
+    valueSchema?: ZodSchema;
+    optionsSchema?: ZodSchema;
 }
+
+export type Property = PropertyDefinition & { value: PropertyValue }
+
+export type PropertyMap = Record<string, Property>;
 
 export interface IProject {
     readonly id: string;
