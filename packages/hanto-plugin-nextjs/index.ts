@@ -1,4 +1,4 @@
-import { Loader } from 'scribbler-core';
+import { Loader } from 'hanto-core';
 
 class NextJsLoader extends Loader {
     private _startingFile: File | undefined  = undefined
@@ -38,8 +38,6 @@ class NextJsLoader extends Loader {
         if (!npmLoader) {
             throw new Error('npm loader is required for typescript loader');
         }
-
-        console.log(npmLoader.str('startingFile'))
         
         return true;
     }

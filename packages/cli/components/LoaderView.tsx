@@ -1,5 +1,5 @@
 import { Box, Text } from 'ink';
-import { Loader, Property } from 'scribbler-core';
+import { Loader, Property } from '../../hanto-core';
 import { LoaderPropertyView, PropertyView } from './PropertyView';
 
 export function LoaderView({ loader, isHorizontal=true }: { loader: Loader, isHorizontal: boolean }) {    

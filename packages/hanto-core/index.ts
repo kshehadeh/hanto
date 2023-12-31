@@ -1,5 +1,5 @@
 // SCRIBBLER CLIENT DEVELOPERS
-export { Project } from './src/lib/project';
+export { createProject } from './src/lib/project';
 
 // SCRIBBLER PLUGIN DEVELOPERS
 export * from './src/interfaces';

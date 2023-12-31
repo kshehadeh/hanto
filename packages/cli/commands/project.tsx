@@ -1,8 +1,8 @@
 import * as yargs from 'yargs';
 import { existsSync } from 'fs';
-import { createProject } from 'scribbler-core/src/lib/project';
 import { render } from 'ink';
 import { ProjectView } from '../components/ProjectView';
+import { createProject } from '../../hanto-core';
 
 export interface CommandArguments {
   directory: string,

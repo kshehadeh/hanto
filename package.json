@@ -1,5 +1,5 @@
 {
-  "name": "scribbler-monorepo",
+  "name": "hanto-monorepo",
   "devDependencies": {},
   "scripts": {
     "cli": "bun run ./packages/cli/index.ts",

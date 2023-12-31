@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import z from 'zod';
 import PackageJsonSchema from './schemas/package.schema';
-import { Loader } from 'scribbler-core';
+import { Loader } from 'hanto-core';
 
 function runNpm(cmd: string, cwd: string) {
     return new Promise<string>((resolve, reject) => {

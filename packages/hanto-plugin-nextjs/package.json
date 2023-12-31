@@ -1,5 +1,5 @@
 {
-  "name": "scribbler-plugin-npm",
+  "name": "hanto-plugin-nextjs",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
@@ -8,8 +8,7 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "dependencies": {    
-    "scribbler-core": "workspace:core",
-    "zod": "^3.22.4"
+  "dependencies": {
+    "hanto-core": "workspace:*"
   }
 }

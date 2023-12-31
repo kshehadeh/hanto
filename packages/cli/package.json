@@ -1,5 +1,5 @@
 {
-  "name": "scribbler-cli",
+  "name": "hanto-cli",
   "version": "1.0.0",
   "description": "A utility for understanding your typescript code",
   "main": "index.ts",
@@ -11,9 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "ink": "^4.4.1",
-    "scribbler-core": "workspace:core",
-    "scribbler-plugin-nextjs": "workspace:loader-nextjs",
-    "scribbler-plugin-npm": "workspace:loader-npm",
+    "hanto-core": "workspace:*",
+    "hanto-plugin-nextjs": "workspace:*",
+    "hanto-plugin-npm": "workspace:*",
     "toml": "^3.0.0",
     "yaml": "^2.3.4",
     "yargs": "^17.7.2",
