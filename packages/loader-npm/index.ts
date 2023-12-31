@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import z from 'zod';
 import PackageJsonSchema from './schemas/package.schema';
 import { Loader } from 'scribbler-core';
@@ -110,24 +110,23 @@ class NpmLoader extends Loader {
         }
     }
 
-    private async loadPackageJson() {
+    private loadPackageJson() {
         const project = this.project;
         if (!project) throw new Error('Loader not initialized');
+        if (!project.dir) throw new Error('Project directory not set');
 
         // first, see if we can find a package.json file.  This will help inform where
         //  to start looking for files.
-        const packageJson = await project.findFile(
-            project.path,
+        const packageJson = project.findFile(
+            project.dir,
             'package.json',
             0,
         );
         if (packageJson) {
             // We can also use this file to determine what the starting file is.
-            const packageJsonContents = await fs.promises.readFile(
-                packageJson,
-                {
-                    encoding: 'utf-8',
-                },
+            // no-dd-sa
+            const packageJsonContents = fs.readFileSync(
+                packageJson, { encoding: 'utf-8' },
             );
 
             const parseResult = PackageJsonSchema.safeParse(
@@ -175,15 +174,16 @@ class NpmLoader extends Loader {
     public resolveDependencyFolder(dependencyName: string) {
         const project = this.project;
         if (!project) throw new Error('Loader not initialized');
+        if (!project.dir) throw new Error('Project directory not set');
 
         if (typeof dependencyName !== 'string') throw new Error('Invalid name');
-            const root = runNpm('root', project!.path);
-            
-        
+        const root = runNpm('root', project!.dir);
+
+
     }
 
     public async load() {
-        this._packageJson = await this.loadPackageJson();
+        this._packageJson = this.loadPackageJson();
         if (this._packageJson) {
             this.set('getDependencyVersion', this.getDependencyVersion);
             this.set('resolveDependencyFolder', this.resolveDependencyFolder);

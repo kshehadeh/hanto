@@ -93,6 +93,7 @@ export class Base<T extends Node> {
 
     public dump() {
         if (!this._top) return
+        // no-dd-sa
         console.log(JSON.stringify(this._top, undefined, 2))
     }
 

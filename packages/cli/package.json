@@ -4,19 +4,26 @@
   "description": "A utility for understanding your typescript code",
   "main": "index.ts",
   "scripts": {
+    "dev": "index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ink": "^4.4.1",
     "scribbler-core": "workspace:core",
-    "scribbler-plugin-npm": "workspace:loader-npm",
     "scribbler-plugin-nextjs": "workspace:loader-nextjs",
-    "yargs": "^17.7.2"
+    "scribbler-plugin-npm": "workspace:loader-npm",
+    "toml": "^3.0.0",
+    "yaml": "^2.3.4",
+    "yargs": "^17.7.2",
+    "react": "^18.2.0"
   },
   "devDependencies": {
     "@types/yargs": "^17.0.32",
-    "bun-types": "latest"
+    "bun-types": "latest",
+    "react-devtools-core": "^5.0.0",
+    "@types/react": "^18.2.46"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

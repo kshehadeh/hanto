@@ -1,9 +1,8 @@
 import * as yargs from 'yargs';
 import { existsSync } from 'fs';
-import { Project } from 'scribbler-core';
-import npmLoader from 'scribbler-plugin-npm';
-import nextJsLoader from 'scribbler-plugin-nextjs';
 import { createProject } from 'scribbler-core/src/lib/project';
+import { render } from 'ink';
+import { ProjectView } from '../components/ProjectView';
 
 export interface CommandArguments {
   directory: string,
@@ -22,14 +21,9 @@ async function projectCommand(dir: string) {
         throw new Error(`Directory ${dir} does not exist`);
     }
 
-    const prj = await createProject(dir, [npmLoader, nextJsLoader]);
+    const prj = await createProject(dir);
     
-    prj.loaders.forEach((loader) => {
-        console.log(loader.name);
-        console.log(loader.errors);
-        console.log(loader.warnings);
-        console.log(loader.properties);
-    });
+    render(<ProjectView project={prj}/>);
     
 }
 

@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import orchestrator from '@/lib/orchestrator';
 import { Loader } from './loader';
+import { ProjectConfig } from './helpers/config';
+import { Issue } from '../..';
 
 /**
  * A project is a collection of files that are related to each other in some way.  For example, a project
@@ -22,38 +24,33 @@ import { Loader } from './loader';
  */
 export class Project {
     private _id: string;
-    private _path = '';
     private _loaders: Loader[] = [];
+    private _config: ProjectConfig | undefined = undefined;
+    private _errors: Issue[] = [];
+    private _warnings: Issue[] = [];
 
-    private constructor(path: string) {
+    constructor(path: string) {
         // make sure we have a unique id for the project
         this._id = uuidV5('https://www.w3.org/', uuidV5.URL);
-        this._path = path;
-    }
 
-    /**
-     * Creates a new project at the given path and loads it using the given loaders.
-     * @param path 
-     * @param loaders 
-     * @returns 
-     */
-    static async create(path: string, loaders: Loader[]) {
-        const project = new Project(path);        
-        await Promise.all(loaders.map(loader => project.addLoader(loader)));
-
-        orchestrator.addProject(project)
-
-        await project.load();
-
-        return project;
+        if (path) {
+            this._config = new ProjectConfig(path);
+            if (this._config.errors.length > 0) {
+                throw new Error(`Could not load project at ${path}: \n\t${this._config.errors.map(e => e.message).join('\n\t')}`);
+            }
+        }        
     }
 
     public get id() {
         return this._id;
     }
 
-    public get path() {
-        return this._path;
+    public get config() {
+        return this._config?.ob;
+    }
+
+    public get dir() {
+        return this._config?.root
     }
 
     public async addLoader<T extends Loader>(loader: T) {
@@ -75,9 +72,33 @@ export class Project {
     }
 
     public async load() {
+        const loaders = this._config?.ob?.loaders
+
+        if (loaders) {
+            for (const l of loaders) { 
+                try {
+                    const {default: loaderOb} = await import(l);
+                    this.addLoader(loaderOb);    
+                } catch (err) {
+                    this.errors.push({
+                        message: `Could not load loader ${l}: ${err}`,
+                        path: [l],                        
+                    })
+                }
+            }
+        }
+
         for (const loader of this._loaders) {
             await loader.load();
         }
+    }
+
+    public get errors() {
+        return this._errors;
+    }
+
+    public get warnings() {
+        return this._warnings;
     }
 
     /**
@@ -94,12 +115,12 @@ export class Project {
      * @param depth
      * @returns
      */
-    public async findFile(
+    public findFile(
         pathToSearch: string,
         fileName: string,
         depth = 0,
-    ): Promise<string | null> {
-        const entries = await fs.promises.readdir(pathToSearch, {
+    ): string | null {
+        const entries = fs.readdirSync(pathToSearch, {
             withFileTypes: true,
         });
 
@@ -107,12 +128,14 @@ export class Project {
             const entryPath = path.join(pathToSearch, entry.name);
             if (entry.isDirectory()) {
                 if (depth !== 0) {
-                    const nestedPath = await this.findFile(
+                    const nestedPath = this.findFile(
                         entryPath,
                         fileName,
                         depth - 1,
                     );
-                    if (nestedPath) return nestedPath;
+                    if (nestedPath) {
+                        return nestedPath;
+                    }
                 }
             } else if (entry.name === fileName) {
                 return entryPath;
@@ -123,6 +146,26 @@ export class Project {
     }
 }
 
-export async function createProject(path: string, loaders: Loader[]) {
-    return Project.create(path, loaders);
+/**
+ * Creates a new project at the given path and loads it using the given loaders.
+ * @param path The path to the project directory (usually where the config for hanto lives)
+ * @param loaders An array of strings that are the same as the loader project names.  For example, if you want to
+ *      load the npm loader, you would pass in `['loader-npm']`.
+ * @returns 
+ */
+export async function createProject(path: string) {
+
+    const project = new Project(path);
+
+    // MUST ADD PROJECT TO ORCHESTRATOR BEFORE LOAD 
+    //  This is to ensure that loaders have access to other loaders 
+    //  during the initialization process.
+    orchestrator.addProject(project)
+
+    // This will iterate through the loaders in order and initialize them
+    //  with the project id.  This is important because some loaders depend
+    //  on other loaders to be initialized first.
+    await project.load();
+
+    return project;
 }
