@@ -1,8 +1,11 @@
 {
-  "name": "hanto-cli",
+  "name": "@hanto/cli",
   "version": "1.0.0",
   "description": "A utility for understanding your typescript code",
   "main": "index.ts",
+  "bin": {
+    "hanto": "index.ts"
+  },
   "scripts": {
     "dev": "index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,14 +13,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hanto/core": "workspace:*",
+    "@hanto/plugin-nextjs": "workspace:*",
+    "@hanto/plugin-npm": "workspace:*",
+    "@swc/wasm": "^1.3.102",
     "ink": "^4.4.1",
-    "hanto-core": "workspace:*",
-    "hanto-plugin-nextjs": "workspace:*",
-    "hanto-plugin-npm": "workspace:*",
+    "react": "^18.2.0",
     "toml": "^3.0.0",
     "yaml": "^2.3.4",
-    "yargs": "^17.7.2",
-    "react": "^18.2.0"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@types/yargs": "^17.0.32",

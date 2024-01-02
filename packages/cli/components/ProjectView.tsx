@@ -1,5 +1,5 @@
 import { Box, Text } from 'ink';
-import { Project } from 'scribbler-core';
+import { Project } from '@hanto/core';
 import { LoaderView } from './LoaderView';
 import { PropertyView } from './PropertyView';
 

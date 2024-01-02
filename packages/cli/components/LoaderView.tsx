@@ -1,6 +1,6 @@
 import { Box, Text } from 'ink';
-import { Loader, Property } from '../../hanto-core';
-import { LoaderPropertyView, PropertyView } from './PropertyView';
+import { Loader, Property } from '@hanto/core';
+import { LoaderPropertyView } from './PropertyView';
 
 export function LoaderView({ loader, isHorizontal=true }: { loader: Loader, isHorizontal: boolean }) {    
     const values = Object.values<Property>(loader.properties);

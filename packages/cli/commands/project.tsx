@@ -2,7 +2,7 @@ import * as yargs from 'yargs';
 import { existsSync } from 'fs';
 import { render } from 'ink';
 import { ProjectView } from '../components/ProjectView';
-import { createProject } from '../../hanto-core';
+import { createProject } from '@hanto/core';
 
 export interface CommandArguments {
   directory: string,

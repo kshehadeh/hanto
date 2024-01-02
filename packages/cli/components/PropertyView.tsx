@@ -1,5 +1,5 @@
 import { Box, Text } from 'ink';
-import { Property } from 'scribbler-core';
+import { Property } from '@hanto/core';
 
 export interface PropertyProps {
     property: string;
