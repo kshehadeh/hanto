@@ -4,7 +4,8 @@ import path from 'path';
 import orchestrator from '@/lib/orchestrator';
 import { Loader } from './loader';
 import { ProjectConfig } from './helpers/config';
-import { Issue } from '../..';
+import { Issue } from '@/interfaces';
+import { Validator } from './validator';
 
 /**
  * A project is a collection of files that are related to each other in some way.  For example, a project
@@ -25,6 +26,7 @@ import { Issue } from '../..';
 export class Project {
     private _id: string;
     private _loaders: Loader[] = [];
+    private _validator: Validator = new Validator();
     private _config: ProjectConfig | undefined = undefined;
     private _errors: Issue[] = [];
     private _warnings: Issue[] = [];
@@ -53,7 +55,7 @@ export class Project {
         return this._config?.root
     }
 
-    public async addLoader<T extends Loader>(loader: T) {
+    public async add<T extends Loader>(loader: T) {
         if (this._loaders.find(l => l.name === loader.name)) {
             throw new Error(`Loader ${loader.name} already exists`);
         }
@@ -61,6 +63,10 @@ export class Project {
         if (loader.initialize(this.id)) {
             this._loaders.push(loader);
         }
+    }
+
+    public get validator() {
+        return this._validator;
     }
 
     public loader(name: string) {
@@ -79,8 +85,15 @@ export class Project {
                 try {
                     const {default: api} = await import(l);
                     if (api) {
-                        this.addLoader(api.loader);
-                    }                    
+                        this.add(api.loader);
+
+                        if (api.rules) {
+                            for (const rule of api.rules) {
+                                this._validator.add(rule);
+                            }
+                        }
+                    }        
+                                
                 } catch (err) {
                     this.errors.push({
                         message: `Could not load loader ${l}: ${err}`,

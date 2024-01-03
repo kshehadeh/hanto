@@ -3,6 +3,7 @@
     "description": "This is a sample app for Hanto",
     "loaders": [
         "@hanto/plugin-npm",
-        "@hanto/plugin-nextjs"
+        "@hanto/plugin-nextjs",
+        "@hanto/plugin-git"
     ]
 }

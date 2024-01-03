@@ -16,6 +16,7 @@
     "@hanto/core": "workspace:*",
     "@hanto/plugin-nextjs": "workspace:*",
     "@hanto/plugin-npm": "workspace:*",
+    "@hanto/plugin-git": "workspace:*",
     "@swc/wasm": "^1.3.102",
     "ink": "^4.4.1",
     "react": "^18.2.0",

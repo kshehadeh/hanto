@@ -2,6 +2,7 @@ import { Box, Text } from 'ink';
 import { Project } from '@hanto/core';
 import { LoaderView } from './LoaderView';
 import { PropertyView } from './PropertyView';
+import { RuleView } from './RuleView';
 
 export function ProjectView({ project }: { project: Project }) {
     return (
@@ -24,6 +25,17 @@ export function ProjectView({ project }: { project: Project }) {
                 <Box flexDirection="column">
                     {project.loaders.map(loader => (
                         <LoaderView key={loader.name} loader={loader} isHorizontal={true} />
+                    ))}
+                </Box>
+            </Box>
+
+            <Box flexDirection="column">
+                <Box borderStyle={'single'} borderBottom={true} borderTop={false} borderRight={false} borderLeft={false} >
+                    <Text bold>Rules</Text>
+                </Box>
+                <Box flexDirection="column">
+                    {project.validator.rules.map(rule => (
+                        <RuleView key={rule.name} rule={rule} isHorizontal={true} />
                     ))}
                 </Box>
             </Box>
