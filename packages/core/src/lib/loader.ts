@@ -41,7 +41,7 @@ export abstract class Loader {
     abstract load(): Promise<boolean>;
 
     public get project() {
-        return orchestrator.getProject(this._projectId);
+        return orchestrator.project(this._projectId);
     }
 
     public get valid() {
@@ -85,7 +85,7 @@ export abstract class Loader {
             throw new Error(`Property ${name} invalid`);
         }
 
-        if (def.valueSchema) {
+        if (def.valueSchema && typeof value !== 'function') {
             const parseResult = def.valueSchema.safeParse(value)
             if (!parseResult.success) {
                 throw new Error(`Property ${name} has an invalid type: ${parseResult.error.issues.map(i => i.message).join(', ')}`);
@@ -144,7 +144,14 @@ export abstract class Loader {
         if (typeof prop?.value === 'function') {
             const optionsParsed = prop.optionsSchema?.safeParse(options);
             if (optionsParsed?.success) {
-                return prop?.value(optionsParsed.data);
+                const val = prop?.value(optionsParsed.data);
+                if (prop.valueSchema) {
+                    const parseResult = prop.valueSchema.safeParse(val);
+                    if (!parseResult.success) {
+                        throw new Error(`Function ${name} returned an invalid type: ${parseResult.error.issues.map(i => i.message).join(', ')}`);
+                    }
+                }
+                return val
             } else {
                 throw new Error(`Invalid options given to call function ${name}`)
             }

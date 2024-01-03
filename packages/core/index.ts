@@ -1,5 +1,5 @@
 // SCRIBBLER CLIENT DEVELOPERS
-export { createProject } from './src/lib/project';
+export { Project, createProject } from './src/lib/project';
 
 // SCRIBBLER PLUGIN DEVELOPERS
 export * from './src/interfaces';
@@ -9,3 +9,5 @@ export { Loader } from './src/lib/loader';
 
 // Plugin developers can use the parser for defining new validations
 export { parse } from './src/lib/parser';
+
+export { default as orchestrator } from './src/lib/orchestrator';

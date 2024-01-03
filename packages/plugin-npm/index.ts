@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import z from 'zod';
 import PackageJsonSchema from './schemas/package.schema';
-import { Loader } from 'hanto-core';
+import { Loader } from '@hanto/core';
 
 function runNpm(cmd: string, cwd: string) {
     return new Promise<string>((resolve, reject) => {
@@ -57,6 +57,7 @@ class NpmLoader extends Loader {
                 optionsSchema: z.object({
                     name: z.string(),
                 }),
+                valueSchema: z.string(),
             },
             {
                 name: 'resolveDependencyFolder',
@@ -65,6 +66,7 @@ class NpmLoader extends Loader {
                 optionsSchema: z.object({
                     name: z.string(),
                 }),
+                valueSchema: z.string(),
             },
         ]);
     }
@@ -74,6 +76,10 @@ class NpmLoader extends Loader {
     }
     get description(): string {
         return 'Reads and understands npm packages';
+    }
+
+    get dependencies(): string[] {
+        return [];
     }
 
     private processStartingFile(
@@ -196,4 +202,6 @@ class NpmLoader extends Loader {
     }
 }
 
-export default new NpmLoader();
+export default {
+    loader: new NpmLoader()
+}

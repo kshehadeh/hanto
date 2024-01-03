@@ -63,7 +63,7 @@ export class Project {
         }
     }
 
-    public getLoader(name: string) {
+    public loader(name: string) {
         return this._loaders.find(l => l.name === name);
     }
 
@@ -77,8 +77,10 @@ export class Project {
         if (loaders) {
             for (const l of loaders) { 
                 try {
-                    const {default: loaderOb} = await import(l);
-                    this.addLoader(loaderOb);    
+                    const {default: api} = await import(l);
+                    if (api) {
+                        this.addLoader(api.loader);
+                    }                    
                 } catch (err) {
                     this.errors.push({
                         message: `Could not load loader ${l}: ${err}`,
@@ -160,7 +162,7 @@ export async function createProject(path: string) {
     // MUST ADD PROJECT TO ORCHESTRATOR BEFORE LOAD 
     //  This is to ensure that loaders have access to other loaders 
     //  during the initialization process.
-    orchestrator.addProject(project)
+    orchestrator.add(project)
 
     // This will iterate through the loaders in order and initialize them
     //  with the project id.  This is important because some loaders depend

@@ -1,4 +1,4 @@
-import { Loader } from 'hanto-core';
+import { Loader } from '@hanto/core';
 
 class NextJsLoader extends Loader {
     private _startingFile: File | undefined  = undefined
@@ -11,6 +11,10 @@ class NextJsLoader extends Loader {
         return 'Reads and understands NextJS projects';
     }
 
+    get dependencies(): string[] {
+        return ['npm'];
+    }
+
     public constructor() {
         super([]);        
     }
@@ -18,7 +22,7 @@ class NextJsLoader extends Loader {
     public initialize(projectId: string): boolean {
         super.initialize(projectId);
 
-        const npmLoader = this.project?.getLoader('npm');
+        const npmLoader = this.project?.loader('npm');
         if (!npmLoader) {
             this._errors.push({
                 message: 'npm loader is required for nextjs loader',
@@ -34,7 +38,7 @@ class NextJsLoader extends Loader {
         const project = this.project;
         if (!project) throw new Error('Loader not initialized');
 
-        const npmLoader = project.getLoader('npm');
+        const npmLoader = project.loader('npm');
         if (!npmLoader) {
             throw new Error('npm loader is required for typescript loader');
         }
@@ -43,4 +47,6 @@ class NextJsLoader extends Loader {
     }
 }
 
-export default new NextJsLoader();
+export default {
+    loader: new NextJsLoader()
+}

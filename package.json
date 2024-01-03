@@ -1,11 +1,10 @@
 {
   "name": "hanto-monorepo",
-  "devDependencies": {},
+  "devDependencies": { "rimraf": "^5.0.5" },
   "scripts": {
-    "cli": "bun run ./packages/cli/index.ts",
-    "clean:modules": "rm -rf node_modules",
-    "clean:lock": "rm bun.lockb",
-    "clean": "bun run clean:modules && bun run clean:lock"
+    "clean:modules": "rimraf packages/*/node_modules node_modules",
+    "clean:lock": "rimraf package-lock.json yarn.lock bun.lockb packages/*/package-lock.json packages/*/yarn.lock packages/*/bun.lockb",
+    "clean": "bun run clean:lock && bun run clean:modules"
   },
   "type": "module",
   "workspaces": [

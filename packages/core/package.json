@@ -1,5 +1,6 @@
 {
-  "name": "hanto-core",
+  "name": "@hanto/core",
+  "version": "1.0.0",
   "module": "index.ts",
   "type": "module",
   "private": true,

@@ -1,5 +1,6 @@
 {
-  "name": "hanto-plugin-nextjs",
+  "name": "@hanto/plugin-npm",
+  "version": "1.0.0",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
@@ -9,6 +10,7 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "hanto-core": "workspace:*"
+    "@hanto/core": "workspace:*",
+    "zod": "^3.22.4"
   }
 }
