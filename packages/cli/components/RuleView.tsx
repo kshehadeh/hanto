@@ -1,6 +1,6 @@
 import { Box, Text } from 'ink';
-import { Property, Rule } from '@hanto/core';
-import { LoaderPropertyView, PropertyView } from './PropertyView';
+import { Rule } from '@hanto/core';
+import { PropertyView } from './PropertyView';
 
 export function RuleView({ rule, isHorizontal=true }: { rule: Rule, isHorizontal: boolean }) {    
     return (

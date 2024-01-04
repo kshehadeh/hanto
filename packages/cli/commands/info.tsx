@@ -16,25 +16,28 @@ export interface CommandBuilderParameters {
  * Parse a file and output information about it
  * @param {string} dir
  */
-async function projectCommand(dir: string) {    
-    if (!existsSync(dir)) {        
-        throw new Error(`Directory ${dir} does not exist`);
+async function projectCommand(dir?: string) {    
+
+    let projectDir = dir || process.cwd();
+
+    if (!existsSync(projectDir)) {        
+        throw new Error(`Directory ${projectDir} does not exist`);
     }
 
-    const prj = await createProject(dir);
+    const prj = await createProject(projectDir);
     
     render(<ProjectView project={prj}/>);
     
 }
 
 const command: yargs.CommandModule<CommandBuilderParameters, CommandArguments> = {
-    command: 'project [directory]',
+    command: 'info [directory]',
     describe: 'Process information about the given project directory',
     builder: {
         directory: {
             alias: 'd',
-            demandOption: true,
-            describe: 'The directory to examine',
+            demandOption: false,
+            describe: 'The directory to examine (defaults to current directory)',
             type: 'string',
         }
     },
