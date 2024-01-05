@@ -1,4 +1,4 @@
-import { ClassMethod, FunctionDeclaration, ReturnStatement } from "@swc/core";
+import { ClassMethod, FunctionDeclaration, ReturnStatement } from "@babel/types";
 import { Base, extractName, isClassMethod, isFunctionDeclaration, isReturnStatement } from "./base";
 
 export class Function extends Base<FunctionDeclaration | ClassMethod> {
@@ -8,7 +8,7 @@ export class Function extends Base<FunctionDeclaration | ClassMethod> {
             return extractName(this._top.key)
         }        
         if (isFunctionDeclaration(this._top)) {
-            return this._top.identifier.value
+            return this._top.id?.name
         }        
     }
 
@@ -18,7 +18,7 @@ export class Function extends Base<FunctionDeclaration | ClassMethod> {
         }
 
         if (isClassMethod(this._top)) {
-            return this._top.function.params
+            return this._top.params
         }
 
         return []
@@ -30,7 +30,7 @@ export class Function extends Base<FunctionDeclaration | ClassMethod> {
         }
 
         if (isClassMethod(this._top)) {
-            return this._top.function.body
+            return this._top.body
         }
     }
 

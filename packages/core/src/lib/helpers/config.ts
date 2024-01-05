@@ -3,9 +3,10 @@ import { existsSync, readFileSync } from 'fs'
 import { dirname, extname, basename, resolve } from 'path'
 import { parse as parseToml } from 'toml'
 import { parse as parseYaml } from 'yaml'
-import { parse as parseJson } from 'json5'
 import { isValidDirectory, isValidFile } from './file-helpers'
 import { Issue } from '../../..'
+
+const parseJson = JSON.parse
 
 const configParsers = [
     {

@@ -1,10 +1,13 @@
 import path from 'path';
-import { ClassDeclaration, ExportDeclaration, ExportDefaultDeclaration, FunctionDeclaration, ImportDeclaration, JscTarget, Module, Script, parseFileSync } from '@swc/core';
+import fs from 'fs';
+import { ExportNamedDeclaration, ClassDeclaration, ExportDeclaration, ExportDefaultDeclaration, FunctionDeclaration, ImportDeclaration, File as BabelFile} from '@babel/types';
 import { Base, ParserError, isAnyJsxType, isClassDeclaration, isFunctionDeclaration, isIdentifier, isImportDeclaration, isModule, isParserError } from './base';
-import { argv } from 'bun';
+import { parseSync } from '@babel/core';
 import { Function } from './function';
 import { Class } from './class';
 import { ImportStatement } from './import';
+
+export type ParseTarget = 'javascript' | 'typescript'
 
 export interface ImportTree {
     [source: string]: {
@@ -13,29 +16,30 @@ export interface ImportTree {
     } | null
 }
 
-export class File extends Base<Module|Script> {
+export class File extends Base<BabelFile> {
     _file: string;    
     _errors: ParserError[] = []
 
     constructor(file: string) {
         super(undefined)
         this._file = file        
-        this._top = this.parse(file)
+        this._top = this.parse()
     }
 
-    public parse(file: string, target: JscTarget = 'esnext') {
-        const isTypescript = path.extname(file).startsWith('.ts')
-        const isX = ['.jsx', '.tsx'].includes(path.extname(file))
+    public parse() {
+        // Load file into a string
+        const fileContent = fs.readFileSync(this._file, 'utf8')
 
         try {
-            return parseFileSync(file, {
-                syntax: isTypescript ? 'typescript' : 'ecmascript',
-                target,
-                tsx: isX && isTypescript,
-                jsx: isX && !isTypescript,
-                dynamicImport: true,
-                decorators: true,
-            })    
+            return parseSync(fileContent, {
+                ast: true,
+                filename: this._file,
+                presets: [
+                    '@babel/preset-react',
+                    '@babel/preset-typescript',
+                    '@babel/preset-env',
+                ],
+            })
         } catch (error) {
             if (!isParserError(error)) throw error            
             this._errors.push(error)
@@ -50,13 +54,13 @@ export class File extends Base<Module|Script> {
 
     public get imports(): ImportDeclaration[] {
         if (!this._top) return []
-        return this._top.body.filter(isImportDeclaration) as ImportDeclaration[]
+        return this._top.program.body.filter(isImportDeclaration) as ImportDeclaration[]
     }
 
     public get exports(): ExportDeclaration[] {
         if (!this._top) return []
         if (isModule(this._top)) {
-            return this._top.body.filter((node): node is ExportDeclaration => node.type === 'ExportDeclaration')
+            return this._top.program.body.filter((node): node is ExportNamedDeclaration => node.type === 'ExportNamedDeclaration')
         }
         return []        
     }
@@ -64,7 +68,7 @@ export class File extends Base<Module|Script> {
     public get exportsDefault(): ExportDefaultDeclaration | undefined {
         if (!this._top) return undefined
         if (isModule(this._top)) {
-            return this._top.body.find((node): node is ExportDefaultDeclaration => node.type === 'ExportDefaultDeclaration')
+            return this._top.program.body.find((node): node is ExportDefaultDeclaration => node.type === 'ExportDefaultDeclaration')
         }
         return undefined
     }
@@ -72,16 +76,16 @@ export class File extends Base<Module|Script> {
     public get classes(): ClassDeclaration[] {
         if (!this._top) return []
 
-        const privatelyDeclaredClasses = this._top.body.filter(isClassDeclaration) as ClassDeclaration[]
-        const exportedClasses = this.exports.filter((node) => isClassDeclaration(node.declaration)).map((node) => node.declaration as ClassDeclaration)
-        const exportedDefaultClass = isClassDeclaration(this.exportsDefault?.decl) ? this.exportsDefault.decl : undefined
+        const privatelyDeclaredClasses = this._top.program.body.filter(isClassDeclaration) as ClassDeclaration[]
+        const exportedClasses = this.exports.filter(isClassDeclaration)
+        const exportedDefaultClass = isClassDeclaration(this.exportsDefault?.declaration) ? this.exportsDefault.declaration : undefined
         
         return [...exportedClasses, ...privatelyDeclaredClasses, exportedDefaultClass].filter(isClassDeclaration)
     }
 
     public functions(): FunctionDeclaration[] {
         if (!this._top) return []
-        return this._top.body.filter(isFunctionDeclaration) as FunctionDeclaration[]
+        return this._top.program.body.filter(isFunctionDeclaration) as FunctionDeclaration[]
     }
 
     public getImportTree() {
@@ -128,7 +132,7 @@ export class File extends Base<Module|Script> {
 
             const c = new Class(node)
             const renderFunction = c.methods.find((node) => {
-                isIdentifier(node.key) && node.key.value === 'render'
+                isIdentifier(node.key) && node.key.name === 'render'
             })
 
             if (!renderFunction) return false
@@ -146,3 +150,6 @@ export class File extends Base<Module|Script> {
 
 }
 
+// const file = new File('./index.ts')
+// const result = file.parse()
+// console.log(file.exports)

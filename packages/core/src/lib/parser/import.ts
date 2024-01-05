@@ -1,4 +1,4 @@
-import { ImportDeclaration } from '@swc/core';
+import { ImportDeclaration } from '@babel/types';
 import { Base } from './base';
 import path from 'path';
 import { nearestProjectRoot } from '../helpers/nearest-project-root';
