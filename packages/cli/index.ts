@@ -1,5 +1,5 @@
 import yargs, { CommandModule } from 'yargs';
-import projectCommand from './commands/info';
+import projectCommand from './src/commands/info';
 
 yargs(process.argv.slice(2))
     .scriptName('hanto')

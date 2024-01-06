@@ -1,4 +1,4 @@
-import { ZodSchema } from "zod";
+import { ZodSchema } from 'zod';
 
 export interface Issue {
     message: string;
@@ -9,7 +9,7 @@ export interface Issue {
     columnEnd?: number;
 }
 
-export type PropertyFunction = (...args: unknown[]) => PropertyValue;
+export type PropertyFunction<T = unknown> = (...args: T[]) => PropertyValue;
 
 export type PropertyValue =
     | string
@@ -27,39 +27,6 @@ export interface PropertyDefinition {
     optionsSchema?: ZodSchema;
 }
 
-export type Property = PropertyDefinition & { value: PropertyValue }
-
 export type PropertyMap = Record<string, Property>;
 
-export interface IProject {
-    readonly id: string;
-    readonly path: string;
-    readonly loaders: ILoader[];
-
-    getLoader(name: string): ILoader | undefined;
-    addLoader(loader: ILoader): void;
-    load(): Promise<void>;
-    findFile(
-        pathToSearch: string,
-        fileName: string,
-        depth?: number,
-    ): Promise<string | null>;    
-}
-
-/**
- * The loader interface is defined here so we don't have cyclic dependencies.  The loader interface
- * is implemented by the Loader class in lib/src/project/loaders/index.ts. Plugins further derive from
- * the Loader class to implement specific processing for different types of projects.
- */
-export interface ILoader {
-    name: string;
-    description: string;
-    project: IProject | null;
-    initialize(project: IProject): boolean;
-    load(): Promise<boolean>;
-    get(key: string): PropertyValue | undefined;
-    getString(key: string): string | undefined;
-    errors: Issue[];
-    warnings: Issue[];
-    properties: Record<string, PropertyDefinition & { value: PropertyValue }>;
-}
+export type Property = PropertyDefinition & { value: PropertyValue };

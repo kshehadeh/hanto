@@ -1,5 +1,5 @@
-import { File } from "./file"
+import { File } from './file';
 
 export function parse(file: string) {
-    return new File(file)
+    return new File(file);
 }

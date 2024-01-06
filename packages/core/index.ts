@@ -1,7 +1,7 @@
-// SCRIBBLER CLIENT DEVELOPERS
+// HANTO CLIENT DEVELOPERS
 export { Project, createProject } from './src/lib/project';
 
-// SCRIBBLER PLUGIN DEVELOPERS
+// HANTO PLUGIN DEVELOPERS
 export * from './src/interfaces';
 
 // Plugin developers will derive new loaders from this base class

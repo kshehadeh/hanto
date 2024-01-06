@@ -1,4 +1,3 @@
-
 export function runNpm(cmd: string, cwd: string) {
     return new Promise<string>((resolve, reject) => {
         const child = require('child_process').spawn('npm', [cmd], {

@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { Loader } from "@hanto/core";
-import { z } from "zod";
+import { Loader } from '@hanto/core';
+import { z } from 'zod';
 import PackageJsonSchema from './schemas/package.schema';
 import { runNpm } from './lib/run-npm';
 
@@ -23,7 +23,6 @@ export class NpmLoader extends Loader {
                 name: 'numberOfTopLevelDevDependencies',
                 description: 'Number of top level dev dependencies',
                 valueSchema: z.number(),
-
             },
             {
                 name: 'getDependencyVersion',
@@ -36,7 +35,8 @@ export class NpmLoader extends Loader {
             },
             {
                 name: 'resolveDependencyFolder',
-                description: 'Returns the folder of a given dependency for this project',
+                description:
+                    'Returns the folder of a given dependency for this project',
                 type: 'function',
                 optionsSchema: z.object({
                     name: z.string(),
@@ -98,17 +98,13 @@ export class NpmLoader extends Loader {
 
         // first, see if we can find a package.json file.  This will help inform where
         //  to start looking for files.
-        const packageJson = project.findFile(
-            project.dir,
-            'package.json',
-            0,
-        );
+        const packageJson = project.findFile(project.dir, 'package.json', 0);
         if (packageJson) {
             // We can also use this file to determine what the starting file is.
             // no-dd-sa
-            const packageJsonContents = fs.readFileSync(
-                packageJson, { encoding: 'utf-8' },
-            );
+            const packageJsonContents = fs.readFileSync(packageJson, {
+                encoding: 'utf-8',
+            });
 
             const parseResult = PackageJsonSchema.safeParse(
                 JSON.parse(packageJsonContents),
@@ -159,8 +155,6 @@ export class NpmLoader extends Loader {
 
         if (typeof dependencyName !== 'string') throw new Error('Invalid name');
         const root = runNpm('root', project!.dir);
-
-
     }
 
     public async load() {

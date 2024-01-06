@@ -15,15 +15,15 @@
             "watchMode": false
         },
         {
-          "name": "Debug Electron",
-          "type": "node",
-          "request": "launch",
-          "cwd": "${workspaceFolder}/app",
-          "runtimeExecutable": "${workspaceFolder}/app/node_modules/.bin/electron-forge-vscode-nix",
-          "runtimeArgs": [
-            ".", //swap this line and the next line
-            "--remote-debugging-port=9223"
-          ]
+            "name": "Debug Electron",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/app",
+            "runtimeExecutable": "${workspaceFolder}/app/node_modules/.bin/electron-forge-vscode-nix",
+            "runtimeArgs": [
+                ".", //swap this line and the next line
+                "--remote-debugging-port=9223"
+            ]
         }
     ]
 }

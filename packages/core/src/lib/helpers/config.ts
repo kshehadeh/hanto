@@ -1,50 +1,45 @@
-import z from 'zod'
-import { existsSync, readFileSync } from 'fs'
-import { dirname, extname, basename, resolve } from 'path'
-import { parse as parseToml } from 'toml'
-import { parse as parseYaml } from 'yaml'
-import { isValidDirectory, isValidFile } from './file-helpers'
-import { Issue } from '../../..'
+import z from 'zod';
+import { existsSync, readFileSync } from 'fs';
+import { dirname, extname, basename, resolve } from 'path';
+import { parse as parseToml } from 'toml';
+import { parse as parseYaml } from 'yaml';
+import { isValidDirectory, isValidFile } from './file-helpers';
+import { Issue } from '../../..';
 
-const parseJson = JSON.parse
+const parseJson = JSON.parse;
 
 const configParsers = [
     {
         name: 'JS/TS Parser',
         extensions: ['.js', '.jsx', '.mjs', '.cjs', '.ts', '.tsx'],
         parser: async (file: string) => {
-            return await import(file)
-        }
+            return await import(file);
+        },
     },
     {
         name: 'JSON Parser',
         extensions: ['.json', '.json5'],
         parser: (file: string) => {
-            return parseJson(readFileSync(file, 'utf8'))
-        }
+            return parseJson(readFileSync(file, 'utf8'));
+        },
     },
     {
         name: 'TOML Parser',
         extensions: ['.toml'],
         parser: (file: string) => {
-            return parseToml(readFileSync(file, 'utf8'))
-        }
+            return parseToml(readFileSync(file, 'utf8'));
+        },
     },
     {
         name: 'YAML Parser',
         extensions: ['.yaml', '.yml'],
         parser: (file: string) => {
-            return parseYaml(readFileSync(file, 'utf8'))
-        }
+            return parseYaml(readFileSync(file, 'utf8'));
+        },
     },
-]
+];
 
-const configBaseNames = [
-    '.hanto.config',
-    'hanto.config',
-    'hanto',
-    '.hanto',
-]
+const configBaseNames = ['.hanto.config', 'hanto.config', 'hanto', '.hanto'];
 
 const CongigSchema = z.object({
     name: z.string(),
@@ -63,70 +58,70 @@ const CongigSchema = z.object({
  */
 export class ProjectConfig {
     _path: string | undefined = undefined;
-    _config: z.infer<typeof CongigSchema> | undefined  = undefined;
+    _config: z.infer<typeof CongigSchema> | undefined = undefined;
     warnings: Issue[] = [];
     errors: Issue[] = [];
 
     constructor(root: string) {
-        let configPath: string | undefined = undefined
+        let configPath: string | undefined = undefined;
         if (isValidFile(root)) {
-            configPath = root
+            configPath = root;
         } else if (isValidDirectory(root)) {
             // Try to find in the current directory and any parent directories
-            let configFiles = this.findInUpwardsDirectory(root)
+            let configFiles = this.findInUpwardsDirectory(root);
 
             if (configFiles.length === 0) {
                 // Try to find in the config directory if one exists
-                configFiles = this.findInConfigDirectory(root) 
+                configFiles = this.findInConfigDirectory(root);
             }
 
             if (configFiles.length > 0) {
                 if (configFiles.length > 1) {
                     this.warnings.push({
-                        message: `Found multiple config files in ${root}. Using ${configFiles[0]}`,                        
-                    })                    
+                        message: `Found multiple config files in ${root}. Using ${configFiles[0]}`,
+                    });
                 }
 
-                configPath = configFiles[0]                
+                configPath = configFiles[0];
             }
         } else {
             this.errors.push({
                 message: `Could not find config file in ${root}`,
-            })
+            });
         }
 
         if (configPath) {
-            this._config = this.parse(configPath)
+            this._config = this.parse(configPath);
             if (this._config) {
-                this._path = configPath
+                this._path = configPath;
             }
         }
     }
 
     findInUpwardsDirectory(dir: string): string[] {
-        const configFiles = this.findInDirectory(dir)
+        const configFiles = this.findInDirectory(dir);
         if (configFiles.length > 0) {
-            return configFiles
+            return configFiles;
         } else {
-            const parentDir = resolve(dir, '..')
+            const parentDir = resolve(dir, '..');
             if (parentDir !== dir) {
-                return this.findInUpwardsDirectory(parentDir)
+                return this.findInUpwardsDirectory(parentDir);
             }
         }
 
-        return []
+        return [];
     }
 
     /**
      * The path to the config file (not necessarily the project root - see `root`)
      */
-    get path () {
-        return this._path
+    get path() {
+        return this._path;
     }
 
-    get ob () {
-        return this._config
-    }   
+    get ob() {
+        return this._config;
+    }
 
     /**
      * The root directory for the project as an absolute file path.  This is the directory that contains the config file or
@@ -136,72 +131,74 @@ export class ProjectConfig {
         if (this._config?.root) {
             return this._config.root;
         } else {
-            return this.path ? dirname(this.path) : resolve('.')
+            return this.path ? dirname(this.path) : resolve('.');
         }
     }
 
     findInConfigDirectory(dir: string): string[] {
-        const configFiles = this.findInDirectory(resolve(dir, 'config'))
+        const configFiles = this.findInDirectory(resolve(dir, 'config'));
         if (configFiles.length > 0) {
-            return configFiles
+            return configFiles;
         } else {
-            return []
+            return [];
         }
     }
     findInDirectory(dir: string): string[] {
-        const extensions = this.allowedExtensions()
-        const configFiles = configBaseNames.map(baseName => {
-            const foundExtension = extensions.find(ext => {
-                const fileName = resolve(dir, `${baseName}${ext}`)
-                if (existsSync(fileName)) {
-                    return true
-                }            
+        const extensions = this.allowedExtensions();
+        const configFiles = configBaseNames
+            .map(baseName => {
+                const foundExtension = extensions.find(ext => {
+                    const fileName = resolve(dir, `${baseName}${ext}`);
+                    if (existsSync(fileName)) {
+                        return true;
+                    }
+                });
+
+                if (foundExtension) {
+                    return resolve(dir, `${baseName}${foundExtension}`);
+                }
             })
+            .filter((f): f is string => f !== undefined);
 
-            if (foundExtension) {
-                return resolve(dir, `${baseName}${foundExtension}`)
-            }
-        }).filter((f): f is string => f !== undefined)
-
-        return configFiles
+        return configFiles;
     }
 
     allowedExtensions() {
-        return configParsers.flatMap(p => p.extensions)
+        return configParsers.flatMap(p => p.extensions);
     }
 
     /**
      * Determines if the given file is a valid config file
-     * @param fileName 
-     * @returns 
+     * @param fileName
+     * @returns
      */
     parse(fileName: string) {
         try {
-            const baseName = basename(fileName)
+            const baseName = basename(fileName);
             if (configBaseNames.find(b => baseName.startsWith(b))) {
-                const ext = extname(fileName)
+                const ext = extname(fileName);
                 const parser = configParsers.find(parser => {
-                    return parser.extensions.includes(ext)
-                })
-                const ob = parser?.parser(fileName)            
-                const result = CongigSchema.safeParse(ob)
+                    return parser.extensions.includes(ext);
+                });
+                const ob = parser?.parser(fileName);
+                const result = CongigSchema.safeParse(ob);
                 if (result.success) {
-                    return result.data
+                    return result.data;
                 } else {
                     result.error.issues.forEach(e => {
                         this.errors.push({
                             message: e.message,
-                            path: e.path
-                        })
-                    })
+                            path: e.path,
+                        });
+                    });
                 }
-            }    
+            }
         } catch (error) {
             this.errors.push({
                 message: `Could not parse config file ${fileName}: ${error}`,
                 path: [fileName],
-            })
+            });
         }
         return undefined;
-    }    
+    }
 }

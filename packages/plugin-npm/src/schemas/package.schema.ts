@@ -226,11 +226,7 @@ export default z
                 z
                     .object({
                         '*': z
-                            .array(
-                                z
-                                    .string()
-                                    .regex(/^[^*]*(?:\*[^*]*)?$/),
-                            )
+                            .array(z.string().regex(/^[^*]*(?:\*[^*]*)?$/))
                             .describe(
                                 'Maps all file paths to the file paths specified in the array.',
                             )
@@ -244,13 +240,7 @@ export default z
                                     'Maps the file path matching the property key to the file paths specified in the array.',
                                 ),
                             z
-                                .array(
-                                    z
-                                        .string()
-                                        .regex(
-                                            /^[^*]*(?:\*[^*]*)?$/,
-                                        ),
-                                )
+                                .array(z.string().regex(/^[^*]*(?:\*[^*]*)?$/))
                                 .describe(
                                     'Maps file paths matching the pattern specified in property key to file paths specified in the array.',
                                 ),
@@ -283,11 +273,7 @@ export default z
                                 evaluated = true;
                                 const result = z
                                     .array(
-                                        z
-                                            .string()
-                                            .regex(
-                                                /^[^*]*(?:\*[^*]*)?$/,
-                                            ),
+                                        z.string().regex(/^[^*]*(?:\*[^*]*)?$/),
                                     )
                                     .describe(
                                         'Maps file paths matching the pattern specified in property key to file paths specified in the array.',

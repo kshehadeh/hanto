@@ -1,7 +1,11 @@
 {
   "name": "hanto-monorepo",
-  "devDependencies": { "rimraf": "^5.0.5" },
+  "devDependencies": {
+    "@types/cardinal": "^2.1.1",
+    "rimraf": "^5.0.5"
+  },
   "scripts": {
+    "prettier": "prettier --write .",
     "clean:build": "rimraf packages/*/build build",
     "clean:modules": "rimraf packages/*/node_modules node_modules",
     "clean:lock": "rimraf package-lock.json yarn.lock bun.lockb packages/*/package-lock.json packages/*/yarn.lock packages/*/bun.lockb",

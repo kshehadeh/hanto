@@ -38,9 +38,13 @@ export class Project {
         if (path) {
             this._config = new ProjectConfig(path);
             if (this._config.errors.length > 0) {
-                throw new Error(`Could not load project at ${path}: \n\t${this._config.errors.map(e => e.message).join('\n\t')}`);
+                throw new Error(
+                    `Could not load project at ${path}: \n\t${this._config.errors
+                        .map(e => e.message)
+                        .join('\n\t')}`,
+                );
             }
-        }        
+        }
     }
 
     public get id() {
@@ -52,7 +56,7 @@ export class Project {
     }
 
     public get dir() {
-        return this._config?.root
+        return this._config?.root;
     }
 
     public async add<T extends Loader>(loader: T) {
@@ -78,12 +82,12 @@ export class Project {
     }
 
     public async load() {
-        const loaders = this._config?.ob?.loaders
+        const loaders = this._config?.ob?.loaders;
 
         if (loaders) {
-            for (const l of loaders) { 
+            for (const l of loaders) {
                 try {
-                    const {default: api} = await import(l);
+                    const { default: api } = await import(l);
                     if (api) {
                         this.add(api.loader);
 
@@ -92,13 +96,12 @@ export class Project {
                                 this._validator.add(rule);
                             }
                         }
-                    }        
-                                
+                    }
                 } catch (err) {
                     this.errors.push({
                         message: `Could not load loader ${l}: ${err}`,
-                        path: [l],                        
-                    })
+                        path: [l],
+                    });
                 }
             }
         }
@@ -166,16 +169,15 @@ export class Project {
  * @param path The path to the project directory (usually where the config for hanto lives)
  * @param loaders An array of strings that are the same as the loader project names.  For example, if you want to
  *      load the npm loader, you would pass in `['loader-npm']`.
- * @returns 
+ * @returns
  */
 export async function createProject(path: string) {
-
     const project = new Project(path);
 
-    // MUST ADD PROJECT TO ORCHESTRATOR BEFORE LOAD 
-    //  This is to ensure that loaders have access to other loaders 
+    // MUST ADD PROJECT TO ORCHESTRATOR BEFORE LOAD
+    //  This is to ensure that loaders have access to other loaders
     //  during the initialization process.
-    orchestrator.add(project)
+    orchestrator.add(project);
 
     // This will iterate through the loaders in order and initialize them
     //  with the project id.  This is important because some loaders depend

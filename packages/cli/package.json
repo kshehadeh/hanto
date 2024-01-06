@@ -1,7 +1,7 @@
 {
   "name": "@hanto/cli",
   "version": "1.0.0",
-  "description": "A utility for understanding your typescript code",
+  "description": "A utility for understanding your projects",
   "main": "index.ts",
   "type": "module",
   "bin": {

@@ -1,7 +1,7 @@
 import { Loader } from '@hanto/core';
 
 class NextJsLoader extends Loader {
-    private _startingFile: File | undefined  = undefined
+    private _startingFile: File | undefined = undefined;
 
     get name() {
         return 'nextjs';
@@ -16,7 +16,7 @@ class NextJsLoader extends Loader {
     }
 
     public constructor() {
-        super([]);        
+        super([]);
     }
 
     public initialize(projectId: string): boolean {
@@ -42,11 +42,11 @@ class NextJsLoader extends Loader {
         if (!npmLoader) {
             throw new Error('npm loader is required for typescript loader');
         }
-        
+
         return true;
     }
 }
 
 export default {
-    loader: new NextJsLoader()
-}
+    loader: new NextJsLoader(),
+};

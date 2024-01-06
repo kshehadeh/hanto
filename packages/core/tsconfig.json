@@ -19,7 +19,9 @@
             "bun-types" // add Bun global
         ],
         "paths": {
-            "@/*": ["./src/*"]
-        }
+            "@/*": ["./*"]
+        },
+        "rootDir": "./src",
+        "baseUrl": "./src"
     }
 }

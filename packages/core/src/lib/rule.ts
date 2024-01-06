@@ -1,5 +1,5 @@
-import { Issue } from "@/interfaces";
-import orchestrator from "./orchestrator";
+import { Issue } from '@/interfaces';
+import orchestrator from './orchestrator';
 
 export abstract class Rule {
     protected _projectId: string;

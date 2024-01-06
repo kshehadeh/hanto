@@ -1,32 +1,31 @@
 {
-  "name": "@hanto/core",
-  "version": "1.0.0",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@schemastore/package": "^0.0.10",
-    "@types/uuid": "^9.0.7",
-    "@typescript-eslint/eslint-plugin": "^6.16.0",
-    "bun-types": "latest",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-prettier": "^5.1.2",
-    "prettier": "^3.1.1"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/preset-env": "^7.23.7",
-    "@babel/preset-react": "^7.23.3",
-    "@babel/preset-typescript": "^7.23.3",
-    "@babel/types": "^7.23.6",
-    "@types/babel__core": "^7.20.5",
-    "uuid": "^9.0.1",
-    "zod": "^3.22.4"
-  }
+    "name": "@hanto/core",
+    "version": "1.0.0",
+    "module": "./src/index.ts",
+    "type": "module",
+    "devDependencies": {
+        "@schemastore/package": "^0.0.10",
+        "@types/uuid": "^9.0.7",
+        "@typescript-eslint/eslint-plugin": "^6.16.0",
+        "bun-types": "latest",
+        "eslint": "^8.56.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-import-resolver-typescript": "^3.6.1",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-prettier": "^5.1.2",
+        "prettier": "^3.1.1"
+    },
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    },
+    "dependencies": {
+        "@babel/core": "^7.23.7",
+        "@babel/preset-env": "^7.23.7",
+        "@babel/preset-react": "^7.23.3",
+        "@babel/preset-typescript": "^7.23.3",
+        "@babel/types": "^7.23.6",
+        "@types/babel__core": "^7.20.5",
+        "uuid": "^9.0.1",
+        "zod": "^3.22.4"
+    }
 }

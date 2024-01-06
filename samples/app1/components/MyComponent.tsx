@@ -1,17 +1,30 @@
-import React, {useState, useEffect, PropsWithChildren, ReactElement} from 'react';
+import React, {
+    useState,
+    useEffect,
+    PropsWithChildren,
+    ReactElement,
+} from 'react';
 import { addAndSubtract } from '../lib/math';
 
-export const i = 0, j = 1;
-const priv = "test";
+export const i = 0,
+    j = 1;
+const priv = 'test';
 
-export function MyComponent(props: PropsWithChildren<{index: number}>): ReactElement {    
+export function MyComponent(
+    props: PropsWithChildren<{ index: number }>,
+): ReactElement {
     const [count, setCount] = useState(0);
 
-    useEffect(() => {        
-        setCount(addAndSubtract(count, props.index))
-    },[count])
+    useEffect(() => {
+        setCount(addAndSubtract(count, props.index));
+    }, [count]);
 
-    return <div>{count}{props.children}</div>;
+    return (
+        <div>
+            {count}
+            {props.children}
+        </div>
+    );
 }
 
 function myFunction() {
@@ -38,18 +51,20 @@ class MyClass {
     }
 }
 
-export class MyComponentClass extends React.Component<{index: number}, {count: number}> {
+export class MyComponentClass extends React.Component<
+    { index: number },
+    { count: number }
+> {
     constructor(props: any) {
         super(props);
         this.state = {
-            count: 0
-        }
+            count: 0,
+        };
     }
 
     render() {
         return <div>{this.state.count}</div>;
     }
 }
-
 
 export default MyClass;

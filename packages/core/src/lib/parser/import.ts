@@ -2,8 +2,11 @@ import { ImportDeclaration } from '@babel/types';
 import { Base } from './base';
 import path from 'path';
 import { nearestProjectRoot } from '../helpers/nearest-project-root';
-import { isRelativePath, isValidFile, isValidDirectory } from '../helpers/file-helpers';
-
+import {
+    isRelativePath,
+    isValidFile,
+    isValidDirectory,
+} from '../helpers/file-helpers';
 
 export function resolveImportedFile({
     projectDirectory,
@@ -24,7 +27,10 @@ export function resolveImportedFile({
         return resolveImportedFile({
             projectDirectory,
             referenceFileDirectory,
-            importedSourceName: path.resolve(referenceFileDirectory, importedSourceName),
+            importedSourceName: path.resolve(
+                referenceFileDirectory,
+                importedSourceName,
+            ),
             possibleExtensions,
             alternativeRootDirectories,
         });
@@ -61,13 +67,18 @@ export function resolveImportedFile({
         //  (e.g. node_modules).  For example, if the file is "lodash" then we'll try to resolve it as
         //  "node_modules/lodash".
         for (const rootDirectory of alternativeRootDirectories) {
-            const projectDir = projectDirectory || nearestProjectRoot(referenceFileDirectory);
+            const projectDir =
+                projectDirectory || nearestProjectRoot(referenceFileDirectory);
             if (!projectDir) continue;
 
             return resolveImportedFile({
                 projectDirectory: projectDir,
                 referenceFileDirectory,
-                importedSourceName: path.resolve(projectDir, rootDirectory, importedSourceName),
+                importedSourceName: path.resolve(
+                    projectDir,
+                    rootDirectory,
+                    importedSourceName,
+                ),
                 possibleExtensions,
                 alternativeRootDirectories,
             });
@@ -93,7 +104,7 @@ export class ImportStatement extends Base<ImportDeclaration> {
      */
     public resolve({
         projectRoot,
-        filePath
+        filePath,
     }: {
         projectRoot?: string;
         filePath: string;

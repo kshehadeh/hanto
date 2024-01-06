@@ -13,4 +13,3 @@ export function nearestProjectRoot(directory: string): string | undefined {
         }
     }
 }
-

@@ -1,5 +1,5 @@
-import { Loader } from "@hanto/core";
-import { z } from "zod";
+import { Loader } from '@hanto/core';
+import { z } from 'zod';
 import { runGit } from './lib/run-git';
 
 export class GitLoader extends Loader {
@@ -38,7 +38,10 @@ export class GitLoader extends Loader {
         if (!project) throw new Error('Loader not initialized');
         if (!project.dir) throw new Error('Project dir not set');
 
-        const result = await runGit(`ls-files --error-unmatch ${relativePath}`, project.dir);
+        const result = await runGit(
+            `ls-files --error-unmatch ${relativePath}`,
+            project.dir,
+        );
         return result === relativePath;
     }
 
@@ -49,7 +52,10 @@ export class GitLoader extends Loader {
 
         this.set('isFileTracked', this.isFileTracked.bind(this));
 
-        const isGitRepo = await runGit('rev-parse --is-inside-work-tree', project.dir);
+        const isGitRepo = await runGit(
+            'rev-parse --is-inside-work-tree',
+            project.dir,
+        );
         this.set('isGitRepository', isGitRepo.trim() === 'true');
 
         return this.errors.length === 0;

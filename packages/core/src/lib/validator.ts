@@ -1,7 +1,6 @@
-import { Issue } from "@/interfaces";
-import orchestrator from "./orchestrator";
-import { Rule } from "./rule";
-
+import { Issue } from '@/interfaces';
+import orchestrator from './orchestrator';
+import { Rule } from './rule';
 
 export class Validator {
     protected _projectId: string;
@@ -26,7 +25,7 @@ export class Validator {
                 this._errors.push({
                     message: `Failed to initialize rule ${r.name}`,
                 });
-            }            
+            }
         });
 
         return this._errors.length === 0;
@@ -39,10 +38,8 @@ export class Validator {
     public get rules() {
         return this._rules;
     }
-    
 
     public async validate(): Promise<boolean> {
-
         for (const rule of this._rules) {
             if (!rule.active) {
                 continue;
@@ -50,7 +47,7 @@ export class Validator {
 
             const result = await rule.check();
             if (!result) {
-                // If the rule is not valid, then we need to add the errors and warnings 
+                // If the rule is not valid, then we need to add the errors and warnings
                 //  as-is because it means that the check wasn't able to run at all for some
                 //  reason.
                 this._errors.push(...rule.errors);
@@ -61,7 +58,7 @@ export class Validator {
                 //  to the warnings list.  Otherwise, add them to the errors list.
                 this._warnings.push(...rule.warnings);
 
-                if (rule.isErrorAsWarning) {                    
+                if (rule.isErrorAsWarning) {
                     this._warnings.push(...rule.errors);
                 } else {
                     this._errors.push(...rule.errors);

@@ -86,9 +86,13 @@ export abstract class Loader {
         }
 
         if (def.valueSchema && typeof value !== 'function') {
-            const parseResult = def.valueSchema.safeParse(value)
+            const parseResult = def.valueSchema.safeParse(value);
             if (!parseResult.success) {
-                throw new Error(`Property ${name} has an invalid type: ${parseResult.error.issues.map(i => i.message).join(', ')}`);
+                throw new Error(
+                    `Property ${name} has an invalid type: ${parseResult.error.issues
+                        .map(i => i.message)
+                        .join(', ')}`,
+                );
             }
         }
 
@@ -148,15 +152,23 @@ export abstract class Loader {
                 if (prop.valueSchema) {
                     const parseResult = prop.valueSchema.safeParse(val);
                     if (!parseResult.success) {
-                        throw new Error(`Function ${name} returned an invalid type: ${parseResult.error.issues.map(i => i.message).join(', ')}`);
+                        throw new Error(
+                            `Function ${name} returned an invalid type: ${parseResult.error.issues
+                                .map(i => i.message)
+                                .join(', ')}`,
+                        );
                     }
                 }
-                return val
+                return val;
             } else {
-                throw new Error(`Invalid options given to call function ${name}`)
+                throw new Error(
+                    `Invalid options given to call function ${name}`,
+                );
             }
         } else {
-            throw new Error(`Property ${name} is not a function or doesn't exist`);
+            throw new Error(
+                `Property ${name} is not a function or doesn't exist`,
+            );
         }
     }
 }
