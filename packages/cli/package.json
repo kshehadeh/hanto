@@ -2,10 +2,10 @@
   "name": "@hanto/cli",
   "version": "1.0.0",
   "description": "A utility for understanding your projects",
-  "main": "index.ts",
+  "main": "./out/index.js",
   "type": "module",
   "bin": {
-    "hanto": "index.ts"
+    "hanto": "./out/index.js"
   },
   "scripts": {
     "dev": "index.ts",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/yargs": "^17.0.32",
+    "@types/cardinal": "^2.1.1",
     "bun-types": "latest",
     "jest": "^29.7.0",
     "react-devtools-core": "^5.0.0"

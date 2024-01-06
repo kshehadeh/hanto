@@ -1,10 +1,13 @@
 {
-  "name": "hanto-monorepo",
+  "name": "hanto",
   "devDependencies": {
-    "@types/cardinal": "^2.1.1",
     "rimraf": "^5.0.5"
   },
+  "bin": {
+    "hanto": "./packages/cli/out/index.js"
+  },
   "scripts": {
+    "build:cli": "bun build --scope packages/cli --target=bun --outdir=./out",
     "prettier": "prettier --write .",
     "clean:build": "rimraf packages/*/build build",
     "clean:modules": "rimraf packages/*/node_modules node_modules",
