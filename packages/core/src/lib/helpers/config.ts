@@ -4,7 +4,7 @@ import { dirname, extname, basename, resolve } from 'path';
 import { parse as parseToml } from 'toml';
 import { parse as parseYaml } from 'yaml';
 import { isValidDirectory, isValidFile } from './file-helpers';
-import { Issue } from '../../..';
+import { Issue } from '@/interfaces';
 
 const parseJson = JSON.parse;
 

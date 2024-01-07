@@ -7,9 +7,15 @@
     "hanto": "./packages/cli/out/index.js"
   },
   "scripts": {
-    "build:cli": "bun build --scope packages/cli --target=bun --outdir=./out",
+
+    "build:cli": "bun ./packages/cli/build.ts",
+    "build:core": "bun ./packages/core/build.ts",
+    "build:plugin-npm": "bun ./packages/plugin-npm/build.ts",
+    "build:plugin-git": "bun ./packages/plugin-git/build.ts",
+    "build:plugin-nextjs": "bun ./packages/plugin-nextjs/build.ts",
+
     "prettier": "prettier --write .",
-    "clean:build": "rimraf packages/*/build build",
+    
     "clean:modules": "rimraf packages/*/node_modules node_modules",
     "clean:lock": "rimraf package-lock.json yarn.lock bun.lockb packages/*/package-lock.json packages/*/yarn.lock packages/*/bun.lockb",
     "clean": "bun run clean:lock && bun run clean:modules && bun run clean:build"
