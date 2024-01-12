@@ -25,7 +25,7 @@ enum TerminalStyle {
     strikethrough = 9,
 
     // Reset bold
-    boldOff = 21,
+    boldOff = 22,
 
     // Reset italic
     italicOff = 23,
@@ -66,6 +66,9 @@ enum TerminalStyle {
     // Set foreground color to white
     fgWhite = 37,
 
+    // Set foreground color to gray
+    fgGray = 90,
+
     // Set foreground color to default
     fgDefault = 39,
 
@@ -98,9 +101,6 @@ enum TerminalStyle {
 
     // Double underline
     double = 21,
-
-    // Double underline to default
-    doubleOff = 22,
 
     // Framed
     framed = 51,

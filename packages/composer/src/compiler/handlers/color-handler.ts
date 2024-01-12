@@ -20,6 +20,7 @@ export const ColorNodeHandler: NodeHandler<z.infer<typeof ColorNodeSchema>> = {
             case 'cyan': return EscapeCodeFromName('fgCyan');
             case 'white': return EscapeCodeFromName('fgWhite');
             case 'black': return EscapeCodeFromName('fgBlack');
+            case 'gray': return EscapeCodeFromName('fgGray');
 
             default: return '';
         }

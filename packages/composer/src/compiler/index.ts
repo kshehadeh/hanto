@@ -7,6 +7,7 @@ import { TextNodeSchema, TextNodeHandler } from "./handlers/text-handler";
 import { BoldNodeSchema, BoldNodeHandler } from "./handlers/bold-handler";
 import { UnderlineNodeSchema, UnderlineNodeHandler } from "./handlers/underline-handler";
 import { AstSchema, BaseNodeSchema } from "./types";
+import { BreakNodeHandler, BreakNodeSchema } from "./handlers/break-handler";
 
 const NodeUnionSchema = z.discriminatedUnion('node', [
     ColorNodeSchema,
@@ -14,6 +15,7 @@ const NodeUnionSchema = z.discriminatedUnion('node', [
     TextNodeSchema,
     BoldNodeSchema,
     UnderlineNodeSchema,
+    BreakNodeSchema,
 ])
         
 type Node = z.infer<typeof NodeUnionSchema> & {
@@ -48,7 +50,8 @@ class Compiler {
             ItalicsNodeHandler,
             UnderlineNodeHandler,
             ColorNodeHandler,
-            TextNodeHandler
+            TextNodeHandler,
+            BreakNodeHandler,
         ]
     }
 
@@ -113,3 +116,13 @@ export function compile(markup: string) {
     const compiler = new Compiler(ast);
     return compiler.compile();
 }
+
+const str = compile(`
+<bold>Title</bold><br/>
+
+<color name="gray">Subtitle goes here</color><br/>
+
+A description using the default text will appear here.  But you can also include <underline><italics>nested</italics></underline> values.
+`)
+
+console.log(str)

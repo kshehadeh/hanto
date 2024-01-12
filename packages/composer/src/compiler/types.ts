@@ -7,6 +7,7 @@ export const BaseNodeSchema = z.object({
         z.literal('italics'),
         z.literal('underline'),
         z.literal('text'),
+        z.literal('break')
     ]),
 })
 
