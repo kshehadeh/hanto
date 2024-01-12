@@ -1,5 +1,5 @@
 import { describe, it, expect} from "bun:test";
-import fixtures from '../test/fixtures.json';
+import fixtures from '../../test/fixtures.json';
 import { compile } from ".";
 
 describe('Parser', () => {

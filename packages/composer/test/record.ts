@@ -1,5 +1,5 @@
-import { compile } from "../compiler";
-import { parse } from "../parser/generated-parser";
+import { compile } from "../src/compiler";
+import { parse } from "../src/parser/generated-parser";
 import fixtures from "./test-strings";
 
 export function record (input: string): { ast: any, input: string, output: string } {
