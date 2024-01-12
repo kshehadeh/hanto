@@ -1,5 +1,5 @@
 import { Property } from '@hanto/core';
-import { Composer, build } from '../tui/composer';
+import { Composer, build } from '../composer';
 
 export function propertyView(prop: Property): Composer {
     const value =

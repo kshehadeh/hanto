@@ -1,5 +1,5 @@
 import { Project } from '@hanto/core';
-import { build } from '../tui/composer';
+import { build } from '../composer';
 import { loaderView } from './loader';
 import { ruleView } from './rule';
 

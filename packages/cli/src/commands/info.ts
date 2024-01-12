@@ -1,9 +1,9 @@
 import * as yargs from 'yargs';
 import { existsSync } from 'fs';
-import { render } from 'ink';
-import { ProjectView } from '../components/project';
+import { projectView } from '../tui/components/project';
 import { createProject } from '@hanto/core';
-import { ValidationView } from '../components/ValidationView';
+import { build } from '../tui/composer';
+import { renderMarkdown } from '../tui/renderer';
 
 export interface CommandArguments {
     directory: string;
@@ -17,7 +17,7 @@ export interface CommandBuilderParameters {
  * Parse a file and output information about it
  * @param {string} dir
  */
-async function checkCommand(dir?: string) {
+async function infoCommand(dir?: string) {
     let projectDir = dir || process.cwd();
 
     if (!existsSync(projectDir)) {
@@ -26,16 +26,19 @@ async function checkCommand(dir?: string) {
 
     const prj = await createProject(projectDir);
 
-    prj.validator.validate();
+    const markdown = build()
+        .h1(`Project: ${prj.config?.name}`)
+        .h2(prj.config?.description)
+        .append(projectView(prj))
+        .render();
 
-    render(<ValidationView project={prj} />);
+    console.log(renderMarkdown(markdown));
 }
 
 const command: yargs.CommandModule<CommandBuilderParameters, CommandArguments> =
     {
-        command: 'check',
-        describe:
-            'Run checks based on the configuration in the current directory or a given project directory',
+        command: 'info [directory]',
+        describe: 'Process information about the given project directory',
         builder: {
             directory: {
                 alias: 'd',
@@ -47,7 +50,7 @@ const command: yargs.CommandModule<CommandBuilderParameters, CommandArguments> =
         },
 
         handler: async argv => {
-            await checkCommand(argv.directory);
+            await infoCommand(argv.directory);
         },
     };
 

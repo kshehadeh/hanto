@@ -1,5 +1,5 @@
 import { Loader, Property } from '@hanto/core';
-import { build } from '../tui/composer';
+import { build } from '../composer';
 import { propertyView } from './property';
 
 export function loaderView(loader: Loader) {

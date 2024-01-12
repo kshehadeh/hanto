@@ -7,7 +7,7 @@ describe('TerminalRendererOptions interface', () => {
     it('should render markdown correctly', () => {
         const result = renderMarkdown('# Heading\n\nParagraph');
         const expected =
-            '\u001B[35m\u001B[4m\u001B[1m# Heading\u001B[22m\u001B[24m\u001B[39m\n\n\u001B[0mParagraph\u001B[0m\n\n';
+            '\u001B[32m\u001B[4m\u001B[1mHeading\u001B[22m\u001B[24m\u001B[39m\n\n\u001B[0mParagraph\u001B[0m\n\n';
         expect(result).toEqual(expected);
     });
     describe('TerminalRendererOptions interface', () => {

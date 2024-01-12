@@ -1,0 +1,407 @@
+[
+  {
+    "input": "<bold>bold</bold>",
+    "ast": [
+      {
+        "node": "bold",
+        "content": [
+          {
+            "node": "text",
+            "value": "bold",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[1mbold\u001b[21m"
+  },
+  {
+    "input": "<italics>italics</italics>",
+    "ast": [
+      {
+        "node": "italics",
+        "content": [
+          {
+            "node": "text",
+            "value": "italics",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[3mitalics\u001b[23m"
+  },
+  {
+    "input": "<underline>underline</underline>",
+    "ast": [
+      {
+        "node": "underline",
+        "content": [
+          {
+            "node": "text",
+            "value": "underline",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[21munderline\u001b[24m"
+  },
+  {
+    "input": "<color name=\"red\">red</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "red",
+        "content": [
+          {
+            "node": "text",
+            "value": "red",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[31mred\u001b[39m"
+  },
+  {
+    "input": "<color name=\"green\">green</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "green",
+        "content": [
+          {
+            "node": "text",
+            "value": "green",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[32mgreen\u001b[39m"
+  },
+  {
+    "input": "<color name=\"blue\">blue</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "blue",
+        "content": [
+          {
+            "node": "text",
+            "value": "blue",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[34mblue\u001b[39m"
+  },
+  {
+    "input": "<color name=\"yellow\">yellow</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "yellow",
+        "content": [
+          {
+            "node": "text",
+            "value": "yellow",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[33myellow\u001b[39m"
+  },
+  {
+    "input": "<color name=\"magenta\">magenta</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "magenta",
+        "content": [
+          {
+            "node": "text",
+            "value": "magenta",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[35mmagenta\u001b[39m"
+  },
+  {
+    "input": "<color name=\"cyan\">cyan</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "cyan",
+        "content": [
+          {
+            "node": "text",
+            "value": "cyan",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[36mcyan\u001b[39m"
+  },
+  {
+    "input": "<color name=\"white\">white</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "white",
+        "content": [
+          {
+            "node": "text",
+            "value": "white",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[37mwhite\u001b[39m"
+  },
+  {
+    "input": "<color name=\"black\">black</color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "black",
+        "content": [
+          {
+            "node": "text",
+            "value": "black",
+            "content": []
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[30mblack\u001b[39m"
+  },
+  {
+    "input": "<color name=\"red\"><color name=\"green\">red green</color></color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "red",
+        "content": [
+          {
+            "node": "color",
+            "name": "green",
+            "content": [
+              {
+                "node": "text",
+                "value": "red green",
+                "content": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[31m\u001b[32mred green\u001b[31m\u001b[39m"
+  },
+  {
+    "input": "<color name=\"red\"><bold>red bold</bold></color>",
+    "ast": [
+      {
+        "node": "color",
+        "name": "red",
+        "content": [
+          {
+            "node": "bold",
+            "content": [
+              {
+                "node": "text",
+                "value": "red bold",
+                "content": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[31m\u001b[1mred bold\u001b[21m\u001b[39m"
+  },
+  {
+    "input": "<bold><color name=\"red\">bold red</color></bold>",
+    "ast": [
+      {
+        "node": "bold",
+        "content": [
+          {
+            "node": "color",
+            "name": "red",
+            "content": [
+              {
+                "node": "text",
+                "value": "bold red",
+                "content": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[1m\u001b[31mbold red\u001b[39m\u001b[21m"
+  },
+  {
+    "input": "Plain Text <bold>Bold Text</bold> Plain Text",
+    "ast": [
+      {
+        "node": "text",
+        "value": "Plain Text ",
+        "content": []
+      },
+      {
+        "node": "bold",
+        "content": [
+          {
+            "node": "text",
+            "value": "Bold Text",
+            "content": []
+          }
+        ]
+      },
+      {
+        "node": "text",
+        "value": "Plain Text",
+        "content": []
+      }
+    ],
+    "output": "Plain Text \u001b[1mBold Text\u001b[21mPlain Text"
+  },
+  {
+    "input": "Plain Text <italics>Italics Text</italics> Plain Text",
+    "ast": [
+      {
+        "node": "text",
+        "value": "Plain Text ",
+        "content": []
+      },
+      {
+        "node": "italics",
+        "content": [
+          {
+            "node": "text",
+            "value": "Italics Text",
+            "content": []
+          }
+        ]
+      },
+      {
+        "node": "text",
+        "value": "Plain Text",
+        "content": []
+      }
+    ],
+    "output": "Plain Text \u001b[3mItalics Text\u001b[23mPlain Text"
+  },
+  {
+    "input": "Plain Text <underline>Underline Text</underline> Plain Text",
+    "ast": [
+      {
+        "node": "text",
+        "value": "Plain Text ",
+        "content": []
+      },
+      {
+        "node": "underline",
+        "content": [
+          {
+            "node": "text",
+            "value": "Underline Text",
+            "content": []
+          }
+        ]
+      },
+      {
+        "node": "text",
+        "value": "Plain Text",
+        "content": []
+      }
+    ],
+    "output": "Plain Text \u001b[21mUnderline Text\u001b[24mPlain Text"
+  },
+  {
+    "input": "Plain Text <color name=\"red\">Red Text</color> Plain Text",
+    "ast": [
+      {
+        "node": "text",
+        "value": "Plain Text ",
+        "content": []
+      },
+      {
+        "node": "color",
+        "name": "red",
+        "content": [
+          {
+            "node": "text",
+            "value": "Red Text",
+            "content": []
+          }
+        ]
+      },
+      {
+        "node": "text",
+        "value": "Plain Text",
+        "content": []
+      }
+    ],
+    "output": "Plain Text \u001b[31mRed Text\u001b[39mPlain Text"
+  },
+  {
+    "input": "Plain Text",
+    "ast": [
+      {
+        "node": "text",
+        "value": "Plain Text",
+        "content": []
+      }
+    ],
+    "output": "Plain Text"
+  },
+  {
+    "input": "Plain Text <color name=\"red\">Red Text <color name=\"blue\">Blue Text</color></color> Plain Text",
+    "ast": [
+      {
+        "node": "text",
+        "value": "Plain Text ",
+        "content": []
+      },
+      {
+        "node": "color",
+        "name": "red",
+        "content": [
+          {
+            "node": "text",
+            "value": "Red Text ",
+            "content": []
+          },
+          {
+            "node": "color",
+            "name": "blue",
+            "content": [
+              {
+                "node": "text",
+                "value": "Blue Text",
+                "content": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "node": "text",
+        "value": "Plain Text",
+        "content": []
+      }
+    ],
+    "output": "Plain Text \u001b[31mRed Text \u001b[34mBlue Text\u001b[31m\u001b[39mPlain Text"
+  }
+]
