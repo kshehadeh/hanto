@@ -6,7 +6,7 @@
     "description": "A simple rendering engine for rich text terminal output with its own markup language.",
     "scripts": {
         "test": "bun test",
-        "test:record": "bun src/test/record.ts",
+        "test:record": "bun test/record.ts",
         "parser:generate": "bun src/parser/generate.ts",
         "build": "bun build"
     },
