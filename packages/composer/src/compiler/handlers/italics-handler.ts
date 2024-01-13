@@ -1,24 +1,25 @@
-import { z } from "zod";
-import { BaseNodeSchema } from "../types";
-import { type NodeHandler } from "..";
-import { EscapeCodeFromName } from "../utilities/escape-code-from-name";
-
+import { z } from 'zod';
+import { type NodeHandler } from '..';
+import { escapeCodeFromName } from '../utilities/escape-code-from-name';
+import type { BaseNode } from '../base';
 
 export const ItalicsNodeSchema = z.object({
     node: z.literal('italics'),
-})
+});
 
-export const ItalicsNodeHandler: NodeHandler<z.infer<typeof ItalicsNodeSchema>> = {
-    handleEnter(node: z.infer<typeof ItalicsNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
-        return EscapeCodeFromName('italic');
+export type ItalicsNode = z.infer<typeof ItalicsNodeSchema>;
+
+export const ItalicsNodeHandler: NodeHandler<ItalicsNode> = {
+    handleEnter(node: z.infer<typeof ItalicsNodeSchema>, stack: BaseNode[]) {
+        return escapeCodeFromName('italic');
     },
 
-    handleExit(node: z.infer<typeof ItalicsNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
-        return EscapeCodeFromName('italicOff');
+    handleExit(node: ItalicsNode, stack: BaseNode[]) {
+        return escapeCodeFromName('italicOff');
     },
 
-    isType(node: z.infer<typeof BaseNodeSchema>): node is z.infer<typeof ItalicsNodeSchema> {
-        return node.node === 'italics';
+    isType(node: unknown): node is ItalicsNode {
+        return (node as ItalicsNode).node === 'italics';
     },
 
     schema: ItalicsNodeSchema,

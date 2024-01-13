@@ -1,24 +1,25 @@
 {
-    "name": "@hanto/composer",
-    "module": "index.ts",
-    "type": "module",
-    "version": "0.0.1",
-    "description": "A simple rendering engine for rich text terminal output with its own markup language.",
-    "scripts": {
-        "test": "bun test",
-        "test:record": "bun test/record.ts",
-        "parser:generate": "bun src/parser/generate.ts",
-        "build": "bun build"
-    },
-    "devDependencies": {
-        "@types/bun": "latest",
-        "peggy": "^3.0.2",
-        "ts-pegjs": "^4.2.1"
-    },
-    "peerDependencies": {
-        "typescript": "^5.0.0"
-    },
-    "dependencies": {
-        "zod": "^3.22.4"
-    }
+  "name": "@hanto/composer",
+  "module": "index.ts",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "A simple rendering engine for rich text terminal output with its own markup language.",
+  "scripts": {
+    "test": "bun test",
+    "test:record": "bun test/record.ts",
+    "parser:generate": "bun src/parser/generate.ts",
+    "build": "bun build"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "peggy": "^3.0.2",
+    "ts-pegjs": "^4.2.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "zod": "^3.22.4"
+  }
 }

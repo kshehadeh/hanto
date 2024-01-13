@@ -13,7 +13,7 @@
         ]
       }
     ],
-    "output": "\u001b[1mbold\u001b[21m"
+    "output": "\u001b[1mbold\u001b[22m"
   },
   {
     "input": "<italics>italics</italics>",
@@ -32,10 +32,11 @@
     "output": "\u001b[3mitalics\u001b[23m"
   },
   {
-    "input": "<underline>underline</underline>",
+    "input": "<underline type=\"single\">underline</underline>",
     "ast": [
       {
         "node": "underline",
+        "type": "single",
         "content": [
           {
             "node": "text",
@@ -45,14 +46,14 @@
         ]
       }
     ],
-    "output": "\u001b[21munderline\u001b[24m"
+    "output": "\u001b[4munderline\u001b[24m"
   },
   {
-    "input": "<color name=\"red\">red</color>",
+    "input": "<color fg=\"red\">red</color>",
     "ast": [
       {
         "node": "color",
-        "name": "red",
+        "fg": "red",
         "content": [
           {
             "node": "text",
@@ -62,14 +63,14 @@
         ]
       }
     ],
-    "output": "\u001b[31mred\u001b[39m"
+    "output": "\u001b[31mred\u001b[39;49m"
   },
   {
-    "input": "<color name=\"green\">green</color>",
+    "input": "<color fg=\"green\">green</color>",
     "ast": [
       {
         "node": "color",
-        "name": "green",
+        "fg": "green",
         "content": [
           {
             "node": "text",
@@ -79,14 +80,14 @@
         ]
       }
     ],
-    "output": "\u001b[32mgreen\u001b[39m"
+    "output": "\u001b[32mgreen\u001b[39;49m"
   },
   {
-    "input": "<color name=\"blue\">blue</color>",
+    "input": "<color fg=\"blue\">blue</color>",
     "ast": [
       {
         "node": "color",
-        "name": "blue",
+        "fg": "blue",
         "content": [
           {
             "node": "text",
@@ -96,14 +97,14 @@
         ]
       }
     ],
-    "output": "\u001b[34mblue\u001b[39m"
+    "output": "\u001b[34mblue\u001b[39;49m"
   },
   {
-    "input": "<color name=\"yellow\">yellow</color>",
+    "input": "<color fg=\"yellow\">yellow</color>",
     "ast": [
       {
         "node": "color",
-        "name": "yellow",
+        "fg": "yellow",
         "content": [
           {
             "node": "text",
@@ -113,14 +114,14 @@
         ]
       }
     ],
-    "output": "\u001b[33myellow\u001b[39m"
+    "output": "\u001b[33myellow\u001b[39;49m"
   },
   {
-    "input": "<color name=\"magenta\">magenta</color>",
+    "input": "<color fg=\"magenta\">magenta</color>",
     "ast": [
       {
         "node": "color",
-        "name": "magenta",
+        "fg": "magenta",
         "content": [
           {
             "node": "text",
@@ -130,14 +131,14 @@
         ]
       }
     ],
-    "output": "\u001b[35mmagenta\u001b[39m"
+    "output": "\u001b[35mmagenta\u001b[39;49m"
   },
   {
-    "input": "<color name=\"cyan\">cyan</color>",
+    "input": "<color fg=\"cyan\">cyan</color>",
     "ast": [
       {
         "node": "color",
-        "name": "cyan",
+        "fg": "cyan",
         "content": [
           {
             "node": "text",
@@ -147,14 +148,14 @@
         ]
       }
     ],
-    "output": "\u001b[36mcyan\u001b[39m"
+    "output": "\u001b[36mcyan\u001b[39;49m"
   },
   {
-    "input": "<color name=\"white\">white</color>",
+    "input": "<color fg=\"white\">white</color>",
     "ast": [
       {
         "node": "color",
-        "name": "white",
+        "fg": "white",
         "content": [
           {
             "node": "text",
@@ -164,14 +165,14 @@
         ]
       }
     ],
-    "output": "\u001b[37mwhite\u001b[39m"
+    "output": "\u001b[37mwhite\u001b[39;49m"
   },
   {
-    "input": "<color name=\"black\">black</color>",
+    "input": "<color fg=\"black\">black</color>",
     "ast": [
       {
         "node": "color",
-        "name": "black",
+        "fg": "black",
         "content": [
           {
             "node": "text",
@@ -181,37 +182,42 @@
         ]
       }
     ],
-    "output": "\u001b[30mblack\u001b[39m"
+    "output": "\u001b[30mblack\u001b[39;49m"
   },
   {
-    "input": "<color name=\"red\"><color name=\"green\">red green</color></color>",
+    "input": "<color fg=\"red\"><color fg=\"green\">green</color>red</color>",
     "ast": [
       {
         "node": "color",
-        "name": "red",
+        "fg": "red",
         "content": [
           {
             "node": "color",
-            "name": "green",
+            "fg": "green",
             "content": [
               {
                 "node": "text",
-                "value": "red green",
+                "value": "green",
                 "content": []
               }
             ]
+          },
+          {
+            "node": "text",
+            "value": "red",
+            "content": []
           }
         ]
       }
     ],
-    "output": "\u001b[31m\u001b[32mred green\u001b[31m\u001b[39m"
+    "output": "\u001b[31m\u001b[32mgreen\u001b[49;31mred\u001b[39;49m"
   },
   {
-    "input": "<color name=\"red\"><bold>red bold</bold></color>",
+    "input": "<color fg=\"red\"><bold>red bold</bold></color>",
     "ast": [
       {
         "node": "color",
-        "name": "red",
+        "fg": "red",
         "content": [
           {
             "node": "bold",
@@ -226,17 +232,17 @@
         ]
       }
     ],
-    "output": "\u001b[31m\u001b[1mred bold\u001b[21m\u001b[39m"
+    "output": "\u001b[31m\u001b[1mred bold\u001b[22m\u001b[39;49m"
   },
   {
-    "input": "<bold><color name=\"red\">bold red</color></bold>",
+    "input": "<bold><color fg=\"red\">bold red</color></bold>",
     "ast": [
       {
         "node": "bold",
         "content": [
           {
             "node": "color",
-            "name": "red",
+            "fg": "red",
             "content": [
               {
                 "node": "text",
@@ -248,7 +254,7 @@
         ]
       }
     ],
-    "output": "\u001b[1m\u001b[31mbold red\u001b[39m\u001b[21m"
+    "output": "\u001b[1m\u001b[31mbold red\u001b[39;49m\u001b[22m"
   },
   {
     "input": "Plain Text <bold>Bold Text</bold> Plain Text",
@@ -274,7 +280,7 @@
         "content": []
       }
     ],
-    "output": "Plain Text \u001b[1mBold Text\u001b[21mPlain Text"
+    "output": "Plain Text \u001b[1mBold Text\u001b[22mPlain Text"
   },
   {
     "input": "Plain Text <italics>Italics Text</italics> Plain Text",
@@ -303,7 +309,7 @@
     "output": "Plain Text \u001b[3mItalics Text\u001b[23mPlain Text"
   },
   {
-    "input": "Plain Text <underline>Underline Text</underline> Plain Text",
+    "input": "Plain Text <underline type=\"single\">Underline Text</underline> Plain Text",
     "ast": [
       {
         "node": "text",
@@ -312,6 +318,7 @@
       },
       {
         "node": "underline",
+        "type": "single",
         "content": [
           {
             "node": "text",
@@ -326,10 +333,10 @@
         "content": []
       }
     ],
-    "output": "Plain Text \u001b[21mUnderline Text\u001b[24mPlain Text"
+    "output": "Plain Text \u001b[4mUnderline Text\u001b[24mPlain Text"
   },
   {
-    "input": "Plain Text <color name=\"red\">Red Text</color> Plain Text",
+    "input": "Plain Text <color fg=\"red\">Red Text</color> Plain Text",
     "ast": [
       {
         "node": "text",
@@ -338,7 +345,7 @@
       },
       {
         "node": "color",
-        "name": "red",
+        "fg": "red",
         "content": [
           {
             "node": "text",
@@ -353,7 +360,7 @@
         "content": []
       }
     ],
-    "output": "Plain Text \u001b[31mRed Text\u001b[39mPlain Text"
+    "output": "Plain Text \u001b[31mRed Text\u001b[39;49mPlain Text"
   },
   {
     "input": "Plain Text",
@@ -367,7 +374,7 @@
     "output": "Plain Text"
   },
   {
-    "input": "Plain Text <color name=\"red\">Red Text <color name=\"blue\">Blue Text</color></color> Plain Text",
+    "input": "Plain Text <color fg=\"red\">Red Text <color fg=\"blue\">Blue Text</color></color> Plain Text",
     "ast": [
       {
         "node": "text",
@@ -376,7 +383,7 @@
       },
       {
         "node": "color",
-        "name": "red",
+        "fg": "red",
         "content": [
           {
             "node": "text",
@@ -385,7 +392,7 @@
           },
           {
             "node": "color",
-            "name": "blue",
+            "fg": "blue",
             "content": [
               {
                 "node": "text",
@@ -402,6 +409,6 @@
         "content": []
       }
     ],
-    "output": "Plain Text \u001b[31mRed Text \u001b[34mBlue Text\u001b[31m\u001b[39mPlain Text"
+    "output": "Plain Text \u001b[31mRed Text \u001b[34mBlue Text\u001b[49;31m\u001b[39;49mPlain Text"
   }
 ]

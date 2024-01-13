@@ -1,23 +1,24 @@
 import { z } from "zod";
 import { type NodeHandler } from "..";
-import type { BaseNodeSchema } from "../types";
-import { EscapeCodeFromName } from "../utilities/escape-code-from-name";
+import { escapeCodeFromName } from "../utilities/escape-code-from-name";
 
 export const BoldNodeSchema = z.object({
     node: z.literal('bold'),
 })
 
+export type BoldNode = z.infer<typeof BoldNodeSchema>;
+
 export const BoldNodeHandler: NodeHandler<z.infer<typeof BoldNodeSchema>> = {
-    handleEnter(node: z.infer<typeof BoldNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
-        return EscapeCodeFromName('bold');
+    handleEnter(node: z.infer<typeof BoldNodeSchema>, stack: BoldNode[]) {
+        return escapeCodeFromName('bold');
     },
 
-    handleExit(node: z.infer<typeof BoldNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
-        return EscapeCodeFromName('boldOff');
+    handleExit(node: z.infer<typeof BoldNodeSchema>, stack: BoldNode[]) {
+        return escapeCodeFromName('boldOff');
     },
 
-    isType(node: z.infer<typeof BaseNodeSchema>): node is z.infer<typeof BoldNodeSchema> {
-        return node.node === 'bold';
+    isType(node: unknown): node is z.infer<typeof BoldNodeSchema> {
+        return (node as BoldNode).node === 'bold';
     },
 
     schema: BoldNodeSchema,

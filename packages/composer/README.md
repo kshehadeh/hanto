@@ -48,10 +48,10 @@ bun run test:record
 
 The markup language follows XML rules in that it uses a declarative tag-based system of angle brackets and attributes.  The supported tags available today are:
 
-1. Color - attributes include `color` which is a string containing the name of the color (e.g. "red")
-2. Bold - No attributes
-3. Italics - No attributes
-4. Underline - No attributes
+1. `<color name="[see colors below]"></color>`
+2. `<bold></bold>`
+3. `<italics></italics>` 
+4. `<underline style="[single|double]"></underline>`
 
 Additionally you can have regular text that is not enclosed in a tag.
 
@@ -60,6 +60,35 @@ Tags can be nested and will render the way you would expect.  So, for example,
 ```
 <color name="red">This is red but <color name="blue"> this is blue </color> and this is red again </color>
 ```
+
+## Underline Table
+
+| Underline Styles |
+|------------------|
+| single           |
+| double           |
+
+## Color Table
+
+| Color Names    |
+|---------------|
+| black         |
+| red           |
+| green         |
+| yellow        |
+| blue          |
+| magenta       |
+| cyan          |
+| white         |
+| gray          |
+| brightred     |
+| brightgreen   |
+| brightyellow  |
+| brightblue    |
+| brightmagenta |
+| brightcyan    |
+| brightwhite   |
+| brightgray    |
 
 ## Updating the Grammar
 

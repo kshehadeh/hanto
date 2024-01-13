@@ -1,43 +1,64 @@
-import { z } from "zod";
-import { type NodeHandler } from "..";
-import { getLastNodeOfTypeFromStack } from "../utilities/get-last-node-of-type-in-stack";
-import { BaseNodeSchema } from "../types";
-import { EscapeCodeFromName } from "../utilities/escape-code-from-name";
+import { z } from 'zod';
+import { type NodeHandler } from '..';
+import { getLastNodeOfTypeFromStack } from '../utilities/get-last-node-of-type-in-stack';
+import { escapeCodeFromName } from '../utilities/escape-code-from-name';
+import { toTitleCase } from '../utilities/to-title-case';
+import { CompilerError, type BaseNode } from '../base';
 
-export const ColorNodeSchema = BaseNodeSchema.extend({
+export const ColorNodeSchema = z.object({
     node: z.literal('color'),
-    name: z.string()
-})
+    fg: z.string().optional(),
+    bg: z.string().optional(),
+});
 
-export const ColorNodeHandler: NodeHandler<z.infer<typeof ColorNodeSchema>> = {
-    handleEnter(node: z.infer<typeof ColorNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
-        switch (node.name) {
-            case 'red': return EscapeCodeFromName('fgRed');
-            case 'green': return EscapeCodeFromName('fgGreen');
-            case 'blue': return EscapeCodeFromName('fgBlue');
-            case 'yellow': return EscapeCodeFromName('fgYellow');
-            case 'magenta': return EscapeCodeFromName('fgMagenta');
-            case 'cyan': return EscapeCodeFromName('fgCyan');
-            case 'white': return EscapeCodeFromName('fgWhite');
-            case 'black': return EscapeCodeFromName('fgBlack');
-            case 'gray': return EscapeCodeFromName('fgGray');
+export type ColorNode = z.infer<typeof ColorNodeSchema>;
 
-            default: return '';
+function getColorEscapeCodeName(color: string, type: 'fg' | 'bg') {
+    return `${type}${toTitleCase(color)}`;
+}
+
+export const ColorNodeHandler: NodeHandler<ColorNode> = {
+    handleEnter(node: ColorNode, stack: BaseNode[]) {
+        const fgColor = node.fg
+            ? getColorEscapeCodeName(node.fg, 'fg')
+            : undefined;
+        const bgColor = node.bg
+            ? getColorEscapeCodeName(node.bg, 'bg')
+            : undefined;
+
+        if (!fgColor && !bgColor) {
+            throw new CompilerError('Color node must have at least one color', node, stack)
         }
+
+        return escapeCodeFromName([fgColor, bgColor]);
     },
 
-    handleExit(node: z.infer<typeof ColorNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
-        const lastColorNode = getLastNodeOfTypeFromStack<'color'>('color', stack);
-        if (lastColorNode) {
-            return ColorNodeHandler.handleEnter(lastColorNode, stack);
+    handleExit(node: ColorNode, stack: BaseNode[]) {
+        let result = '';
+        const lastColorNode = ColorNodeSchema.safeParse(
+            getLastNodeOfTypeFromStack('color', stack),
+        );
+        if (lastColorNode.success) {
+            if (lastColorNode.data.fg && lastColorNode.data.bg) {
+                result = escapeCodeFromName([getColorEscapeCodeName(lastColorNode.data.fg, 'fg'), getColorEscapeCodeName(lastColorNode.data.fg, 'bg')]);
+            } else if (lastColorNode.data.fg) {
+                result = escapeCodeFromName(['bgDefault', getColorEscapeCodeName(lastColorNode.data.fg, 'fg')]);
+            } else if (lastColorNode.data.bg) {
+                result = escapeCodeFromName(['fgDefault', getColorEscapeCodeName(lastColorNode.data.fg, 'bg')]);
+            } else {
+                result = ColorNodeHandler.handleEnter(lastColorNode.data, stack);
+            }
+            
         } else {
-            return EscapeCodeFromName('fgDefault');
+            result = escapeCodeFromName(['fgDefault', 'bgDefault']);
         }
+
+        return result;
     },
 
-    isType(node: z.infer<typeof BaseNodeSchema>): node is z.infer<typeof ColorNodeSchema> {
-        return node.node === 'color';
+    isType(node: unknown): node is ColorNode {
+        return (node as ColorNode).node === 'color';
     },
-    
+
     schema: ColorNodeSchema,
 };

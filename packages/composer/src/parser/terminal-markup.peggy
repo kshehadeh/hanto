@@ -22,10 +22,10 @@ Document = __ nodes:Element* { return nodes }
 
 Element  = RawText / Nested / Void / Comment
 
-RawText  = Color / Bold / Italics / Underline / Text
+RawText  = Color / Bold / Italics / Underline / Text / Break
 
 Color     "color"     
-    = '<color'i attrs:Attributes '>' 
+    = '<color'i attrs:Attributes '>'
         __ content:(Element)* __ 
         '</color'i __ '>' __ { return node ('color', attrs, content) }
 
@@ -43,6 +43,9 @@ Underline   "underline"
     = '<underline'i  attrs:Attributes '>' 
         __ content:(Element)* __ 
         '</underline'i __ '>' __ { return node ('underline', attrs, content) }
+
+Break   "br"     
+    = '<br'i  __ '/>' __ { return node ('break', {}, '\n') }
 
 /**
  * Void element (with self closing tag, w/o content)

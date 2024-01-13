@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { type NodeHandler } from "..";
-import type { BaseNodeSchema } from "../types";
-import { EscapeCodeFromName } from "../utilities/escape-code-from-name";
+import type { BaseNode } from "../base";
+import { escapeCodeFromName } from "../utilities/escape-code-from-name";
 
 export const UnderlineNodeSchema = z.object({
     node: z.literal('underline'),
@@ -11,21 +11,23 @@ export const UnderlineNodeSchema = z.object({
     ])
 })
 
-export const UnderlineNodeHandler: NodeHandler<z.infer<typeof UnderlineNodeSchema>> = {
-    handleEnter(node: z.infer<typeof UnderlineNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
+export type UnderlineNode = z.infer<typeof UnderlineNodeSchema>;
+
+export const UnderlineNodeHandler: NodeHandler<UnderlineNode> = {
+    handleEnter(node: UnderlineNode, stack: BaseNode[]) {
         if (node.type === 'single') {
-            return EscapeCodeFromName('underline');
+            return escapeCodeFromName('underline');
         } else {
-            return EscapeCodeFromName('double');
+            return escapeCodeFromName('doubleunderline');
         }
     },
 
-    handleExit(node: z.infer<typeof UnderlineNodeSchema>, stack: z.infer<typeof BaseNodeSchema>[]) {
-        return EscapeCodeFromName('underlineOff');
+    handleExit(node: UnderlineNode, stack: BaseNode[]) {
+        return escapeCodeFromName('underlineOff');
     },
 
-    isType(node: z.infer<typeof BaseNodeSchema>): node is z.infer<typeof UnderlineNodeSchema> {
-        return node.node === 'underline';
+    isType(node: unknown): node is UnderlineNode {
+        return (node as UnderlineNode).node === 'underline';
     },
 
     schema: UnderlineNodeSchema,

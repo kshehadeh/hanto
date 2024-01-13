@@ -1,42 +1,26 @@
 import { z } from "zod";
 import { parseString } from "../parser";
 
-import { ColorNodeSchema, ColorNodeHandler } from "./handlers/color-handler";
-import { ItalicsNodeSchema, ItalicsNodeHandler } from "./handlers/italics-handler";
-import { TextNodeSchema, TextNodeHandler } from "./handlers/text-handler";
-import { BoldNodeSchema, BoldNodeHandler } from "./handlers/bold-handler";
-import { UnderlineNodeSchema, UnderlineNodeHandler } from "./handlers/underline-handler";
-import { AstSchema, BaseNodeSchema } from "./types";
-import { BreakNodeHandler, BreakNodeSchema } from "./handlers/break-handler";
+import { ColorNodeHandler } from "./handlers/color-handler";
+import { ItalicsNodeHandler } from "./handlers/italics-handler";
+import { TextNodeHandler } from "./handlers/text-handler";
+import { BoldNodeHandler } from "./handlers/bold-handler";
+import { UnderlineNodeHandler } from "./handlers/underline-handler";
+import { AstSchema, NodeSchema } from "./types";
+import { BreakNodeHandler } from "./handlers/break-handler";
+import { CompilerError, type BaseNode } from "./base";
 
-const NodeUnionSchema = z.discriminatedUnion('node', [
-    ColorNodeSchema,
-    ItalicsNodeSchema,
-    TextNodeSchema,
-    BoldNodeSchema,
-    UnderlineNodeSchema,
-    BreakNodeSchema,
-])
-        
-type Node = z.infer<typeof NodeUnionSchema> & {
-    content?: z.infer<typeof NodeUnionSchema> | z.infer<typeof NodeUnionSchema>[];
-}
-
-const NodeSchema: z.ZodType<Node> = BaseNodeSchema.extend({
-    content: z.lazy(() => z.union([z.array(NodeUnionSchema), NodeUnionSchema]))
-})
-
-export interface NodeHandler<T extends z.infer<typeof BaseNodeSchema>>{
-    handleEnter(node: T, stack: z.infer<typeof BaseNodeSchema>[]): string;
-    handleExit(node: T, stack: z.infer<typeof BaseNodeSchema>[]): string;
-    isType(node: z.infer<typeof BaseNodeSchema>): node is T;
+export interface NodeHandler<T extends z.infer<typeof NodeSchema>>{
+    handleEnter(node: T, stack: BaseNode[]): string;
+    handleExit(node: T, stack: BaseNode[]): string;
+    isType(node: z.infer<typeof NodeSchema>): node is T;
     schema: z.ZodObject<any, any>;
 }
 
 class Compiler {
     private _ast: z.infer<typeof AstSchema>;
     private _stack: z.infer<typeof NodeSchema>[] = [];
-    private _handlers: NodeHandler<z.infer<typeof BaseNodeSchema>>[] = [];
+    private _handlers: NodeHandler<z.infer<typeof NodeSchema>>[] = [];
 
     /**
      * The compiler takes the AST from the parser and compiles it into a string
@@ -96,33 +80,43 @@ class Compiler {
 
         const strings = []
 
-        strings.push(this._push(node))
+        try {
+            strings.push(this._push(node))
 
-        if (node.content) {
-            if (Array.isArray(node.content)) {
-                node.content.forEach(node => strings.push(this._compileNode(node)))
-            } else {
-                strings.push(this._compileNode(node.content))
+            if (node.content) {
+                if (Array.isArray(node.content)) {
+                    node.content.forEach(node => strings.push(this._compileNode(node)))
+                } else {
+                    strings.push(this._compileNode(node.content))
+                }
+            }
+    
+            strings.push(this._pop())
+    
+            return strings.join('')    
+        } catch (e) {
+            if (e instanceof CompilerError) {
+                console.error(e.toString())
+                if (!e.continue) {
+                    throw e
+                }
             }
         }
-
-        strings.push(this._pop())
-
-        return strings.join('')
     }
 }
 export function compile(markup: string) {
     const ast = parseString(markup);
-    const compiler = new Compiler(ast);
-    return compiler.compile();
+    if (ast) {
+        const compiler = new Compiler(ast);
+        return compiler.compile();
+    }
 }
 
-const str = compile(`
-<bold>Title</bold><br/>
+// const str = compile(`<color fg="red"><color fg="green">green</color>red</color>`)
+// console.log(str)
+// <bold>Title</bold><br/>
 
-<color name="gray">Subtitle goes here</color><br/>
+// <color fg="gray" bg="white">Subtitle goes here</color><br/>
 
-A description using the default text will appear here.  But you can also include <underline><italics>nested</italics></underline> values.
-`)
-
-console.log(str)
+// A description using the default text will appear here.  But you can also include <underline type="single"><italics>nested</italics></underline> values.
+// `)

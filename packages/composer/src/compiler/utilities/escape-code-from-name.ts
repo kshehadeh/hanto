@@ -6,113 +6,81 @@ enum TerminalStyle {
     // Reset all styles
     reset = 0,
 
-    // Make text bold
+    // Text Styles 
+
     bold = 1,
-
-    // Make text italic
-    italic = 3,
-
-    // Underline text
-    underline = 4,
-
-    // Invert foreground and background colors
-    inverse = 7,
-
-    // Hide text (foreground color same as background)
-    hidden = 8,
-
-    // Strike-through text
-    strikethrough = 9,
-
-    // Reset bold
     boldOff = 22,
 
-    // Reset italic
+    italic = 3,
     italicOff = 23,
 
-    // Reset underline
-    underlineOff = 24,
+    underline = 4,
+    doubleunderline = 21,
+    underlineOff = 24,  // this reset both underline and doubleunderline
 
-    // Reset inverse
+    inverse = 7,
     inverseOff = 27,
 
-    // Reset hidden
+    hidden = 8,
     hiddenOff = 28,
 
-    // Reset strikethrough
+    strikethrough = 9,
     strikethroughOff = 29,
 
-    // Set foreground color to black
+    // *** Foreground Colors
     fgBlack = 30,
-
-    // Set foreground color to red
     fgRed = 31,
-
-    // Set foreground color to green
     fgGreen = 32,
-
-    // Set foreground color to yellow
     fgYellow = 33,
-
-    // Set foreground color to blue
     fgBlue = 34,
-
-    // Set foreground color to magenta
     fgMagenta = 35,
-
-    // Set foreground color to cyan
     fgCyan = 36,
-
-    // Set foreground color to white
     fgWhite = 37,
-
-    // Set foreground color to gray
+    fgBrightRed = 91,
+    fgBrightGreen = 92,
+    fgBrightYellow = 93,
+    fgBrightBlue = 94,
+    fgBrightMagenta = 95,
+    fgBrightCyan = 96,
+    fgBrightWhite = 97,
     fgGray = 90,
 
-    // Set foreground color to default
+    // Resets foreground color to default
     fgDefault = 39,
 
-    // Set background color to black
+
+    // *** Background Colors
     bgBlack = 40,
-
-    // Set background color to red
     bgRed = 41,
-
-    // Set background color to green
     bgGreen = 42,
-
-    // Set background color to yellow
     bgYellow = 43,
-
-    // Set background color to blue
     bgBlue = 44,
-
-    // Set background color to magenta
     bgMagenta = 45,
-
-    // Set background color to cyan
     bgCyan = 46,
-
-    // Set background color to white
     bgWhite = 47,
-
-    // Set background color to default
+    bgBrightRed = 101,
+    bgBrightGreen = 102,
+    bgBrightYellow = 103,
+    bgBrightBlue = 104,
+    bgBrightMagenta = 105,
+    bgBrightCyan = 106,
+    bgBrightWhite = 107,
+    bgGray = 100,
+    
+    // Resets background color to default
     bgDefault = 49,
 
-    // Double underline
-    double = 21,
-
-    // Framed
+    // *** Containers 
     framed = 51,
-
-    // Encircled
     encircled = 52,
-
-    // Overline
     overline = 53,
 };
 
-export function EscapeCodeFromName(name: keyof typeof TerminalStyle): string {
-    const style = TerminalStyle[name];
-    return style ? `\x1b[${style}m` : ''
+type TerminalStyleName = keyof typeof TerminalStyle;
+
+// Given a name or array of names, return the ANSI escape code for that name.
+export function escapeCodeFromName(name: TerminalStyleName | string | string[] | TerminalStyleName[]): string {
+    const nameArray = (Array.isArray(name) ? name : [name]).filter(n=>!!n) as TerminalStyleName[];
+    const codeString = nameArray.map((n) => TerminalStyle[n]).join(';');
+    return `\x1b[${codeString}m`
 }
