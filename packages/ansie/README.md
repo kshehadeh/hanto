@@ -84,17 +84,17 @@ Tags can be nested and will render the way you would expect. So, for example,
 
 ## Composition
 
-The library includes a Composer that allows for easy composition through a fluent functional interface. Here's an exmaple of how to build markup programmatically:
+The library includes a Composer that allows for easy composition through a programmatic interface. *This is not required to use Ansie*.  For some people it's a little easier to use an imperative approach for building views.  Here's an exmaple of how to build markup programmatically:
 
 ```typescript
-const markup = Composer.start()
+const markup = compose([
     .bold('Title')
     .br()
     .underline('single', 'Subtitle')
     .br()
     .text('This is some text that is not formatted')
     .color('red', undefined, 'Some red text')
-    .end();
+]).toString()
 
 console.log(markup);
 console.log(compile(markup))
@@ -102,6 +102,54 @@ console.log(compile(markup))
 // Line 1: <bold>Title</bold><br/><underline type="single">Subtitle</underline><br/>This is some text that is not formatted<color fg="red">Some red text</color>
 // Line 2: \x1b[1mTitle\x1b[22m\n\x1b[4mSubtitle\x1b[24m\nThis is some text that is not formatted\x1b[31mSome red text\x1b[39;49m
 ```
+
+### Convenience Functions
+| Function    | Params                    | Description                                                                                     |
+| ----------- | ------------------------- | ----------------------------------------------------------------------------------------------- |
+| `bold`      | *Child Nodes*             | Contained items are surrounded with `<bold>`                                                    |
+| `underline` | `type`, *Child Nodes*     | Contained items are surrounded with `<underline>`                                               |
+| `italics`   | *Child Nodes*             | Contained items are surrounded with `<italics>`                                                 |
+| `br`        | *None*                    | Inserts a `<br/>`                                                                               |
+| `text`      | *None*                    | Inserts text as-is (but will replace `:emoji:`)                                                 |
+| `color`     | `fg`, `bg`, *Child Nodes* | Contained items are surrounded with `<color>`                                                   |
+| `list`      | `bullet`, *Child Nodes*   | Adds a bulleted list item for each item in the passed array of nodes                            |
+| `bundle`    | *Sibling Nodes*           | Outputs a set of sibling nodes - useful when passing to other functions that need a single node |
+| `raw`       | *Valid Markup*            | Allows you to combine raw markup with composed items from above                                 |
+
+Some of these nodes accept children because they add some formatting to a finite set of contained items.  For these 
+you will pass in the children as an array to the function, after the other properties that customize the styling. 
+
+For example, the color function takes a foreground, background and an array of children:
+
+```typescript
+console.log(color('white', 'red', 'This text will be colored white with a red background'))
+
+// <color fg="white" bg="red">This text will be colored white with a red background</color>
+```
+
+You can create lists with the `list` method which takes a bullet style followed by a list of items to prepend the bullet to.  
+
+```typescript
+console.log(list('* ', ['Item 1', 'Item 2', 'Item 3']))
+
+// * Item 1<br/>* Item 2<br/>* Item 3<br/>
+```
+
+You can also create more complex output using bundles which will take arbitrary array of nodes and render them in order.
+
+```typescript
+console.log(bundle(['Property: ', bold('Bold Value')]))
+
+// Property: <bold>Bold Value</bold>
+```
+
+```typescript
+console.log(bundle(['Property: ', raw('<bold>Bold Text</bold>')]))
+
+// Property: <bold>Bold Text</bold>
+```
+
+Using these you can create relatively complex compositions imperatively.
 
 ## Developing
 
