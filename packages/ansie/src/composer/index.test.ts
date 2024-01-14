@@ -74,4 +74,9 @@ describe('Composer functions', () => {
         // Check the compiled version is correct
         expect(compile(node.toString())).toBe('\x1b[1mTitle\x1b[22m\n\x1b[4mSubtitle\x1b[24m\nThis is some text that is not formatted\x1b[31mSome red text\x1b[39;49m');
     });
+
+    it('should handle raw markup', () => {
+        const node = Composer.start().raw('<bold>Title</bold>');
+        expect(node.toString()).toBe('<bold>Title</bold>');
+    })
 });

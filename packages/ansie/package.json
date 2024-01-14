@@ -2,7 +2,7 @@
     "name": "ansie",
     "module": "index.ts",
     "type": "module",
-    "version": "0.1.1-1",
+    "version": "0.1.1-2",
     "bin": {
         "ansie": "dist/node/cli.js"
     },
@@ -11,8 +11,12 @@
         "test": "bun test",
         "test:record": "bun test/record.ts",
         "parser:generate": "bun src/parser/generate.ts",
-        "build": "bun build.ts",
-        "publish": "npm publish"
+        "build": "bun test && bun build.ts",
+        "publish": "bun run build && npm publish",
+        "version:prerelease": "npm version prerelease",
+        "version:patch": "npm version patch",
+        "version:minor": "npm version minor",
+        "version:major": "npm version major"
     },
     "devDependencies": {
         "@types/bun": "latest",

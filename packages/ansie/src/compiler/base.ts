@@ -34,3 +34,5 @@ export class CompilerError implements Error {
         return !this.fatal;
     }
 }
+export type CompilerFormat = 'ansi' | 'markup';
+

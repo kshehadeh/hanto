@@ -2,7 +2,7 @@ import { describe, it, expect } from 'bun:test';
 import fixtures from '../../test/fixtures.json';
 import { compile } from '.';
 
-describe('Parser', () => {
+describe('Compiler', () => {
     fixtures.forEach((fixture: { input: string; ast: any; output: string }) => {
         it(fixture.input, () => {
             const output = compile(fixture.input);

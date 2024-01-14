@@ -29,3 +29,4 @@ export const AstSchema = z.array(NodeUnionSchema);
 
 export type NodeUnion = z.infer<typeof NodeUnionSchema>;
 export type Ast = z.infer<typeof AstSchema>;
+

@@ -7,14 +7,24 @@ import { TextNodeHandler } from './handlers/text-handler';
 import { BoldNodeHandler } from './handlers/bold-handler';
 import { UnderlineNodeHandler } from './handlers/underline-handler';
 import { AstSchema, NodeSchema } from './types';
+import { type CompilerFormat } from './base';
 import { BreakNodeHandler } from './handlers/break-handler';
 import { CompilerError, type BaseNode } from './base';
 
-export interface NodeHandler<T extends z.infer<typeof NodeSchema>> {
-    handleEnter(node: T, stack: BaseNode[]): string;
-    handleExit(node: T, stack: BaseNode[]): string;
+
+export interface NodeHandler<T extends z.infer<typeof NodeSchema>> {    
+    handleEnter(node: T, stack: BaseNode[], format: CompilerFormat): string;
+    handleExit(node: T, stack: BaseNode[], format: CompilerFormat): string;
     isType(node: z.infer<typeof NodeSchema>): node is T;
     schema: z.ZodObject<any, any>;
+    tagName: string;
+    selfTerminated?: boolean;
+    attributes: {
+        name: string;
+        type: 'enum' | 'string' | 'number';
+        required?: boolean;
+        values?: string[];
+    }[];
 }
 
 class Compiler {
@@ -43,44 +53,44 @@ class Compiler {
      * The compile function takes the AST and compiles it into a string.
      * @returns A string that is the compiled markup.
      */
-    public compile() {
+    public compile(format: CompilerFormat= 'ansi') {
         return this._ast.reduce((finalString, node) => {
-            finalString += this._compileNode(node);
+            finalString += this._compileNode(node, format);
             return finalString;
         }, '');
     }
 
-    protected handleStateEnter(state: z.infer<typeof NodeSchema>) {
+    protected handleStateEnter(state: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
         for (const handler of this._handlers) {
             if (handler.isType(state)) {
-                return handler.handleEnter(state, this._stack);
+                return handler.handleEnter(state, this._stack, format);
             }
         }
     }
 
-    protected handleStateExit(state: z.infer<typeof NodeSchema>) {
+    protected handleStateExit(state: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
         for (const handler of this._handlers) {
             if (handler.isType(state)) {
-                return handler.handleExit(state, this._stack);
+                return handler.handleExit(state, this._stack, format);
             }
         }
     }
 
-    private _push(state: z.infer<typeof NodeSchema>) {
+    private _push(state: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
         this._stack.push(state);
-        return this.handleStateEnter(state);
+        return this.handleStateEnter(state, format);
     }
 
-    private _pop() {
+    private _pop(format?: 'ansi' | 'markup') {
         const old = this._stack.pop();
-        return this.handleStateExit(old!);
+        return this.handleStateExit(old!, format);
     }
 
-    private _compileNode(node: z.infer<typeof NodeSchema>) {
+    private _compileNode(node: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
         const strings = [];
 
         try {
-            strings.push(this._push(node));
+            strings.push(this._push(node, format));
 
             if (node.content) {
                 if (Array.isArray(node.content)) {
@@ -92,7 +102,7 @@ class Compiler {
                 }
             }
 
-            strings.push(this._pop());
+            strings.push(this._pop(format));
 
             return strings.join('');
         } catch (e) {
@@ -105,19 +115,13 @@ class Compiler {
         }
     }
 }
-export function compile(markup: string) {
+
+
+
+export function compile(markup: string, format: CompilerFormat = 'ansi') {
     const ast = parseString(markup);
     if (ast) {
         const compiler = new Compiler(ast);
-        return compiler.compile();
+        return compiler.compile(format);
     }
 }
-
-// const str = compile(`<color fg="red"><color fg="green">green</color>red</color>`)
-// console.log(str)
-// <bold>Title</bold><br/>
-
-// <color fg="gray" bg="white">Subtitle goes here</color><br/>
-
-// A description using the default text will appear here.  But you can also include <underline type="single"><italics>nested</italics></underline> values.
-// `)

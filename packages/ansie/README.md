@@ -31,8 +31,8 @@ console.log(compile('<bold>This is bold</bold>'));
 ```
 
 ```typescript 
-import { compose } from 'ansie';
-console.log(compose.Build.start().bold('This is bold').end());
+import { Composer } from 'ansie';
+console.log(Composer.start().bold('This is bold').end());
 // Output: "\u001b[1mThis is bold\u001b[21m"
 ```
 
