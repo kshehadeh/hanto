@@ -1,4 +1,3 @@
-
 // A command parser for the composer CLI that takes the following arguments:
 //       --help     Show help                                             [boolean]
 //       --version  Show version number                                   [boolean]
@@ -14,7 +13,7 @@ import { compile } from './src/compiler';
 import pkg from './package.json';
 import { parseString } from './src/parser';
 
-const y = yargs(hideBin(process.argv))    
+const y = yargs(hideBin(process.argv))
     .scriptName('ansie')
     .version(pkg.version)
     .usage('Usage: ansie -i/-m <inputfile/markup>')
@@ -38,38 +37,41 @@ const y = yargs(hideBin(process.argv))
         type: 'boolean',
         description: 'Output the AST instead of the compiled text',
     })
-    .check((argv) => {
+    .check(argv => {
         if (argv.input && argv.markup) {
-            throw(new Error('You must specify either --input or --markup, not both'));
+            throw new Error(
+                'You must specify either --input or --markup, not both',
+            );
         }
 
         if (!argv.input && !argv.markup) {
-            throw(new Error('You must specify either --input or --markup so that the compiler knows what to compile'));
+            throw new Error(
+                'You must specify either --input or --markup so that the compiler knows what to compile',
+            );
         }
 
         if (argv.input) {
             if (!fs.existsSync(argv.input)) {
-                throw(new Error(`The input file ${argv.input} does not exist`));
+                throw new Error(`The input file ${argv.input} does not exist`);
             }
         }
 
-        return true
-    })
-
+        return true;
+    });
 
 const argv = await y.argv;
 if (argv.help) {
     y.showHelp();
 } else if (argv.version) {
     console.log(pkg.version);
-} else {    
-    let input = ''
+} else {
+    let input = '';
     if (argv.input) {
         // Read the input file into the string `input`
         input = fs.readFileSync(argv.input, 'utf8');
     } else if (argv.markup) {
         input = argv.markup;
-    } 
+    }
 
     if (input) {
         let output = '';
@@ -84,10 +86,9 @@ if (argv.help) {
                 fs.writeFileSync(argv.output, output);
             } else {
                 console.log(output);
-            }    
+            }
         } else {
-            throw(new Error('No output was generated'));
+            throw new Error('No output was generated');
         }
     }
 }
-

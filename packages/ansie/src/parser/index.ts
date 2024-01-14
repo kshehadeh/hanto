@@ -26,8 +26,7 @@ import chalk from 'chalk';
 //     }
 // ]
 
-function getParseErrorMessage(issue: ZodIssue, indent="  ") {
-
+function getParseErrorMessage(issue: ZodIssue, indent = '  ') {
     const path = issue.path.join(' | ');
     // Generate a human readable error message from a Zod issue
     if (issue.code === 'invalid_type') {
@@ -35,7 +34,10 @@ function getParseErrorMessage(issue: ZodIssue, indent="  ") {
     }
 
     if (issue.code === 'invalid_union') {
-        return `Invalid union: Path: ${chalk.bold(path)} > Union Issues: \n${indent}${issue.unionErrors.flatMap(f => f.issues).map(i => getParseErrorMessage(i, indent)).join(`\n${indent}`)}`;
+        return `Invalid union: Path: ${chalk.bold(path)} > Union Issues: \n${indent}${issue.unionErrors
+            .flatMap(f => f.issues)
+            .map(i => getParseErrorMessage(i, indent))
+            .join(`\n${indent}`)}`;
     }
 
     if (issue.code === 'invalid_enum_value') {
@@ -99,7 +101,10 @@ export function parseString(text: string): Ast | null {
     if (result.success === false) {
         console.log(
             `\n${chalk.underline('Invalid AST Received From Parser')}: \n${result.error.issues
-                .map(i => `${i.fatal ? chalk.red('fatal'): chalk.yellow('error')}: ${chalk.red(getParseErrorMessage(i))}`)
+                .map(
+                    i =>
+                        `${i.fatal ? chalk.red('fatal') : chalk.yellow('error')}: ${chalk.red(getParseErrorMessage(i))}`,
+                )
                 .join('\n')}`,
         );
         return null;

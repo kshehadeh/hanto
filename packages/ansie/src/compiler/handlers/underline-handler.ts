@@ -1,15 +1,12 @@
-import { z } from "zod";
-import { type NodeHandler } from "..";
-import type { BaseNode } from "../base";
-import { escapeCodeFromName } from "../utilities/escape-code-from-name";
+import { z } from 'zod';
+import { type NodeHandler } from '..';
+import type { BaseNode } from '../base';
+import { escapeCodeFromName } from '../utilities/escape-code-from-name';
 
 export const UnderlineNodeSchema = z.object({
     node: z.literal('underline'),
-    type: z.union([
-        z.literal('single'),
-        z.literal('double'),
-    ])
-})
+    type: z.union([z.literal('single'), z.literal('double')]),
+});
 
 export type UnderlineNode = z.infer<typeof UnderlineNodeSchema>;
 

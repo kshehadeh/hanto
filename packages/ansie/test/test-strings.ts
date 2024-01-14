@@ -20,7 +20,6 @@ export default [
     'Plain Text <underline type="single">Underline Text</underline> Plain Text',
     'Plain Text <color fg="red">Red Text</color> Plain Text',
 
-
     'Plain Text',
     'Plain Text <color fg="red">Red Text <color fg="blue">Blue Text</color></color> Plain Text',
-]
+];

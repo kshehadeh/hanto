@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const BaseNodeSchema = z.object({
-    node: z.string()
-})
+    node: z.string(),
+});
 
 export type BaseNode = z.infer<typeof BaseNodeSchema>;
 
@@ -14,7 +14,12 @@ export class CompilerError implements Error {
     markupNode: BaseNode;
     markupStack: BaseNode[];
 
-    constructor(message: string, markupNode: BaseNode, markupStack: BaseNode[], fatal: boolean = false) {
+    constructor(
+        message: string,
+        markupNode: BaseNode,
+        markupStack: BaseNode[],
+        fatal: boolean = false,
+    ) {
         this.message = message;
         this.markupNode = markupNode;
         this.markupStack = markupStack;

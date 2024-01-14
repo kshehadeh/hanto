@@ -27,7 +27,11 @@ export const ColorNodeHandler: NodeHandler<ColorNode> = {
             : undefined;
 
         if (!fgColor && !bgColor) {
-            throw new CompilerError('Color node must have at least one color', node, stack)
+            throw new CompilerError(
+                'Color node must have at least one color',
+                node,
+                stack,
+            );
         }
 
         return escapeCodeFromName([fgColor, bgColor]);
@@ -40,15 +44,26 @@ export const ColorNodeHandler: NodeHandler<ColorNode> = {
         );
         if (lastColorNode.success) {
             if (lastColorNode.data.fg && lastColorNode.data.bg) {
-                result = escapeCodeFromName([getColorEscapeCodeName(lastColorNode.data.fg, 'fg'), getColorEscapeCodeName(lastColorNode.data.fg, 'bg')]);
+                result = escapeCodeFromName([
+                    getColorEscapeCodeName(lastColorNode.data.fg, 'fg'),
+                    getColorEscapeCodeName(lastColorNode.data.fg, 'bg'),
+                ]);
             } else if (lastColorNode.data.fg) {
-                result = escapeCodeFromName(['bgDefault', getColorEscapeCodeName(lastColorNode.data.fg, 'fg')]);
+                result = escapeCodeFromName([
+                    'bgDefault',
+                    getColorEscapeCodeName(lastColorNode.data.fg, 'fg'),
+                ]);
             } else if (lastColorNode.data.bg) {
-                result = escapeCodeFromName(['fgDefault', getColorEscapeCodeName(lastColorNode.data.fg, 'bg')]);
+                result = escapeCodeFromName([
+                    'fgDefault',
+                    getColorEscapeCodeName(lastColorNode.data.fg, 'bg'),
+                ]);
             } else {
-                result = ColorNodeHandler.handleEnter(lastColorNode.data, stack);
+                result = ColorNodeHandler.handleEnter(
+                    lastColorNode.data,
+                    stack,
+                );
             }
-            
         } else {
             result = escapeCodeFromName(['fgDefault', 'bgDefault']);
         }

@@ -1,10 +1,10 @@
-import { z } from "zod";
-import { type NodeHandler } from "..";
-import { escapeCodeFromName } from "../utilities/escape-code-from-name";
+import { z } from 'zod';
+import { type NodeHandler } from '..';
+import { escapeCodeFromName } from '../utilities/escape-code-from-name';
 
 export const BoldNodeSchema = z.object({
     node: z.literal('bold'),
-})
+});
 
 export type BoldNode = z.infer<typeof BoldNodeSchema>;
 

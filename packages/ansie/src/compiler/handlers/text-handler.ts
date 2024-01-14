@@ -1,11 +1,11 @@
-import { z } from "zod";
-import { type NodeHandler } from "..";
-import { type BaseNode } from "../base";
+import { z } from 'zod';
+import { type NodeHandler } from '..';
+import { type BaseNode } from '../base';
 
 export const TextNodeSchema = z.object({
     node: z.literal('text'),
     value: z.string(),
-})
+});
 
 export type TextNode = z.infer<typeof TextNodeSchema>;
 

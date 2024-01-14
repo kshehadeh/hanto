@@ -1,6 +1,5 @@
 type InputText = string | undefined;
 
-
 /**
  * Build markdown strings using a fluent interface.  For example:
  * ```
@@ -16,13 +15,13 @@ type InputText = string | undefined;
  *         name: 'John Doe',
  *      });
  *  ```
- * 
+ *
  * The above would produce:
  * ```
  * # My Title
- * 
+ *
  * Hello there, John Doe
- * 
+ *
  * * Item 1
  * * Item 2
  * * Item 3
@@ -116,7 +115,9 @@ export class Composer {
             return this;
         }
 
-        const ind = Array(this._indent*this.tabWidth).fill(' ').join('');
+        const ind = Array(this._indent * this.tabWidth)
+            .fill(' ')
+            .join('');
         this.parts.push(`${ind}${text}`);
 
         return this;
@@ -157,8 +158,8 @@ export class Composer {
         return text.replace(/\${(\w+)}/g, (_, key) => {
             if (!data || !data[key]) {
                 return '';
-            }            
-            return (data[key] as string).toString()
+            }
+            return (data[key] as string).toString();
         });
     }
 

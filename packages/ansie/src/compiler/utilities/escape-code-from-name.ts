@@ -1,4 +1,3 @@
-
 // A set of variables that map to the ANSI escape codes for terminal manipulation
 // and colorization.  See https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters
 // for more information.
@@ -6,7 +5,7 @@ enum TerminalStyle {
     // Reset all styles
     reset = 0,
 
-    // Text Styles 
+    // Text Styles
 
     bold = 1,
     boldOff = 22,
@@ -16,7 +15,7 @@ enum TerminalStyle {
 
     underline = 4,
     doubleunderline = 21,
-    underlineOff = 24,  // this reset both underline and doubleunderline
+    underlineOff = 24, // this reset both underline and doubleunderline
 
     inverse = 7,
     inverseOff = 27,
@@ -48,7 +47,6 @@ enum TerminalStyle {
     // Resets foreground color to default
     fgDefault = 39,
 
-
     // *** Background Colors
     bgBlack = 40,
     bgRed = 41,
@@ -66,21 +64,25 @@ enum TerminalStyle {
     bgBrightCyan = 106,
     bgBrightWhite = 107,
     bgGray = 100,
-    
+
     // Resets background color to default
     bgDefault = 49,
 
-    // *** Containers 
+    // *** Containers
     framed = 51,
     encircled = 52,
     overline = 53,
-};
+}
 
 type TerminalStyleName = keyof typeof TerminalStyle;
 
 // Given a name or array of names, return the ANSI escape code for that name.
-export function escapeCodeFromName(name: TerminalStyleName | string | string[] | TerminalStyleName[]): string {
-    const nameArray = (Array.isArray(name) ? name : [name]).filter(n=>!!n) as TerminalStyleName[];
-    const codeString = nameArray.map((n) => TerminalStyle[n]).join(';');
-    return `\x1b[${codeString}m`
+export function escapeCodeFromName(
+    name: TerminalStyleName | string | string[] | TerminalStyleName[],
+): string {
+    const nameArray = (Array.isArray(name) ? name : [name]).filter(
+        n => !!n,
+    ) as TerminalStyleName[];
+    const codeString = nameArray.map(n => TerminalStyle[n]).join(';');
+    return `\x1b[${codeString}m`;
 }
