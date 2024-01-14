@@ -1,14 +1,22 @@
 import { Project } from '@hanto/core';
-import { build } from '../composer';
-import { loaderView } from './loader';
-import { ruleView } from './rule';
+import { loader } from './loader';
+import { rule } from './rule';
+import { bold, bundle, p, underline } from 'ansie';
 
-export function projectView(project: Project) {
-    return build()
-        .h1(`Project: ${project.config?.name}`)
-        .p(project.config?.description)
-        .h2('Loaders')
-        .list(project.loaders.map(loader => loaderView(loader)))
-        .h2('Rules')
-        .list(project.validator.rules.map(rule => ruleView(rule)));
+export function projectHeader(project: Project) {
+    return bundle([
+        bold([underline('single', `Project: ${project.config?.name}`)]),
+        p(project.config?.description),
+    ])
+}
+
+export function projectDetails(project: Project) {
+    return bundle([
+
+        bold('Loaders'),
+        bundle(project.loaders.map(l => loader(l))),
+
+        bold('Rules'),
+        bundle(project.validator.rules.map(r => rule(r))),
+    ]);
 }

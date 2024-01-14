@@ -1,9 +1,8 @@
 import * as yargs from 'yargs';
 import { existsSync } from 'fs';
-import { projectView } from '../tui/components/project';
 import { createProject } from '@hanto/core';
-import { build } from '../tui/composer';
-import { renderMarkdown } from '../tui/renderer';
+import { projectHeader } from '@/tui/components/project';
+import { compile } from 'ansie';
 
 export interface CommandArguments {
     directory: string;
@@ -18,21 +17,14 @@ export interface CommandBuilderParameters {
  * @param {string} dir
  */
 async function infoCommand(dir?: string) {
-    let projectDir = dir || process.cwd();
+    const projectDir = dir || process.cwd();
 
     if (!existsSync(projectDir)) {
         throw new Error(`Directory ${projectDir} does not exist`);
     }
 
     const prj = await createProject(projectDir);
-
-    const markdown = build()
-        .h1(`Project: ${prj.config?.name}`)
-        .h2(prj.config?.description)
-        .append(projectView(prj))
-        .render();
-
-    console.log(renderMarkdown(markdown));
+    console.log(compile(projectHeader(prj).toString()));
 }
 
 const command: yargs.CommandModule<CommandBuilderParameters, CommandArguments> =

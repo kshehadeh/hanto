@@ -77,7 +77,8 @@ export abstract class ComposerNode {
      * @param node
      * @returns
      */
-    static createFromAlternateInput(node: unknown): ComposerNode {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    static createFromAlternateInput(_node: unknown): ComposerNode {
         return undefined;
     }
 }
@@ -171,7 +172,7 @@ export class BreakComposerNode extends ComposerNode implements BreakNode {
     }
 
     toString() {
-        return `<br/>`;
+        return '<br/>';
     }
 }
 
@@ -204,11 +205,58 @@ export class TextComposerNode extends ComposerNode implements TextNode {
     }
 }
 
+export class ListComposerNode extends ComposerNode {
+    node = 'list' as const;    
+    _bullet: string
+
+    constructor(bullet: string, nodes?: ComposerNodeCompatible) {
+        super(nodes);
+        this._bullet = bullet;
+    }
+
+    toString() {
+        let str = '';
+        for (const node of this._content) {
+            str += `  ${this._bullet}${node.toString()}${new BreakComposerNode().toString()}`
+        }
+        return str;
+    }
+}
+
+export class BundleComposerNode extends ComposerNode {
+    node = 'bundle' as const;
+    _name: string;
+
+    constructor(nodes?: ComposerNodeCompatible) {
+        super(nodes);        
+    }
+
+    toString() {
+        return super.toString();
+    }
+}
+
+export class ParagraphComposerNode extends ComposerNode {
+    node = 'paragraph' as const;
+
+    constructor(nodes?: ComposerNodeCompatible) {
+        super(nodes);
+    }
+
+    toString() {
+        return `${new BreakComposerNode().toString()}${super.toString()}`;
+    }
+}
+
 export const AvailableComposerNodes = [
     ColorComposerNode,
     BoldComposerNode,
     UnderlineComposerNode,
     ItalicsComposerNode,
     BreakComposerNode,
+    ListComposerNode,
+    RawComponentNode,
+    BundleComposerNode,
+    ParagraphComposerNode,
     TextComposerNode, // Text node should always be last as it accepts strings as input.  This allows other nodes to override the behavior of the text input if necessary.
 ] as const;

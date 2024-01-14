@@ -3,9 +3,6 @@
   "devDependencies": {
     "rimraf": "^5.0.5"
   },
-  "bin": {
-    "hanto": "./packages/cli/out/index.js"
-  },
   "scripts": {
 
     "build:cli": "bun ./packages/cli/build.ts",

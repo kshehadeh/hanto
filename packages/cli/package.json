@@ -18,6 +18,7 @@
     "@hanto/plugin-git": "workspace:*",
     "@hanto/plugin-nextjs": "workspace:*",
     "@hanto/plugin-npm": "workspace:*",
+    "ansie": "workspace:*",
     "cardinal": "^2.1.1",
     "chalk": "^5.3.0",
     "marked-terminal": "^6.2.0",

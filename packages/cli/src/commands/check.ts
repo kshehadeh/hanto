@@ -1,16 +1,12 @@
 import * as yargs from 'yargs';
 import { existsSync } from 'fs';
-import { projectView } from '../tui/components/project';
 import { createProject } from '@hanto/core';
-import { build } from '../tui/composer';
-import { renderMarkdown } from '../tui/renderer';
+import { projectHeader } from '@/tui/components/project';
+import { br, compile, compose, p, text } from 'ansie';
+import { issue } from '@/tui/components/issue';
 
 export interface CommandArguments {
     directory: string;
-}
-
-export interface CommandBuilderParameters {
-    directory: yargs.Options;
 }
 
 /**
@@ -18,7 +14,7 @@ export interface CommandBuilderParameters {
  * @param {string} dir
  */
 async function checkCommand(dir?: string) {
-    let projectDir = dir || process.cwd();
+    const projectDir = dir || process.cwd();
 
     if (!existsSync(projectDir)) {
         throw new Error(`Directory ${projectDir} does not exist`);
@@ -26,43 +22,40 @@ async function checkCommand(dir?: string) {
 
     const prj = await createProject(projectDir);
 
-    const composer = build().h1(`Project: ${prj.config?.name}`).h2(prj.config?.description)
+    const composer = compose([projectHeader(prj)])
 
     await prj.validator.validate();
 
     if (prj.validator.errors.length > 0) {
-        composer.h2(':fire:Errors')
+        composer.add([br(), text(':fire: Errors'), br()])
         prj.validator.errors.forEach(e => {
-            composer.listItem(e.message);
+            composer.add([issue(e)]);
         })
     }
 
     if (prj.validator.warnings.length > 0) {        
-        composer.h2(':warning: Warnings')
+        composer.add(text(':warning: Warnings'))
         prj.validator.warnings.forEach(w => {
-            composer.listItem(w.message);
+            composer.add(issue(w));
         })        
     } 
     
     if (prj.validator.errors.length === 0 && prj.validator.warnings.length === 0) {
-        composer.p('No errors or warnings found')
+        composer.add(p('No errors or warnings found'))
     }
 
-    console.log(renderMarkdown(composer.render()));
+    console.log(compile(composer.toString()));
 }
 
-const command: yargs.CommandModule<CommandBuilderParameters, CommandArguments> =
-{
+const command: yargs.CommandModule<undefined, CommandArguments> = {
     command: 'check [directory]',
     describe: 'Run checks against the given project directory',
-    builder: {
-        directory: {
-            alias: 'd',
-            demandOption: false,
-            describe:
-                'The directory to examine (defaults to current directory)',
+    builder: async (yargs) => {
+        return yargs.positional('directory', {
+            describe: 'The directory to examine (defaults to current directory)',
             type: 'string',
-        },
+            default: '.'
+        })
     },
 
     handler: async argv => {

@@ -1,9 +1,12 @@
 import { Property } from '@hanto/core';
-import { Composer, build } from '../composer';
+import { ComposerNode, bold, bundle, italics, text } from 'ansie';
 
-export function propertyView(prop: Property): Composer {
+export function property(prop: Property): ComposerNode {
     const value =
         typeof prop.value === 'function' ? '<Bound Function>' : prop.value;
 
-    return build().listItem(`${prop.name}: ${value}`);
+    return bundle([
+        bold(`${prop.name}:`),
+        value ? text(value?.toString()) : italics('undefined'),
+    ]);
 }
