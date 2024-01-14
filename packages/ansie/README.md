@@ -6,9 +6,9 @@ For example,
 
 ```xml
 <bold>Title</bold>
-<color name="gray">Subtitle goes here</color>
+<color fg="gray">Subtitle goes here</color>
 A description using the default text will appear here.  But you can also include
-<underline><italics>nested</italics></underline> values.
+<underline style="single"><italics>nested</italics></underline> values.
 ```
 
 The library contains three components:
@@ -90,7 +90,7 @@ The library includes a Builder that allows for easy composition through a fluent
 const markup = Builder.start()
     .bold('Title')
     .br()
-    .underline('Subtitle')
+    .underline('single', 'Subtitle')
     .br()
     .text('This is some text that is not formatted')
     .color('red', undefined, 'Some red text')
