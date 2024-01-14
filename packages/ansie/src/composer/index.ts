@@ -7,11 +7,11 @@ import type { UnderlineNode } from '../compiler/handlers/underline-handler';
 
 const condStr = (b: boolean, s?: string) => (b ? s : '');
 
-export class Builder {
+export class Composer {
     private _nodes: ComposerNode[] = [];
 
     static start() {
-        return new Builder();
+        return new Composer();
     }
 
     // Chainable
@@ -227,7 +227,7 @@ const AvailableComposerNodes = [
 
 // Example of using the above classes:
 
-const result = Builder.start()
+const result = Composer.start()
     .bold('Title')
     .br()
     .italics('Subtitle')

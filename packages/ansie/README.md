@@ -84,10 +84,10 @@ Tags can be nested and will render the way you would expect. So, for example,
 
 ## Composition
 
-The library includes a Builder that allows for easy composition through a fluent functional interface. Here's an exmaple of how to build markup programmatically:
+The library includes a Composer that allows for easy composition through a fluent functional interface. Here's an exmaple of how to build markup programmatically:
 
 ```typescript
-const markup = Builder.start()
+const markup = Composer.start()
     .bold('Title')
     .br()
     .underline('single', 'Subtitle')
