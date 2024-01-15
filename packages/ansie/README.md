@@ -2,6 +2,7 @@
 
 A library used to render a simplified html-like declarative language to rich terminal text.
 
+
 For example,
 
 ```xml
@@ -20,8 +21,27 @@ The library contains three components:
 ## Installation
 
 `bun add ansie`
+ 
+or 
 
-## Usage
+`npm install ansie`
+
+## Usage as CLI
+
+**⚠️ This is a very early release so the CLI and the markup may change**
+
+You can access the functionality in ansie through a CLI as in:
+
+```bash
+> ansie -m "<bold>This is bold</bold>"
+```
+This will output:
+
+> **This is bold**
+
+## Usage as API
+
+**⚠️ This is a very early release so the API and the markup may change**
 
 ```typescript
 import { compile } from 'ansie';
@@ -152,6 +172,8 @@ console.log(bundle(['Property: ', raw('<bold>Bold Text</bold>')]))
 Using these you can create relatively complex compositions imperatively.
 
 ## Developing
+
+This package is developed using bun to make the building and packaging of Typescript easier.  If you have an interest in making this `npm` compatible please submit a PR.
 
 To install dependencies:
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // A command parser for the composer CLI that takes the following arguments:
 //       --help     Show help                                             [boolean]
 //       --version  Show version number                                   [boolean]
