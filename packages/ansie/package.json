@@ -1,5 +1,6 @@
 {
     "name": "ansie",
+    "version": "0.1.1-5",
     "module": "index.ts",
     "type": "module",
     "homepage": "https://github.com/kshehadeh/hanto/blob/main/packages/ansie/README.md",
@@ -16,21 +17,39 @@
         "url": "https://github.com/kshehadeh/hanto/issues"
     },
     "license": "MIT",
-    "version": "0.1.1-5",
     "bin": {
         "ansie": "dist/node/cli.js"
     },
+    "keywords": [
+        "terminal",
+        "cli",
+        "markup",
+        "parser",
+        "rendering",
+        "rich",
+        "text",
+        "ansi",
+        "color",
+        "colour",
+        "form"
+    ],
     "description": "A simple rendering engine for rich text terminal output with its own markup language.",
     "scripts": {
+        
         "test": "bun test",
-        "test:record": "bun test/record.ts",
+
+        "fixture:generate": "bun test/record.ts",
         "parser:generate": "bun src/parser/generate.ts",
-        "build": "bun test && bun build.ts",
-        "publish": "bun run build && npm publish",
-        "version:prerelease": "npm version prerelease",
-        "version:patch": "npm version patch",
-        "version:minor": "npm version minor",
-        "version:major": "npm version major"
+
+        "ver:pre": "npm version prerelease",
+        "ver:pat": "npm version patch",
+        "ver:min": "npm version minor",
+        "ver:maj": "npm version major",
+
+        "bld": "bun test && bun build.ts",
+
+        "pub": "bun run bld && npm publish",
+        "pub:dry": "bun run bld && npm publish --dry-run"
     },
     "devDependencies": {
         "@types/bun": "latest",
