@@ -9,7 +9,23 @@
 
   function reduceToObj (xs) {
     return xs.reduce((obj, x) => {
-        if (x && x.name){
+        if (x && x.name) {
+            // If the value is empty or true or yes then assume it is a boolean that indicates true
+            if ([undefined, null, "true", "yes", ""].includes(x.text)) {
+                x.text = true
+
+            // If the value is a string that equals false or no then assume it's a boolean
+            } else if (["false", "no"].includes(x.text)) {
+                x.text = false
+
+            // If the value is a number then convert it to a number
+            } else {
+                const num = parseInt(x.text, 10);
+                if (!isNaN(num)) {
+                    x.text = num;
+                }
+            }
+            
             obj[x.name] = x.text
         }
         return obj
@@ -22,27 +38,28 @@ Document = __ nodes:Element* { return nodes }
 
 Element  = RawText / Nested / Void / Comment
 
-RawText  = Color / Bold / Italics / Underline / Text / Break
+RawText  = Text / Break / H1 / H2 / H3 / BODY
 
-Color     "color"     
-    = '<color'i attrs:Attributes '>'
+H1    "h1"     
+    = '<h1'i attrs:TextAttributes '>'
         __ content:(Element)* __ 
-        '</color'i __ '>' __ { return node ('color', attrs, content) }
+        '</h1'i __ '>' __ { return node ('h1', attrs, content) }
 
-Bold     "bold"     
-    = '<bold'i '>' 
+H2   "h2"     
+    = '<h2'i attrs:TextAttributes '>'
         __ content:(Element)* __ 
-        '</bold'i __ '>' __ { return node ('bold', {}, content) }
+        '</h2'i __ '>' __ { return node ('h2', attrs, content) }
 
-Italics   "italics"     
-    = '<italics'i '>' 
+H3   "h3"
+    = '<h3'i attrs:TextAttributes '>'
         __ content:(Element)* __ 
-        '</italics'i __ '>' __ { return node ('italics', {}, content) }
+        '</h3'i __ '>' __ { return node ('h3', attrs, content) }
 
-Underline   "underline"     
-    = '<underline'i  attrs:Attributes '>' 
+BODY "body"  
+    = '<body'i attrs:Attributes '>'
         __ content:(Element)* __ 
-        '</underline'i __ '>' __ { return node ('underline', attrs, content) }
+        '</body'i __ '>' __ { return node ('body', attrs, content) }
+    
 
 Break   "br"     
     = '<br'i  __ '/>' __ { return node ('break', {}, '\n') }
@@ -62,12 +79,28 @@ Text "text"
   }
 
 Attributes = __ attrs:Attribute* __ { return reduceToObj(attrs) }
+TextAttributes = __ attrs:TextAttribute* __ { return reduceToObj(attrs) }
 
 Attribute "attribute"
   = name:Symbol __ text:(__ '=' __ s:String { return s })? __ { return {name, text} }
   / !'/>' [^> ]+ __ { return null }
 
 Symbol = h:[a-zA-Z0-9_\-] t:[a-zA-Z0-9:_\-]* { return h + t.join('') }
+
+
+///// TEXT ATTRIBUTES (like h1, h2, h3, etc) /////
+
+TextAttribute "text attribute"
+    = name:TextAttributeNames __ text:(__ '=' __ s:String { return s })? __ { return {name, text} }
+    / !'/>' [^> ]+ __ { return null }
+
+TextAttributeNames = 'fg' / 'bg' / 'bold' / 'italics' / 'underline'
+
+
+
+
+
+
 
 Nested    "element"   = begin:TagBegin __ content:Element* __ end:TagEnd __ &{ return begin.node == end } {
     node (begin.node, begin.attrs, content)

@@ -1,30 +1,19 @@
 import { z } from 'zod';
 import { parseString } from '../parser';
 
-import { ColorNodeHandler } from './handlers/color-handler';
-import { ItalicsNodeHandler } from './handlers/italics-handler';
-import { TextNodeHandler } from './handlers/text-handler';
-import { BoldNodeHandler } from './handlers/bold-handler';
-import { UnderlineNodeHandler } from './handlers/underline-handler';
 import { AstSchema, NodeSchema } from './types';
 import { type CompilerFormat } from './base';
 import { BreakNodeHandler } from './handlers/break-handler';
 import { CompilerError, type BaseNode } from './base';
-
+import { H1NodeHandler, H2NodeHandler, H3NodeHandler, BodyNodeHandler } from './handlers/text-handlers';
+import { RawTextNodeHandler } from './handlers/raw-text-handler';
 
 export interface NodeHandler<T extends z.infer<typeof NodeSchema>> {    
     handleEnter(node: T, stack: BaseNode[], format: CompilerFormat): string;
     handleExit(node: T, stack: BaseNode[], format: CompilerFormat): string;
     isType(node: z.infer<typeof NodeSchema>): node is T;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     schema: z.ZodObject<any, any>;
-    tagName: string;
-    selfTerminated?: boolean;
-    attributes: {
-        name: string;
-        type: 'enum' | 'string' | 'number';
-        required?: boolean;
-        values?: string[];
-    }[];
 }
 
 class Compiler {
@@ -40,12 +29,12 @@ class Compiler {
         this._ast = ast;
 
         this._handlers = [
-            BoldNodeHandler,
-            ItalicsNodeHandler,
-            UnderlineNodeHandler,
-            ColorNodeHandler,
-            TextNodeHandler,
+            RawTextNodeHandler,
             BreakNodeHandler,
+            H1NodeHandler,
+            H2NodeHandler,
+            H3NodeHandler,
+            BodyNodeHandler
         ];
     }
 
@@ -125,3 +114,11 @@ export function compile(markup: string, format: CompilerFormat = 'ansi') {
         return compiler.compile(format);
     }
 }
+
+console.log(compile(`
+<h1 fg="red">H1 RED FOREGROUND</h1>
+<h1 fg="red" bg="blue">RED FOREGROUND AND BLUE BACKGROUND</h1>
+<h2 bold>BOLD
+    <body italics>ITALICS AND BOLD </body>
+    BOLD AGAIN
+</h2>`));

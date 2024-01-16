@@ -45,21 +45,21 @@ const EmojiMap = {
     ":thumbsup::skin-tone-6:": "👍🏿"    
 }
 
-export const TextNodeSchema = z.object({
+export const RawTextNodeSchema = z.object({
     node: z.literal('text'),
     value: z.string(),
 });
 
-export type TextNode = z.infer<typeof TextNodeSchema>;
+export type RawTextNode = z.infer<typeof RawTextNodeSchema>;
 
 function replaceEmojiCodes(text: string): string {
     // Use regex to find all the emoji names that use the format :emoji_name: and
     //  replace them with the emoji in the emoji map if it exists
     let updatedText = text;
-    let emojiMatches = text.match(/:[a-z_]+:/g);
+    const emojiMatches = text.match(/:[a-z_]+:/g);
     if (emojiMatches) {
         emojiMatches.forEach((match) => {
-            let emoji = EmojiMap[match];
+            const emoji = EmojiMap[match];
             if (emoji) {
                 updatedText = text.replace(match, emoji);
             }
@@ -68,8 +68,8 @@ function replaceEmojiCodes(text: string): string {
     return updatedText
 }
 
-export const TextNodeHandler: NodeHandler<TextNode> = {
-    handleEnter(node: z.infer<typeof TextNodeSchema>, stack: BaseNode[], format: CompilerFormat = 'ansi') {
+export const RawTextNodeHandler: NodeHandler<RawTextNode> = {
+    handleEnter(node: z.infer<typeof RawTextNodeSchema>, stack: BaseNode[], format: CompilerFormat = 'ansi') {
         if (format === 'markup') {
             return node.value
         } else {
@@ -77,19 +77,13 @@ export const TextNodeHandler: NodeHandler<TextNode> = {
         }        
     },
 
-    handleExit(node: z.infer<typeof TextNodeSchema>, stack: BaseNode[]) {
+    handleExit() {
         return '';
     },
 
-    isType(node: unknown): node is z.infer<typeof TextNodeSchema> {
-        return (node as TextNode).node === 'text';
+    isType(node: unknown): node is z.infer<typeof RawTextNodeSchema> {
+        return (node as RawTextNode).node === 'text';
     },
 
-    tagName: '',
-
-    selfTerminated: true,
-
-    attributes: [],
-
-    schema: TextNodeSchema,
+    schema: RawTextNodeSchema,
 };

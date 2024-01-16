@@ -97,6 +97,7 @@ function getParseErrorMessage(issue: ZodIssue, indent = '  ') {
 
 export function parseString(text: string): Ast | null {
     const ast = parse(text);
+    console.log(JSON.stringify(ast, null, 2));
     const result = AstSchema.safeParse(ast);
     if (result.success === false) {
         console.log(
@@ -116,6 +117,10 @@ export function parseFile(filename: string): z.infer<typeof AstSchema> {
     const fileContent = readFileSync(filename, 'utf8');
     return parseString(fileContent);
 }
+
+// console.log(JSON.stringify(parseString('<h1 fg="red">hello</h1>'), null, 2))
+// console.log(JSON.stringify(parseString('<body bold=true>Hello</body>'), null, 2))
+// console.log(JSON.stringify(parseString('<body bold italics underline fg="red" bg="white">Hello</body>'), null, 2))
 
 // console.log(JSON.stringify(parseString('<color name="red">Hello</color>'), null, 2))
 // console.log(JSON.stringify(parseString('<bold>Hello</bold>'), null, 2))

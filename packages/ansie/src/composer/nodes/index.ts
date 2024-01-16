@@ -1,21 +1,38 @@
-import { compile } from '../../compiler';
-import { CompilerError, type BaseNode } from '../../compiler/base';
-import type { BoldNode } from '../../compiler/handlers/bold-handler';
-import type { BreakNode } from '../../compiler/handlers/break-handler';
-import type { ColorNode } from '../../compiler/handlers/color-handler';
-import type { ItalicsNode } from '../../compiler/handlers/italics-handler';
-import type { TextNode } from '../../compiler/handlers/text-handler';
-import type { UnderlineNode } from '../../compiler/handlers/underline-handler';
-import { condStr } from '../../util';
+import { defaultTheme, type AnsieTheme } from '../styles';
+import { AvailableComposerNodes } from './all-nodes';
+
+export interface NodeParams {
+    nodes?: ComposerNodeCompatible;
+    theme?: AnsieTheme;
+    [key: string]: unknown;
+}
 
 export abstract class ComposerNode {
+    _theme: AnsieTheme;
     _content: ComposerNode[];
-    constructor(nodes?: ComposerNodeCompatible) {
-        this._content = ComposerNode.create(nodes);
+    constructor(params: NodeParams = {}) {
+        this._content = ComposerNode.create(params.nodes) || [];        
+        this._theme = params.theme || defaultTheme;
     }
 
     toString() {
         return this._content?.map(c => c.toString()).join('') || '';
+    }
+
+    set theme(theme: AnsieTheme) {
+        this._theme = theme;
+    }
+
+    get theme() {
+        return this._theme;
+    }
+
+    /**
+     * Add a node or array of nodes to the content of this node.
+     * @param node
+     */
+    add(node: ComposerNodeCompatible) {
+        this._content = this._content.concat(ComposerNode.create(node));
     }
 
     /**
@@ -86,177 +103,46 @@ export abstract class ComposerNode {
 export type ComposerNodeCompatible = ComposerNode | (ComposerNode | string)[] | string;
 
 
+
+///// HIGHER LEVEL NODES /////
+// These nodes are used to create higher level constructs that are composed of other nodes.
+//  For example, the `list` node is composed of sub-nodes and the raw node is composed of
+//  a string that is compiled into a node.
+/////////////////////////////
+
 /**
- * This is a special node that allows for raw markup to be inserted into the output.
- * This does the work of validating that the raw markup is valid ansie markup before
- * storing.
- * 
- * @returns 
+ * Nest the nodes in the stack to create a hierarchical structure.
+ * The first node in the stack will be the root node, and each subsequent node will be added as a child of the previous node.
+ * @param stack - An array of ComposerNode objects representing the nodes to be nested.
+ * @returns The root node of the nested structure.
  */
-export class RawComponentNode extends ComposerNode implements BaseNode {
-    node = 'raw' as const;
-    markup: string;
+// function nest(stack: ComposerNode[]) {
+//     const root = stack[0];
+//     while (stack.length > 0) {
+//         const node = stack.shift();
+//         if (node && stack.length > 0) {
+//             // Add the next node as a child of the current node
+//             const nextNode = stack[0];
+//             node.add(nextNode);
+//         }
+//     }
+//     return root;
+// }
 
-    constructor(content: string) {
-        super();     
 
-        try {
-            this.markup = compile(content, 'markup');
-        } catch (e) {
-            if (e instanceof CompilerError) {
-                console.error(e.toString());
-                if (!e.continue) {
-                    throw e;
-                }
-            }
-        }
-    }
 
-    toString() {
-        return this.markup;
-    }
-}
 
-export class ColorComposerNode extends ComposerNode implements ColorNode {
-    node = 'color' as const;
-    _fg: string;
-    _bg: string;
-
-    constructor(fg?: string, bg?: string, nodes?: ComposerNodeCompatible) {
-        super(nodes);
-        this._fg = fg;
-        this._bg = bg;
-    }
-
-    toString() {
-        return `<color ${condStr(!!this._fg, `fg="${this._fg}"`)} ${condStr(!!this._bg, `bg="${this._bg}"`)}>${super.toString()}</color>`;
-    }
-}
-
-export class BoldComposerNode extends ComposerNode implements BoldNode {
-    node = 'bold' as const;
-    toString() {
-        return `<bold>${super.toString()}</bold>`;
-    }
-}
-
-export class UnderlineComposerNode extends ComposerNode implements UnderlineNode {
-    node = 'underline' as const;
-    _type: UnderlineNode['type'];
-
-    constructor(type: UnderlineNode['type'], nodes?: ComposerNodeCompatible) {
-        super(nodes);
-        this._type = type;
-    }
-
-    toString() {
-        return `<underline ${condStr(!!this._type, `type="${this._type}"`)}>${super.toString()}</underline>`;
-    }
-}
-
-export class ItalicsComposerNode extends ComposerNode implements ItalicsNode {
-    node = 'italics' as const;
-
-    toString() {
-        return `<italics>${super.toString()}</italics>`;
-    }
-}
-
-export class BreakComposerNode extends ComposerNode implements BreakNode {
-    node = 'break' as const;
-
-    constructor() {
-        // Intentionally do not allow any contained nodes here because it's a self-terminated
-        //  node.
-        super();
-    }
-
-    toString() {
-        return '<br/>';
-    }
-}
-
-export class TextComposerNode extends ComposerNode implements TextNode {
-    node = 'text' as const;
-    _text: string;
-
-    constructor(text: string, nodes?: ComposerNodeCompatible) {
-        super(nodes);
-        this._text = text;
-    }
-
-    toString() {
-        return this._text;
-    }
-
-    /**
-     * The text node will accept a string as a node.  We use it to allow strings to be passed
-     * in place of nodes in some cases.  For example, if you pass a string to the `bold` function, it will
-     * be interpreted as a `text` node.
-     * @param node
-     * @returns
-     */
-    static createFromAlternateInput(node: unknown): ComposerNode {
-        if (typeof node === 'string') {
-            return new TextComposerNode(node);
-        } else {
-            return undefined;
-        }
-    }
-}
-
-export class ListComposerNode extends ComposerNode {
-    node = 'list' as const;    
-    _bullet: string
-
-    constructor(bullet: string, nodes?: ComposerNodeCompatible) {
-        super(nodes);
-        this._bullet = bullet;
-    }
-
-    toString() {
-        let str = '';
-        for (const node of this._content) {
-            str += `  ${this._bullet}${node.toString()}${new BreakComposerNode().toString()}`
-        }
-        return str;
-    }
-}
-
-export class BundleComposerNode extends ComposerNode {
-    node = 'bundle' as const;
-    _name: string;
-
-    constructor(nodes?: ComposerNodeCompatible) {
-        super(nodes);        
-    }
-
-    toString() {
-        return super.toString();
-    }
-}
-
-export class ParagraphComposerNode extends ComposerNode {
-    node = 'paragraph' as const;
-
-    constructor(nodes?: ComposerNodeCompatible) {
-        super(nodes);
-    }
-
-    toString() {
-        return `${new BreakComposerNode().toString()}${super.toString()}`;
-    }
-}
-
-export const AvailableComposerNodes = [
-    ColorComposerNode,
-    BoldComposerNode,
-    UnderlineComposerNode,
-    ItalicsComposerNode,
-    BreakComposerNode,
-    ListComposerNode,
-    RawComponentNode,
-    BundleComposerNode,
-    ParagraphComposerNode,
-    TextComposerNode, // Text node should always be last as it accepts strings as input.  This allows other nodes to override the behavior of the text input if necessary.
-] as const;
+// <doc theme="default"> 
+//     <h1>Heading 1</h1>
+//     <h2>Heading 2</h2>
+//     <h3>Heading 3</h3>
+//     <body>
+//         <p>Paragraph 1</p>
+//         <p>Paragraph 2</p>
+//         <list bullet="-">
+//             <text>Item 1</text>
+//             <text>Item 2</text>
+//             <text>Item 3</text>
+//         </list>
+//     </body>
+// </doc>
