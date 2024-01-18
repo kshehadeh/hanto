@@ -2,7 +2,6 @@
 
 A library used to render a simplified html-like declarative language to rich terminal text.
 
-
 For example,
 
 ```xml
@@ -21,40 +20,69 @@ The library contains three components:
 ## Installation
 
 `bun add ansie`
- 
-or 
+
+or
 
 `npm install ansie`
 
-## Usage as CLI
+## Getting Started
+
+The quickest way to get started is through the `compile` function:
+
+```typescript
+import { compile } from 'ansie';
+console.log(compile('<h1 bold italics>Hello there</h1>'))
+
+// Output: ^[[1;3mHello there^[[22;23m
+```
+
+This directly takes markup and produces a terminal string you can output to the terminal to get rich text.
+
+A slightly more advanced way of doing it is to use the composer:
+
+```typescript
+import { compose } from 'ansie';
+console.log(compose([
+    h1('Title'),
+    h2('A subtitle'),
+    p('Paragraph'),
+]).compile())
+
+// Output: 
+//
+// ^[[34;1;21mTitle^[[39;22;24m
+//
+// ^[[39;1;4mA subtitle^[[39;22;24m
+//
+// Paragraph
+//
+```
+
+## Usage the CLI
 
 **⚠️ This is a very early release so the CLI and the markup may change**
 
 You can access the functionality in ansie through a CLI as in:
 
 ```bash
-> ansie -m "<bold>This is bold</bold>"
+> ansie "<h1 bold>This is bold</h1>"
 ```
+
 This will output:
 
 > **This is bold**
 
-## Usage as API
+You can also pipe in the markup to produce the output:
+
+```bash
+> echo "<h1 bold>This is bold</h1>" | ansie
+```
+
+> **This is bold**
+
+## Using the API
 
 **⚠️ This is a very early release so the API and the markup may change**
-
-```typescript
-import { compile } from 'ansie';
-console.log(compile('<bold>This is bold</bold>'));
-
-// Output: "\u001b[1mThis is bold\u001b[21m"
-```
-
-```typescript 
-import { Composer } from 'ansie';
-console.log(Composer.start().bold('This is bold').end());
-// Output: "\u001b[1mThis is bold\u001b[21m"
-```
 
 ## Ansie Markup
 
@@ -80,7 +108,6 @@ The markup language follows XML rules in that it uses a declarative tag-based sy
 | underline | "single", "double", "none", undefined   | Makes text underlined - if `underline` specified but not value then it will assume *single* |
 | fg        | { fg color }                            | Changes the foreground color of the text                                                    |
 | bg        | { bg color }                            | Changes the background color of the text                                                    |
-
 
 ### Free (Raw) Text
 
@@ -170,7 +197,7 @@ Text can include emoji either through unicode or through *Slack* style formattin
 
 ## Composition
 
-The library includes a Composer that allows for easy composition through a programmatic interface and includes the concept of *themes*.  A 
+The library includes a Composer that allows for easy composition through a programmatic interface and includes the concept of *themes*.  A
 theme is a method with which you can easily apply a consistent look and feel across outputted content.  Themes operate at the markup level,
 not at the compilation level meaning that themes cannot do anything that is not possible through the standard markup grammar.
 
@@ -213,8 +240,7 @@ The order in which these nodes are rendered match the order they appear in the a
 | `bundle` | *Sibling Nodes*                   | Outputs a set of sibling nodes - useful when passing to other functions that need a single node |
 | `markup` | *Valid Markup*                    | Allows you to combine raw markup with composed items from above                                 |
 
-
-Most of these functions take a style object which can be used to override the theme associated with compose function.  This is useful in cases where you want to diverge of the overall look and feel of the output.   
+Most of these functions take a style object which can be used to override the theme associated with compose function.  This is useful in cases where you want to diverge of the overall look and feel of the output.
 
 ### The `compose` function
 
@@ -223,7 +249,7 @@ Most of these functions take a style object which can be used to override the th
 **Parameters**
 
 `composition` - An array of nodes that will be iterated over to generate the final markup
-`theme` - An object that defines the styles to use for the various semantic tags that the markup supports. 
+`theme` - An object that defines the styles to use for the various semantic tags that the markup supports.
 
 ### Themes
 
@@ -238,7 +264,6 @@ The theme is made up of the following sections:
 | div     | Used to style generic blocks of text          |
 | list    | Used to indicate how lists should be styled   |
 | span    | Used to style generic inline elements of text |
-
 
 ## Developing
 
@@ -274,18 +299,16 @@ The parser code in this context is generated from a grammar file (terminal-marku
 
 ## Testing
 
-Test files are colocated with the files that they are testing using the format `<filename>.test.ts`.  For composition and 
+Test files are colocated with the files that they are testing using the format `<filename>.test.ts`.  For composition and
 markup tests, we automatically generate fixture files from an array of test string and commands.  
 
 Many of the tests are built off of fixtures that can be re-recorded at any time using the `tests:record` script.
 
 `test-composer-commands` is a file that export an array where each item in the array is a function that runs an compose command.
-When you run `bun run tests:record` each of these functions is executed and the results are stored in the `composer-fixtures.json` file 
+When you run `bun run tests:record` each of these functions is executed and the results are stored in the `composer-fixtures.json` file
 which is then run as part of the package's tests.
 
-`test-markup-strings` is an array of valid markup strings that are used during the `bun run tests:record` script to 
+`test-markup-strings` is an array of valid markup strings that are used during the `bun run tests:record` script to
 generate the `compiler-fixtures.json` file which contains the inputs and expected outputs.  
 
 **You should only rerecord the fixtures if you are confident that they will generate correct output**
-
-

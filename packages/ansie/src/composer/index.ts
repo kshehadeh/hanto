@@ -1,4 +1,5 @@
 import { compile } from '../compiler';
+import type { CompilerFormat } from '../compiler/base';
 import { ComposerNode } from './nodes';
 import { BreakComposerNode } from './nodes/break';
 import { BundleComposerNode } from './nodes/bundle';
@@ -31,6 +32,18 @@ export class Composer {
 
     toString() {
         return this._nodes.map(n => n.toString()).join('');
+    }
+
+    get theme() {
+        return this._theme;
+    }
+
+    compile() {
+        return this.compileTo('ansi');
+    }
+
+    compileTo(format: CompilerFormat) {
+        return compile(this.toString(), format);
     }
 }
 
@@ -128,15 +141,20 @@ export function compose(
 if (process.argv[1].includes('composer')) {
     // const result = compose([div('Hello World')]);
 
-    const result = compose([
+    // const result = compose([
+    //     h1('Title'),
+    //     h2('A subtitle'),
+    //     p('Paragraph'),
+    //     text('This is some text that is not formatted'),
+    //     bundle(['Text', span('injected'), 'more text']),
+    //     markup('<h1>Raw Markup</h1>')
+    // ]).toString()
+    
+    console.log(compose([
         h1('Title'),
         h2('A subtitle'),
         p('Paragraph'),
-        text('This is some text that is not formatted'),
-        bundle(['Text', span('injected'), 'more text']),
-        markup('<h1>Raw Markup</h1>')
-    ]).toString()
-    
+    ]).compile())
 
     // const result = compose([
     //     bold(['Title', br()]),
@@ -146,7 +164,7 @@ if (process.argv[1].includes('composer')) {
     //     list('* ', ['One', 'Two', 'Three']),
     // ])
 
-    console.log(compile(result.toString()));
+    // console.log(compile(result.toString()));
 
     // <color fg=red bg=green><bold>Hello World</bold></color>
 }

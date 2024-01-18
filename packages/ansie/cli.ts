@@ -15,19 +15,30 @@ import { compile } from './src/compiler';
 import pkg from './package.json';
 import { parseString } from './src/parser';
 
+async function readStdin(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        let data = '';
+        process.stdin.on('data', chunk => data += chunk);
+        process.stdin.on('end', () => resolve(data));
+        process.stdin.on('error', reject);
+    });
+}
+
+const stdInput = await readStdin();
+
 const y = yargs(hideBin(process.argv))
     .scriptName('ansie')
     .version(pkg.version)
-    .usage('Usage: ansie -i/-m <inputfile/markup>')
+    .usage('Usage: ansie [markup] -i [input] -o [output]')
+    .positional('markup', {
+        alias: 'm',
+        type: 'string',
+        description: 'Specify the markup text (instead of a file)',
+    })
     .option('input', {
         alias: 'i',
         type: 'string',
         description: 'Specify the input file',
-    })
-    .option('markup', {
-        alias: 'm',
-        type: 'string',
-        description: 'Specify the markup text (instead of a file)',
     })
     .option('output', {
         alias: 'o',
@@ -39,14 +50,15 @@ const y = yargs(hideBin(process.argv))
         type: 'boolean',
         description: 'Output the AST instead of the compiled text',
     })
-    .check(argv => {
-        if (argv.input && argv.markup) {
+    .check(argv => {        
+        const markup = argv._.join(' ');
+        if (argv.input && markup.length > 0) {
             throw new Error(
-                'You must specify either --input or --markup, not both',
+                'You must specify either --input or markup as a positional argument, not both',
             );
         }
 
-        if (!argv.input && !argv.markup) {
+        if (!argv.input && !markup && !stdInput) {
             throw new Error(
                 'You must specify either --input or --markup so that the compiler knows what to compile',
             );
@@ -57,6 +69,7 @@ const y = yargs(hideBin(process.argv))
                 throw new Error(`The input file ${argv.input} does not exist`);
             }
         }
+        
 
         return true;
     });
@@ -71,8 +84,10 @@ if (argv.help) {
     if (argv.input) {
         // Read the input file into the string `input`
         input = fs.readFileSync(argv.input, 'utf8');
-    } else if (argv.markup) {
-        input = argv.markup;
+    } else if (argv._.length > 0) {
+        input = argv._.join(' ');
+    } else if (stdInput) {
+        input = stdInput;
     }
 
     if (input) {
