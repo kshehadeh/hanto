@@ -5,10 +5,13 @@ A library used to render a simplified html-like declarative language to rich ter
 For example,
 
 ```xml
-<bold>Title</bold>
-<color fg="gray">Subtitle goes here</color>
-A description using the default text will appear here.  But you can also include
-<underline style="single"><italics>nested</italics></underline> values.
+<h1 fg="green">Title</h1>
+<h2 fg="blue">Subtitle goes here</h2>
+<p>
+    A description using the default text will appear here.  
+    But you can also include <span bold>embedded markup</span>
+</p>
+<div underline="single" fg="gray">Footnote</div>
 ```
 
 The library contains three components:

@@ -13,7 +13,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle\u001b[m"
+    "output": "title"
   },
   {
     "input": "<h1 bold>title with bold</h1>",
@@ -81,7 +81,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle without bold\u001b[m"
+    "output": "title without bold"
   },
   {
     "input": "<h1 bold=\"no\">title without bold</h1>",
@@ -98,7 +98,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle without bold\u001b[m"
+    "output": "title without bold"
   },
   {
     "input": "<h1 underline>title with underline</h1>",
@@ -115,7 +115,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle with underline\u001b[24m"
+    "output": "title with underline\u001b[24m"
   },
   {
     "input": "<h1 underline=\"true\">title with underline</h1>",
@@ -132,7 +132,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle with underline\u001b[24m"
+    "output": "title with underline\u001b[24m"
   },
   {
     "input": "<h1 underline=\"yes\">title with underline</h1>",
@@ -149,7 +149,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle with underline\u001b[24m"
+    "output": "title with underline\u001b[24m"
   },
   {
     "input": "<h1 underline=\"false\">title without underline</h1>",
@@ -166,7 +166,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle without underline\u001b[m"
+    "output": "title without underline"
   },
   {
     "input": "<h1 underline=\"no\">title without underline</h1>",
@@ -183,7 +183,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle without underline\u001b[m"
+    "output": "title without underline"
   },
   {
     "input": "<h1 underline=\"single\">title with single underline</h1>",
@@ -234,7 +234,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle without underline\u001b[24m"
+    "output": "title without underline\u001b[24m"
   },
   {
     "input": "<h1 italics>title with italics</h1>",
@@ -302,7 +302,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle without italics\u001b[m"
+    "output": "title without italics"
   },
   {
     "input": "<h1 italics=\"no\">title without italics</h1>",
@@ -319,7 +319,7 @@
         ]
       }
     ],
-    "output": "\u001b[mtitle without italics\u001b[m"
+    "output": "title without italics"
   },
   {
     "input": "<h1 fg=\"red\">title with red foreground</h1>",
@@ -882,7 +882,7 @@
         ]
       }
     ],
-    "output": "\n \u001b[mtitle with margin\u001b[m \n"
+    "output": "\n title with margin \n"
   },
   {
     "input": "<h1 margin=\"1\" marginTop=\"2\">title with margin</h1>",
@@ -900,7 +900,7 @@
         ]
       }
     ],
-    "output": "\n\n \u001b[mtitle with margin\u001b[m \n"
+    "output": "\n\n title with margin \n"
   },
   {
     "input": "<h1 margin=\"1\" marginBottom=\"2\">title with margin</h1>",
@@ -918,7 +918,7 @@
         ]
       }
     ],
-    "output": "\n \u001b[mtitle with margin\u001b[m \n\n"
+    "output": "\n title with margin \n\n"
   },
   {
     "input": "<h1 margin=\"1\" marginLeft=\"2\">title with margin</h1>",
@@ -936,7 +936,7 @@
         ]
       }
     ],
-    "output": "\n  \u001b[mtitle with margin\u001b[m \n"
+    "output": "\n  title with margin \n"
   },
   {
     "input": "<h1 margin=\"1\" marginRight=\"2\">title with margin</h1>",
@@ -954,7 +954,7 @@
         ]
       }
     ],
-    "output": "\n \u001b[mtitle with margin\u001b[m  \n"
+    "output": "\n title with margin  \n"
   },
   {
     "input": "<h1 margin=\"1\" marginTop=\"2\" marginBottom=\"3\" marginLeft=\"4\" marginRight=\"5\">title with margin</h1>",
@@ -975,7 +975,7 @@
         ]
       }
     ],
-    "output": "\n\n    \u001b[mtitle with margin\u001b[m     \n\n\n"
+    "output": "\n\n    title with margin     \n\n\n"
   },
   {
     "input": "<h1 margin=\"1\" marginTop=\"2\" marginBottom=\"3\" marginLeft=\"4\" marginRight=\"5\" fg=\"red\">title with margin</h1>",
@@ -1087,7 +1087,7 @@
         ]
       }
     ],
-    "output": "\u001b[m\u001b[mtitle\u001b[m\u001b[m"
+    "output": "title"
   },
   {
     "input": "<body><h1>title</h1><h2>subtitle</h2><p>Paragraph with <span>span</span> and <div>div</div></p></body>",
@@ -1153,6 +1153,6 @@
         ]
       }
     ],
-    "output": "\u001b[m\u001b[mtitle\u001b[m\u001b[msubtitle\u001b[m\u001b[mParagraph with \u001b[mspan\u001b[mand \u001b[mdiv\u001b[m\u001b[m\u001b[m"
+    "output": "titlesubtitleParagraph with spanand div"
   }
 ]
