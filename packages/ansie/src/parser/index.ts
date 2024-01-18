@@ -2,7 +2,6 @@ import { readFileSync } from 'fs';
 import { z, type ZodIssue } from 'zod';
 import { parse } from './generated-parser';
 import { AstSchema, type Ast } from '../compiler/types';
-import chalk from 'chalk';
 
 // const ast: z.infer<typeof AstSchema> = [
 //     {
@@ -30,66 +29,66 @@ function getParseErrorMessage(issue: ZodIssue, indent = '  ') {
     const path = issue.path.join(' | ');
     // Generate a human readable error message from a Zod issue
     if (issue.code === 'invalid_type') {
-        return `Invalid type: Path: ${chalk.bold(path)} > Expected ${issue.expected} but received ${issue.received}`;
+        return `Invalid type: Path: ${path} > Expected ${issue.expected} but received ${issue.received}`;
     }
 
     if (issue.code === 'invalid_union') {
-        return `Invalid union: Path: ${chalk.bold(path)} > Union Issues: \n${indent}${issue.unionErrors
+        return `Invalid union: Path: ${path} > Union Issues: \n${indent}${issue.unionErrors
             .flatMap(f => f.issues)
             .map(i => getParseErrorMessage(i, indent))
             .join(`\n${indent}`)}`;
     }
 
     if (issue.code === 'invalid_enum_value') {
-        return `Invalid enum value: Path: ${chalk.bold(path)} > Received "${issue.received}" but options are "${issue.options.join(', ')}"`;
+        return `Invalid enum value: Path: ${path} > Received "${issue.received}" but options are "${issue.options.join(', ')}"`;
     }
 
     if (issue.code === 'invalid_literal') {
-        return `Invalid literal: Path: ${chalk.bold(path)} > Expected "${issue.expected}" but received "${issue.received}"`;
+        return `Invalid literal: Path: ${path} > Expected "${issue.expected}" but received "${issue.received}"`;
     }
 
     if (issue.code === 'invalid_arguments') {
-        return `Invalid arguments: Path: ${chalk.bold(path)} > \n${indent}${issue.argumentsError.issues.join(`\n${indent}`)}`;
+        return `Invalid arguments: Path: ${path} > \n${indent}${issue.argumentsError.issues.join(`\n${indent}`)}`;
     }
 
     if (issue.code === 'invalid_return_type') {
-        return `Invalid return type: Path: ${chalk.bold(path)} > \n${indent}${issue.returnTypeError.issues.join(`\n${indent}`)}`;
+        return `Invalid return type: Path: ${path} > \n${indent}${issue.returnTypeError.issues.join(`\n${indent}`)}`;
     }
 
     if (issue.code === 'invalid_date') {
-        return `Invalid date: Path: ${chalk.bold(path)} > ${issue.message}`;
+        return `Invalid date: Path: ${path} > ${issue.message}`;
     }
 
     if (issue.code === 'invalid_string') {
-        return `Invalid string: Path: ${chalk.bold(path)} > ${issue.message}`;
+        return `Invalid string: Path: ${path} > ${issue.message}`;
     }
 
     if (issue.code === 'too_small') {
-        return `Too small: Path: ${chalk.bold(path)} > Minimum is "${issue.minimum}"`;
+        return `Too small: Path: ${path} > Minimum is "${issue.minimum}"`;
     }
 
     if (issue.code === 'too_big') {
-        return `Too big: Path: ${chalk.bold(path)} > Maximum is "${issue.maximum}"`;
+        return `Too big: Path: ${path} > Maximum is "${issue.maximum}"`;
     }
 
     if (issue.code === 'invalid_intersection_types') {
-        return `Invalid intersection types: Path: ${chalk.bold(path)} > ${issue.message}`;
+        return `Invalid intersection types: Path: ${path} > ${issue.message}`;
     }
 
     if (issue.code === 'not_multiple_of') {
-        return `Not multiple of: Path: ${chalk.bold(path)} > Should be multiple of "${issue.multipleOf}"`;
+        return `Not multiple of: Path: ${path} > Should be multiple of "${issue.multipleOf}"`;
     }
 
     if (issue.code === 'not_finite') {
-        return `Not finite: Path: ${chalk.bold(path)} > ${issue.message}`;
+        return `Not finite: Path: ${path} > ${issue.message}`;
     }
 
     if (issue.code === 'unrecognized_keys') {
-        return `Unrecognized keys: Path: ${chalk.bold(path)} > Keys: ${issue.keys.join(' + ')}`;
+        return `Unrecognized keys: Path: ${path} > Keys: ${issue.keys.join(' + ')}`;
     }
 
     if (issue.code === 'custom') {
-        return `Custom: Path: ${chalk.bold(path)} > ${issue.message}`;
+        return `Custom: Path: ${path} > ${issue.message}`;
     }
 
     return JSON.stringify(issue);
@@ -100,10 +99,10 @@ export function parseString(text: string): Ast | null {
     const result = AstSchema.safeParse(ast);
     if (result.success === false) {
         console.log(
-            `\n${chalk.underline('Invalid AST Received From Parser')}: \n${result.error.issues
+            `\n${'Invalid AST Received From Parser'}: \n${result.error.issues
                 .map(
                     i =>
-                        `${i.fatal ? chalk.red('fatal') : chalk.yellow('error')}: ${chalk.red(getParseErrorMessage(i))}`,
+                        `${i.fatal ? 'fatal' : 'error'}: ${getParseErrorMessage(i)}`,
                 )
                 .join('\n')}`,
         );

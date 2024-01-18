@@ -3,7 +3,7 @@ import fs from 'fs';
 import { build, type BuildArtifact, type Target } from 'bun';
 
 const projectDir = resolve(import.meta.dir, '../..');
-const targets: Target[] = ['node', 'bun'];
+const targets: Target[] = ['node', /*'bun'*/];
 
 for (const target of targets) {
     const outputs = await build({
@@ -14,6 +14,7 @@ for (const target of targets) {
         outdir: resolve(projectDir, `./dist/${target}`),
         minify: false,
         sourcemap: 'external',
+        splitting: true,
         target,
     });
 
