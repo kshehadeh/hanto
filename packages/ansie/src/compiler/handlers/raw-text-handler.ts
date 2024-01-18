@@ -17,9 +17,9 @@ const EmojiMap = {
     ":sos:": "🆘",
     ":lock:": "🔒",
     ":key:": "🔑",
+    ":heart:": "❤️",
     ":broken_heart:": "💔",
     ":skull_and_crossbones:": "☠️",
-    ":grinning:": "😀",
     ":grin:": "😁",
     ":joy:": "😂",
     ":heart_eyes:": "😍",
@@ -63,7 +63,7 @@ function replaceEmojiCodes(text: string): string {
         emojiMatches.forEach((match) => {
             const emoji = EmojiMap[match];
             if (emoji) {
-                updatedText = text.replace(match, emoji);
+                updatedText = updatedText.replace(match, emoji);
             }
         });
     }    
@@ -89,3 +89,7 @@ export const RawTextNodeHandler: NodeHandler<RawTextNode> = {
 
     schema: RawTextNodeSchema,
 };
+
+export const _testableFunctions = {
+    replaceEmojiCodes
+}

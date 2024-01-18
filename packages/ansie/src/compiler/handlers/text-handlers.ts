@@ -204,3 +204,12 @@ export const DivNodeHandler: NodeHandler<DivNode> = {
     handleEnter: (node: DivNode, stack: AnsieNode[], format: CompilerFormat = 'ansi') => buildStart(node, format),
     handleExit: (node: DivNode, stack: AnsieNode[], format: CompilerFormat = 'ansi') => buildEnd(node, format)
 }
+
+export const _testableFunctions = {
+    buildStart,
+    buildEnd,
+    renderSpaceAttributesStart,
+    renderSpaceAttributesEnd,
+    renderTextAttributesStart,
+    renderTextAttributesEnd
+}
