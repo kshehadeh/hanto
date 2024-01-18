@@ -1,10 +1,6 @@
 import type { TextAttributes } from "../handlers/text-handlers";
 import { TerminalStyle, escapeCodeFromName } from "./escape-code-from-name";
-
-
-function capitalize(str: string): string {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
+import { toTitleCase } from "./to-title-case";
 
 /**
  * Retrieves the escape codes for the given text attributes.  It will return both the escape codes for turning 
@@ -40,15 +36,15 @@ export function getTextEscapeCodesFromProperties(properties: TextAttributes): {o
         off.push(TerminalStyle.italicOff);
     }
     return {
-        on: escapeCodeFromName(on),
-        off: escapeCodeFromName(off),
+        on: on.length > 0 ? escapeCodeFromName(on): '',
+        off: off.length > 0 ? escapeCodeFromName(off) : '',
     };
 }
 
-function colorToTerminalStyle(color: string, foreground: boolean): TerminalStyle {
+export function colorToTerminalStyle(color: string, foreground: boolean): TerminalStyle {
     if (foreground) {
-        return TerminalStyle[`fg${capitalize(color)}`];
+        return TerminalStyle[`fg${toTitleCase(color)}`];
     } else {
-        return TerminalStyle[`bg${capitalize(color)}`];
+        return TerminalStyle[`bg${toTitleCase(color)}`];
     }
 }
