@@ -10,14 +10,18 @@ export interface AnsieStyle {
         italics?: boolean;        
     },
 
+    spacing?: {
+        margin?: number;
+        marginLeft?: number;
+        marginRight?: number;
+        marginTop?: number;
+        marginBottom?: number;
+    }
+
     list?: {
         prefix: string;
-        newLineCount: number;
     },
 
-    paragraph?: {
-        newLineCount: number;
-    },
 }
 
 export const body: AnsieStyle = {
@@ -30,6 +34,13 @@ export const body: AnsieStyle = {
         underline: 'none',
         italics: false,        
     },
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 0,
+        marginBottom: 0,
+    },
 };
 
 export const h1: AnsieStyle = {
@@ -41,6 +52,13 @@ export const h1: AnsieStyle = {
         underline: 'double',
         italics: false,        
     },
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 1,
+        marginBottom: 1,
+    }
 };
 
 export const h2: AnsieStyle = {
@@ -52,6 +70,13 @@ export const h2: AnsieStyle = {
         underline: 'single',
         italics: false,        
     },
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 1,
+        marginBottom: 1,
+    }
 };
 
 export const h3: AnsieStyle = {
@@ -63,19 +88,49 @@ export const h3: AnsieStyle = {
         underline: 'none',
         italics: false,        
     },
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 1,
+        marginBottom: 1,
+    }
 };
 
-export const paragraph: AnsieStyle = {
-    paragraph: {
-        newLineCount: 1,
-    },
+export const p: AnsieStyle = {
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 1,
+        marginBottom: 1,
+    }
+};
+
+export const span: AnsieStyle = {
 };
 
 export const list: AnsieStyle = {
     list: {
         prefix: '* ',
-        newLineCount: 1,
     },
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 1,
+        marginBottom: 1,
+    }
+};
+
+export const div: AnsieStyle = {
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 1,
+        marginBottom: 1,
+    }
 };
 
 export interface AnsieTheme {
@@ -83,8 +138,10 @@ export interface AnsieTheme {
     h2: AnsieStyle;
     h3: AnsieStyle;
     body: AnsieStyle;
-    paragraph: AnsieStyle;
+    div: AnsieStyle;
+    span: AnsieStyle;
     list: AnsieStyle;
+    p: AnsieStyle
 }
 
 export const defaultTheme: AnsieTheme = {
@@ -92,6 +149,8 @@ export const defaultTheme: AnsieTheme = {
     h2,
     h3,
     body,
-    paragraph,
+    p,
     list,
+    span,
+    div
 };

@@ -1,6 +1,6 @@
 import { ComposerNode, type NodeParams } from ".";
 import { compile } from "../../compiler";
-import { type BaseNode, CompilerError } from "../../compiler/base";
+import { CompilerError } from "../../compiler/base";
 
 export interface MarkupNodeParams extends NodeParams {
     content: string;
@@ -13,7 +13,7 @@ export interface MarkupNodeParams extends NodeParams {
  * 
  * @returns 
  */
-export class MarkupComponentNode extends ComposerNode implements BaseNode {
+export class MarkupComponentNode extends ComposerNode {
     node = 'raw' as const;
     markup: string;
 

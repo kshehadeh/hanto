@@ -1,7 +1,7 @@
 // A set of variables that map to the ANSI escape codes for terminal manipulation
 // and colorization.  See https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters
 // for more information.
-enum TerminalStyle {
+export enum TerminalStyle {
     // Reset all styles
     reset = 0,
 
@@ -74,15 +74,8 @@ enum TerminalStyle {
     overline = 53,
 }
 
-type TerminalStyleName = keyof typeof TerminalStyle;
-
 // Given a name or array of names, return the ANSI escape code for that name.
-export function escapeCodeFromName(
-    name: TerminalStyleName | string | string[] | TerminalStyleName[],
-): string {
-    const nameArray = (Array.isArray(name) ? name : [name]).filter(
-        n => !!n,
-    ) as TerminalStyleName[];
-    const codeString = nameArray.map(n => TerminalStyle[n]).join(';');
+export function escapeCodeFromName(names: number[]): string {    
+    const codeString = names.join(';');
     return `\x1b[${codeString}m`;
 }

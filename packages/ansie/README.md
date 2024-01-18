@@ -60,25 +60,44 @@ console.log(Composer.start().bold('This is bold').end());
 
 The markup language follows XML rules in that it uses a declarative tag-based system of angle brackets and attributes. The supported tags available today are:
 
-1. `<color name="[see colors below]"></color>`
-2. `<bold></bold>`
-3. `<italics></italics>`
-4. `<underline style="[single|double]"></underline>`
+| Name | Attributes         | Description                                                                             |
+| ---- | ------------------ | --------------------------------------------------------------------------------------- |
+| body | {text attributes}  | A semantic tag intended to be a container for multiple other tags - usually at the root |
+| div  | {text attributes } | Content that injects new lines before and after                                         |
+| span | {text attributes } | Content that does not have new lines before and after                                   |
+| p    | {text attributes } | Content that injects new lines before and after                                         |
+| h1   | {text attributes}  | A semantic tag intended to represent the headline of a block of text                    |
+| h2   | {text attributes}  | A semantic tag intended to represent the sub-headline of a block of text                |
+| h3   | {text attributes}  | A semantic tag intended to represent the tertiary headline of a block of text           |
+| br   | *None*             | Injects a newline in the compiled output                                                |
 
-Additionally you can have regular text that is not enclosed in a tag.
+### Text Attributes
+
+| Name      | Value                                   | Description                                                                                 |
+| --------- | --------------------------------------- | ------------------------------------------------------------------------------------------- |
+| bold      | "false", "true", "yes", "no", undefined | Makes text bold - if `bold` specified but not value then it will assume *true*              |
+| italics   | "false", "true", "yes", "no", undefined | Makes text italicized - if `italics` specified but not value then it will assume *true*     |
+| underline | "single", "double", "none", undefined   | Makes text underlined - if `underline` specified but not value then it will assume *single* |
+| fg        | { fg color }                            | Changes the foreground color of the text                                                    |
+| bg        | { bg color }                            | Changes the background color of the text                                                    |
+
+
+### Free (Raw) Text
+
+Additionally you can have regular text that is not enclosed in a tag.  For example, you can have:
+
+```xml
+<h1>Title</h1>
+Raw text here
+```
 
 Tags can be nested and will render the way you would expect. So, for example,
 
 ```xml
-<color name="red">This is red but <color name="blue"> this is blue </color> and this is red again </color>
+<body fg="red">
+    <h1 fg="blue">My Title</h1>
+</body>
 ```
-
-### Underline Table
-
-| Underline Styles |
-| ---------------- |
-| single           |
-| double           |
 
 ### Color Table
 
@@ -102,74 +121,124 @@ Tags can be nested and will render the way you would expect. So, for example,
 | brightwhite   |
 | brightgray    |
 
+### Emoji
+
+Text can include emoji either through unicode or through *Slack* style formatting as in `:fire:`.  Supported emoji include:
+
+| Code                        | Emoji  |
+| --------------------------- | ------ |
+| `:exclamation:`             | ❗     |
+| `:warning:`                 | ⚠️   |
+| `:no_entry:`                | ⛔     |
+| `:heavy_check_mark:`        | ✔️   |
+| `:x:`                       | ❌     |
+| `:bangbang:`                | ‼️    |
+| `:triangular_flag_on_post:` | 🚩    |
+| `:fire:`                    | 🔥    |
+| `:sos:`                     | 🆘     |
+| `:lock:`                    | 🔒    |
+| `:key:`                     | 🔑    |
+| `:broken_heart:`            | 💔    |
+| `:skull_and_crossbones:`    | ☠️   |
+| `:grinning:`                | 😀    |
+| `:grin:`                    | 😁    |
+| `:joy:`                     | 😂    |
+| `:heart_eyes:`              | 😍    |
+| `:smirk:`                   | 😏    |
+| `:sunglasses:`              | 😎    |
+| `:thumbsup:`                | 👍    |
+| `:thumbsdown:`              | 👎    |
+| `:clap:`                    | 👏    |
+| `:pray:`                    | 🙏    |
+| `:cry:`                     | 😢    |
+| `:sob:`                     | 😭    |
+| `:rocket:`                  | 🚀    |
+| `:sunny:`                   | ☀️   |
+| `:umbrella:`                | ☔     |
+| `:camera:`                  | 📷    |
+| `:book:`                    | 📖    |
+| `:moneybag:`                | 💰    |
+| `:gift:`                    | 🎁    |
+| `:bell:`                    | 🔔    |
+| `:hammer:`                  | 🔨    |
+| `:thumbsup-skin-tone-1:`    | 👍🏻 |
+| `:thumbsup-skin-tone-2:`    | 👍🏻 |
+| `:thumbsup-skin-tone-3:`    | 👍🏼 |
+| `:thumbsup-skin-tone-4:`    | 👍🏽 |
+| `:thumbsup-skin-tone-5:`    | 👍🏾 |
+| `:thumbsup-skin-tone-6:`    | 👍🏿 |
+
 ## Composition
 
-The library includes a Composer that allows for easy composition through a programmatic interface. *This is not required to use Ansie*.  For some people it's a little easier to use an imperative approach for building views.  Here's an exmaple of how to build markup programmatically:
+The library includes a Composer that allows for easy composition through a programmatic interface and includes the concept of *themes*.  A 
+theme is a method with which you can easily apply a consistent look and feel across outputted content.  Themes operate at the markup level,
+not at the compilation level meaning that themes cannot do anything that is not possible through the standard markup grammar.
+
+### Using the Composer
+
+The composer allows you to associate a theme with a set of nodes all at once.  It takes an array of nodes and a theme.  If no theme is given then it will use the default theme.  
+
+The `compose` function takes an array of nodes which can take array of other nodes themselves to create a hierarchy of nodes.  For example:
 
 ```typescript
-const markup = compose([
-    .bold('Title')
-    .br()
-    .underline('single', 'Subtitle')
-    .br()
-    .text('This is some text that is not formatted')
-    .color('red', undefined, 'Some red text')
+const result = compose([
+    h1('Title'),
+    h2('A subtitle'),
+    p('Paragraph'),
+    text('This is some text that is not formatted'),
+    bundle(['Text', span('injected'), 'more text']),
+    markup('<h1>Raw Markup</h1>')
 ]).toString()
 
 console.log(markup);
 console.log(compile(markup))
 
-// Line 1: <bold>Title</bold><br/><underline type="single">Subtitle</underline><br/>This is some text that is not formatted<color fg="red">Some red text</color>
-// Line 2: \x1b[1mTitle\x1b[22m\n\x1b[4mSubtitle\x1b[24m\nThis is some text that is not formatted\x1b[31mSome red text\x1b[39;49m
 ```
 
-### Convenience Functions
-| Function    | Params                    | Description                                                                                     |
-| ----------- | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| `bold`      | *Child Nodes*             | Contained items are surrounded with `<bold>`                                                    |
-| `underline` | `type`, *Child Nodes*     | Contained items are surrounded with `<underline>`                                               |
-| `italics`   | *Child Nodes*             | Contained items are surrounded with `<italics>`                                                 |
-| `br`        | *None*                    | Inserts a `<br/>`                                                                               |
-| `text`      | *None*                    | Inserts text as-is (but will replace `:emoji:`)                                                 |
-| `color`     | `fg`, `bg`, *Child Nodes* | Contained items are surrounded with `<color>`                                                   |
-| `list`      | `bullet`, *Child Nodes*   | Adds a bulleted list item for each item in the passed array of nodes                            |
-| `bundle`    | *Sibling Nodes*           | Outputs a set of sibling nodes - useful when passing to other functions that need a single node |
-| `raw`       | *Valid Markup*            | Allows you to combine raw markup with composed items from above                                 |
+The order in which these nodes are rendered match the order they appear in the array.  Each one can take an array of nodes or, in most cases, a string which is automatically converted to a raw text node.  You can mix and match raw text and nodes as you can see in the *bundle* call above.  The same approach would work with most of the other node building functions.  For a full list of node creation functions, see `Node Creation` below.
 
-Some of these nodes accept children because they add some formatting to a finite set of contained items.  For these 
-you will pass in the children as an array to the function, after the other properties that customize the styling. 
+### Node Creation
 
-For example, the color function takes a foreground, background and an array of children:
+| Function | Params                            | Description                                                                                     |
+| -------- | --------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `h1`     | Text or *Child Nodes*, [*styles*] | Represents a top level header                                                                   |
+| `h2`     | Text or *Child Nodes*, [*styles*] | Represents a secondary header                                                                   |
+| `h3`     | Text or *Child Nodes*, [*styles*] | Represents a tertiary header                                                                    |
+| `span`   | Text or *Child Nodes*, [*styles*] | Represents inline text (usually only needed if doing alternate styling)                         |
+| `div`    | Text or *Child Nodes*, [*styles*] | Allows you to combine raw markup with composed items from above                                 |
+| `text`   | Text, [*styles*]                  | Inserts text as-is (but will replace `:emoji:`)                                                 |
+| `p`      | Text or *Child Nodes*, [*styles*] | Contained items are surrounded with `<color>`                                                   |
+| `list`   | *Child Nodes*, [*styles*]         | Adds a bulleted list item for each item in the passed array of nodes                            |
+| `br`     | [*styles*]                        | Inserts a `<br/>`                                                                               |
+| `bundle` | *Sibling Nodes*                   | Outputs a set of sibling nodes - useful when passing to other functions that need a single node |
+| `markup` | *Valid Markup*                    | Allows you to combine raw markup with composed items from above                                 |
 
-```typescript
-console.log(color('white', 'red', 'This text will be colored white with a red background'))
 
-// <color fg="white" bg="red">This text will be colored white with a red background</color>
-```
+Most of these functions take a style object which can be used to override the theme associated with compose function.  This is useful in cases where you want to diverge of the overall look and feel of the output.   
 
-You can create lists with the `list` method which takes a bullet style followed by a list of items to prepend the bullet to.  
+### The `compose` function
 
-```typescript
-console.log(list('* ', ['Item 1', 'Item 2', 'Item 3']))
+`compose( composition: ComposerNode[] = [],  theme: AnsieTheme = defaultTheme,) => string`
 
-// * Item 1<br/>* Item 2<br/>* Item 3<br/>
-```
+**Parameters**
 
-You can also create more complex output using bundles which will take arbitrary array of nodes and render them in order.
+`composition` - An array of nodes that will be iterated over to generate the final markup
+`theme` - An object that defines the styles to use for the various semantic tags that the markup supports. 
 
-```typescript
-console.log(bundle(['Property: ', bold('Bold Value')]))
+### Themes
 
-// Property: <bold>Bold Value</bold>
-```
+The theme is made up of the following sections:
 
-```typescript
-console.log(bundle(['Property: ', raw('<bold>Bold Text</bold>')]))
+| Section | Description                                   |
+| ------- | --------------------------------------------- |
+| h1      | Used the to style the h1 blocks               |
+| h2      | Used to style the h2 blocks                   |
+| h3      | Used to style the h3 blocks                   |
+| p       | Used the style paragraph blocks               |
+| div     | Used to style generic blocks of text          |
+| list    | Used to indicate how lists should be styled   |
+| span    | Used to style generic inline elements of text |
 
-// Property: <bold>Bold Text</bold>
-```
-
-Using these you can create relatively complex compositions imperatively.
 
 ## Developing
 
@@ -201,4 +270,22 @@ The parser code in this context is generated from a grammar file (terminal-marku
 2. Make the necessary changes to the grammar. This could involve adding new rules, modifying existing ones, or fixing bugs.
 3. Run the generate.ts script to generate a new parser. You can do this by running `bun parser:generate`
 4. The updated parser will be written to `generated-parser.js`.
-5. Any new grammar that added or fixed remember to add a test to `test/fixtures.json`
+5. Any new grammar that added or fixed remember to add a test to `test/test-markup-strings.json`
+
+## Testing
+
+Test files are colocated with the files that they are testing using the format `<filename>.test.ts`.  For composition and 
+markup tests, we automatically generate fixture files from an array of test string and commands.  
+
+Many of the tests are built off of fixtures that can be re-recorded at any time using the `tests:record` script.
+
+`test-composer-commands` is a file that export an array where each item in the array is a function that runs an compose command.
+When you run `bun run tests:record` each of these functions is executed and the results are stored in the `composer-fixtures.json` file 
+which is then run as part of the package's tests.
+
+`test-markup-strings` is an array of valid markup strings that are used during the `bun run tests:record` script to 
+generate the `compiler-fixtures.json` file which contains the inputs and expected outputs.  
+
+**You should only rerecord the fixtures if you are confident that they will generate correct output**
+
+

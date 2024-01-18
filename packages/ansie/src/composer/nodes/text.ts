@@ -1,6 +1,7 @@
 import { ComposerNode, type NodeParams } from ".";
 import type { RawTextNode } from "../../compiler/handlers/raw-text-handler";
-import type { BodyNode, H1Node, H2Node, H3Node } from "../../compiler/handlers/text-handlers";
+import type { BodyNode, DivNode, H1Node, H2Node, H3Node, ParagraphNode, SpanNode } from "../../compiler/handlers/text-handlers";
+import type { AnsieStyle } from "../styles";
 
 export interface TextNodeParams extends NodeParams {
     italics?: boolean;
@@ -10,31 +11,65 @@ export interface TextNodeParams extends NodeParams {
     bg?: string;
 }
 
-export class TextComposerNode extends ComposerNode {
-    node: string;
-    italics: boolean;
-    underline: ('single' | 'double' | 'none') | boolean;
-    bold: boolean;
-    fg: string;
-    bg: string;
+export interface SpaceNodeParams extends NodeParams {
+    margin?: number;
+    marginLeft?: number;
+    marginRight?: number;
+    marginTop?: number;
+    marginBottom?: number;
+}
 
-    constructor(params: TextNodeParams) {
-        super(params);
-        this.italics = params.italics;
-        this.underline = params.underline;
-        this.bold = params.bold;
-        this.fg = params.fg;
-        this.bg = params.bg;
+/**
+ * Builds a set of attributes from a style object.  This is used to build the attributes for a node tag.  It will
+ * only include attributes that are defined in the style object.
+ * @param style 
+ * @returns 
+ */
+function buildAttributesFromStyle(style: AnsieStyle): Record<string, string|number|boolean|undefined> {
+    const attributes: Record<string, string|number|boolean|undefined> = {};
+    if (style.font?.italics) {
+        attributes.italics = style.font.italics;
+    }
+    if (style.font?.underline) {
+        attributes.underline = style.font.underline;
+    }
+    if (style.font?.bold) {
+        attributes.bold = style.font.bold;
+    }
+    if (style.font?.color.fg) {
+        attributes.fg = style.font.color.fg;
+    }
+    if (style.font?.color.bg) {
+        attributes.bg = style.font.color.bg;
     }
 
+    if (style.spacing?.margin) {
+        attributes.margin = style.spacing.margin;
+    }
+    if (style.spacing?.marginLeft) {
+        attributes.marginLeft = style.spacing.marginLeft;
+    }
+    if (style.spacing?.marginRight) {
+        attributes.marginRight = style.spacing.marginRight;
+    }
+    if (style.spacing?.marginTop) {
+        attributes.marginTop = style.spacing.marginTop;
+    }
+    if (style.spacing?.marginBottom) {
+        attributes.marginBottom = style.spacing.marginBottom;
+    }
+    
+    return attributes;
+
+}
+
+export class TextComposerNode extends ComposerNode {
+    node: string;
+
     toString() {
-        const italics = this.italics ? 'italics' : '';
-        const underline = this.underline ? `underline${typeof this.underline === 'string' ? `="${this.underline}"` : ''}` : '';
-        const bold = this.bold ? 'bold' : '';
-        const fg = this.fg ? `fg="${this.fg}"` : '';
-        const bg = this.bg ? `bg="${this.bg}"` : '';
-        
-        return `<${this.node} ${italics} ${underline} ${bold} ${fg} ${bg}>${super.toString()}</${this.node}>`;
+        const attributes = buildAttributesFromStyle(this.attrib) || {};
+        const attributesString = Object.entries(attributes).map(([key, value]) => `${key}${value ? `="${value}` : ''}"`).join(' ')
+        return `<${this.node} ${attributesString}>${super.toString()}</${this.node}>`;
     }
 }
 
@@ -63,7 +98,23 @@ export class H3ComposerNode extends TextComposerNode implements H3Node {
     node = 'h3' as const;
 }
 
+// NODE: P
 
+export class ParagraphComposerNode extends TextComposerNode implements ParagraphNode {
+    node = 'p' as const;
+}
+
+// NODE: SPAN
+
+export class SpanComposerNode extends TextComposerNode implements SpanNode {
+    node = 'span' as const;
+}
+
+// NODE: DIV
+
+export class DivComposerNode extends TextComposerNode implements DivNode {
+    node = 'div' as const;
+}
 
 // NODE: RAW TEXT
 export interface RawTextNodeParams extends NodeParams {

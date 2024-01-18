@@ -1,18 +1,46 @@
-import { defaultTheme, type AnsieTheme } from '../styles';
-import { AvailableComposerNodes } from './all-nodes';
+import { defaultTheme, type AnsieTheme, type AnsieStyle } from '../styles';
 
 export interface NodeParams {
-    nodes?: ComposerNodeCompatible;
+    nodes?: ComposerNode[];
     theme?: AnsieTheme;
+    style?: AnsieStyle;
     [key: string]: unknown;
 }
 
+/**
+ * The base class for all composition nodes.  This store information about the theme, style and 
+ * content of the node.  It also provides methods for adding content to the node and
+ * converting the node to a string.
+ * 
+ * ## Differences between a styling and themes
+ * 
+ * A theme is a set of styles that are applied to a set of nodes.  A theme is applied to a node
+ * by the composer when the node is created.  A style is a subset of styling attributes to apply
+ * to this specific node.  The assigned styling properties will always take precedence over the
+ * theme properties.
+ * 
+ * ## Creating a node
+ * 
+ * A node can be created by calling the constructor directly or by calling the `create` method.
+ * The `create` method will handle the proper instantiation of a node from a node or an array of
+ * nodes.
+ * 
+ * ## Adding content to a node
+ * 
+ * Content can be added to a node by calling the `add` method.  This method will handle the creation
+ * of a node from a node, string or an array of either.
+ * 
+ */
 export abstract class ComposerNode {
+    abstract node: string;
+
     _theme: AnsieTheme;
     _content: ComposerNode[];
+    _style: AnsieStyle;
     constructor(params: NodeParams = {}) {
         this._content = ComposerNode.create(params.nodes) || [];        
         this._theme = params.theme || defaultTheme;
+        this._style = params.style || {};
     }
 
     toString() {
@@ -25,6 +53,26 @@ export abstract class ComposerNode {
 
     get theme() {
         return this._theme;
+    }
+
+    set style(style: AnsieStyle) {
+        this._style = style;
+    }
+
+    get style() {
+        return this._style;
+    }
+
+    /**
+     * Get the attributes for this node.  This will merge the theme attributes with the style attributes.
+     * Override to include additional attributes.
+     * @returns 
+     */
+    get attrib() {
+        return {
+            ...(this._theme[this.node] ? this._theme[this.node] : {}),
+            ...(this._style ? this._style : {}),
+        }
     }
 
     /**
@@ -44,9 +92,6 @@ export abstract class ComposerNode {
         if (Array.isArray(node)) {
             // If we got an array then call this function recursively
             return node.map(n => ComposerNode.create(n).at(0)).filter(n => !!n);
-        } else if (typeof node === 'string') {
-            // If we have a string then interpret the string as a node
-            return [ComposerNode.interpretString(node)].filter(n => !!n);
         } else if (node instanceof ComposerNode) {
             // If we got a node then just return it as is
             return [node];
@@ -55,52 +100,9 @@ export abstract class ComposerNode {
             return undefined;
         }
     }
-
-    /**
-     * Interpret a string as a node.  This is used to allow strings to be passed in place of
-     * nodes in some cases.  For example, if you pass a string to the `bold` function, it will
-     * be interpreted as a `text` node.  But this function can also be used to interpret a
-     * string as a node in any other context.  This opens up the extensibility to allow for
-     * specialized nodes that take string as inputs.
-     * @param str
-     * @returns
-     */
-    protected static interpretString(str: string): ComposerNode {
-        // If we got a string then try to create a node from it.
-        //  We'll try each of the available node types until we find one that works.
-        const bld = AvailableComposerNodes.reduce(
-            (acc, cls) => {
-                return acc || cls.createFromAlternateInput?.(str);
-            },
-            undefined as ComposerNode | undefined,
-        );
-
-        // If we didn't find a node then throw an error.
-        if (!bld) {
-            throw new Error(`Unable to create node from ${str}`);
-        }
-
-        return Array.isArray(bld) ? bld[0] : bld;
-    }
-
-    /**
-     * Nodes can override this to allow for alternate input types.  For example, the `text` node
-     * will accept a string as a node.  We use it to allow strings to be passed in place of nodes
-     * in some cases.  Example:
-     *
-     *  color('red', 'green', [bold(['Hello World'])]) will create a node that looks like this:
-     *  `<color fg=red bg=green><bold>Hello World</bold></color>`
-     *
-     * @param node
-     * @returns
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    static createFromAlternateInput(_node: unknown): ComposerNode {
-        return undefined;
-    }
 }
 
-export type ComposerNodeCompatible = ComposerNode | (ComposerNode | string)[] | string;
+export type ComposerNodeCompatible = ComposerNode | ComposerNode[];
 
 
 

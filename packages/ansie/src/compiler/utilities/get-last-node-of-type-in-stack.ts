@@ -1,4 +1,4 @@
-import type { BaseNode } from '../base';
+import type { AnsieNode } from "../types";
 
 /**
  * This function retrieves the last node of a specific type from a stack of nodes (such as the stack of nodes in the compiler).
@@ -11,9 +11,9 @@ import type { BaseNode } from '../base';
  * let result = getLastNodeOfTypeFromStack('bold', stack);
  * // result will be the last node of type 'bold' in the stack
  */
-export function getLastNodeOfTypeFromStack<T extends BaseNode['node']>(
+export function getLastNodeOfTypeFromStack<T extends AnsieNode['node']>(
     nodeType: T,
-    stack: BaseNode[],
+    stack: AnsieNode[],
 ) {
     for (let i = stack.length - 1; i >= 0; i--) {
         const stackNode = stack[i];

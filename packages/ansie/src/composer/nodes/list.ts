@@ -1,5 +1,5 @@
 import { type NodeParams, ComposerNode } from ".";
-import { BreakComposerNode } from "./break";
+import { DivComposerNode } from "./text";
 
 export interface ListNodeParams extends NodeParams {
     bullet?: string;
@@ -7,17 +7,20 @@ export interface ListNodeParams extends NodeParams {
 
 export class ListComposerNode extends ComposerNode {
     node = 'list' as const;    
-    _bullet: string
 
     constructor(params: ListNodeParams) {
-        super(params);
-        this._bullet = params.bullet;
+        const finalNodes = [];
+        for (const node of params.nodes) {
+            // Put each node inside a div node
+            finalNodes.push(new DivComposerNode({ nodes: [node] }));
+        }            
+        super({ ...params, nodes: finalNodes });
     }
 
     toString() {
         let str = '';
         for (const node of this._content) {
-            str += `  ${this._bullet}${node.toString()}${new BreakComposerNode().toString()}`
+            str += `${this._theme.list.list.prefix}${node.toString()}`
         }
         return str;
     }

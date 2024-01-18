@@ -1,13 +1,19 @@
 import { compile } from '../src/compiler';
 import { parse } from '../src/parser/generated-parser';
-import fixtures from './test-strings';
+import compilationFixtures from './test-markup-strings';
+import compositionFixtures from './test-composer-commands';
+import * as readline from 'readline';
 
-export function record(input: string): {
+import { writeFileSync } from 'fs';
+import { resolve } from 'path';
+
+export function recordCompilation(input: string): {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ast: any;
     input: string;
     output: string;
 } {
-    console.log('Recording: ', input);
+    console.log('Recording comilation: ', input);
     const ast = parse(input);
     const output = compile(input);
     return {
@@ -17,16 +23,56 @@ export function record(input: string): {
     };
 }
 
-const results = fixtures.map(f => record(f));
+export function recordComposition(cmd: () => string) {
+    console.log('Recording composition: ', cmd.toString());
+    const markup = cmd();
 
-// Write recorded results to a file
-import { writeFileSync } from 'fs';
-import { resolve } from 'path';
+    // Validate that the markup is valid
+    const result = compile(markup);
+    console.log("Result: ", result);
+
+    return {
+        cmd: cmd.toString(),
+        markup,
+    }
+}
+
+
+// Query the user to ensure that they actually want to overrwrite their fixtures
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
 const currentDir = import.meta.url
     .replace('file://', '')
     .replace('/record.ts', '');
-writeFileSync(
-    resolve(currentDir, 'fixtures.json'),
-    JSON.stringify(results, null, 2),
-    'utf8',
-);
+
+
+rl.question('Do you want to overwrite your fixtures? (y/n) ', (answer) => {
+    if (answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes') {
+        // Write compiler recorded results to a file
+        const compilationResults = compilationFixtures.map(f => recordCompilation(f));
+        writeFileSync(
+            resolve(currentDir, 'compiler-fixtures.json'),
+            JSON.stringify(compilationResults, null, 2),
+            'utf8',
+        );
+
+        // Write composer recorded results to a file
+        const compositionResults = compositionFixtures.map(f => recordComposition(f));
+        writeFileSync(
+            resolve(currentDir, 'composer-fixtures.js'),
+            `// AUTOMATICALLY GENERATED FILE - DO NOT EDIT - RUN yarn fixture:generate TO UPDATE
+import {compose, h1, h2, h3, span, div, p, body, text, markup, list} from '../src/composer'
+export default [\n${
+                compositionResults.map(r => {
+                return `    { cmd: ${r.cmd}, markup: "${r.markup.replaceAll('"', '\\"')}" }`}).join(',\n')}
+]`,            
+            'utf8',
+        );
+    } else {
+        console.log('Operation cancelled.');
+    }
+    rl.close();
+});

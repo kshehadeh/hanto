@@ -10,8 +10,7 @@ console.log('Reading grammar from ', inFile);
 const grammar = readFileSync(inFile, 'utf8');
 const parserSource: string = peggy.generate(grammar, {
     output: 'source',
-    format: 'commonjs',
-    // plugins: [tspeggy],
+    format: 'commonjs',    
 });
 
 const outFile = path.resolve(currentDir, 'generated-parser.js');

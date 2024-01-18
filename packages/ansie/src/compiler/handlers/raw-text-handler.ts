@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import { type NodeHandler } from '..';
-import { type BaseNode } from '../base';
 import { type CompilerFormat } from '../base';
+import type { AnsieNode } from '../types';
+
+//// Raw Text Node - This is a node that represents raw text that should be output as-is with some exceptions (like emoji)
 
 const EmojiMap = {
     ":exclamation:": "❗",
@@ -69,7 +71,7 @@ function replaceEmojiCodes(text: string): string {
 }
 
 export const RawTextNodeHandler: NodeHandler<RawTextNode> = {
-    handleEnter(node: z.infer<typeof RawTextNodeSchema>, stack: BaseNode[], format: CompilerFormat = 'ansi') {
+    handleEnter(node: z.infer<typeof RawTextNodeSchema>, stack: AnsieNode[], format: CompilerFormat = 'ansi') {
         if (format === 'markup') {
             return node.value
         } else {

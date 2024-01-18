@@ -1,23 +1,22 @@
 import { z } from 'zod';
+import type { AnsieNode } from './types';
 
 export const BaseNodeSchema = z.object({
     node: z.string(),
 });
-
-export type BaseNode = z.infer<typeof BaseNodeSchema>;
 
 export class CompilerError implements Error {
     name: string = 'CompilerError';
     message: string;
     fatal: boolean;
 
-    markupNode: BaseNode;
-    markupStack: BaseNode[];
+    markupNode: AnsieNode;
+    markupStack: AnsieNode[];
 
     constructor(
         message: string,
-        markupNode: BaseNode,
-        markupStack: BaseNode[],
+        markupNode: AnsieNode,
+        markupStack: AnsieNode[],
         fatal: boolean = false,
     ) {
         this.message = message;
