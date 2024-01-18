@@ -2,7 +2,7 @@ import { basename, resolve, join } from 'path';
 import fs from 'fs';
 import { build, type BuildArtifact, type Target } from 'bun';
 
-const projectDir = import.meta.dir;
+const projectDir = resolve(import.meta.dir, '../..');
 const targets: Target[] = ['node', 'bun'];
 
 for (const target of targets) {
@@ -12,7 +12,7 @@ for (const target of targets) {
             join(projectDir, './cli.ts'),
         ],
         outdir: resolve(projectDir, `./dist/${target}`),
-        minify: true,
+        minify: false,
         sourcemap: 'external',
         target,
     });

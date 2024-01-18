@@ -8,12 +8,12 @@ const inFile = path.resolve(currentDir, 'ansie-markup.peggy');
 console.log('Reading grammar from ', inFile);
 
 const grammar = readFileSync(inFile, 'utf8');
-const parserSource: string = peggy.generate(grammar, {
+const parserSource: string = '/* eslint-disable */\n' + peggy.generate(grammar, {
     output: 'source',
     format: 'commonjs',    
 });
 
-const outFile = path.resolve(currentDir, 'generated-parser.js');
+const outFile = path.resolve(currentDir, '../../src/parser/generated-parser.js');
 
 console.log('Writing parser to ', outFile);
 writeFileSync(outFile, parserSource, 'utf8');
