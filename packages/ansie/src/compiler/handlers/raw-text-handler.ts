@@ -1,11 +1,10 @@
-import { z } from 'zod';
 import { type NodeHandler } from '..';
 import { type CompilerFormat } from '../base';
-import type { AnsieNode } from '../types';
+import type { AnsieNode, RawTextNode } from '../types';
 
 //// Raw Text Node - This is a node that represents raw text that should be output as-is with some exceptions (like emoji)
 
-const EmojiMap = {
+const EmojiMap: Record<string, string> = {
     ":exclamation:": "❗",
     ":warning:": "⚠️",
     ":no_entry:": "⛔",
@@ -47,13 +46,6 @@ const EmojiMap = {
     ":thumbsup::skin-tone-6:": "👍🏿"    
 }
 
-export const RawTextNodeSchema = z.object({
-    node: z.literal('text'),
-    value: z.string(),
-});
-
-export type RawTextNode = z.infer<typeof RawTextNodeSchema>;
-
 function replaceEmojiCodes(text: string): string {
     // Use regex to find all the emoji names that use the format :emoji_name: and
     //  replace them with the emoji in the emoji map if it exists
@@ -71,7 +63,7 @@ function replaceEmojiCodes(text: string): string {
 }
 
 export const RawTextNodeHandler: NodeHandler<RawTextNode> = {
-    handleEnter(node: z.infer<typeof RawTextNodeSchema>, stack: AnsieNode[], format: CompilerFormat = 'ansi') {
+    handleEnter(node: RawTextNode, stack: AnsieNode[], format: CompilerFormat = 'ansi') {
         if (format === 'markup') {
             return node.value
         } else {
@@ -83,11 +75,9 @@ export const RawTextNodeHandler: NodeHandler<RawTextNode> = {
         return '';
     },
 
-    isType(node: unknown): node is z.infer<typeof RawTextNodeSchema> {
+    isType(node: unknown): node is RawTextNode {
         return (node as RawTextNode).node === 'text';
-    },
-
-    schema: RawTextNodeSchema,
+    }
 };
 
 export const _testableFunctions = {

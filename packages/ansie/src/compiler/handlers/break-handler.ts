@@ -1,15 +1,8 @@
-import { z } from 'zod';
 import { type NodeHandler } from '..';
-import { type CompilerFormat } from '../base';
-import type { AnsieNode } from '../types';
+import { CompilerError, type CompilerFormat } from '../base';
+import type { AnsieNode, BreakNode } from '../types';
 
 //// Break Node - This is a node that represents a line break
-
-export const BreakNodeSchema = z.object({
-    node: z.literal('break'),
-});
-
-export type BreakNode = z.infer<typeof BreakNodeSchema>;
 
 export const BreakNodeHandler: NodeHandler<BreakNode> = {
     handleEnter(node: BreakNode, stack: AnsieNode[], format: CompilerFormat = 'ansi') {
@@ -17,7 +10,9 @@ export const BreakNodeHandler: NodeHandler<BreakNode> = {
             return '\n';
         } else if (format === 'markup') {
             return '<br/>';
-        }
+        } 
+
+        throw new CompilerError(`Invalid format: ${format}`, node, stack, false);
     },
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,6 +23,4 @@ export const BreakNodeHandler: NodeHandler<BreakNode> = {
     isType(node: unknown): node is BreakNode {
         return (node as BreakNode).node === 'break';
     },
-
-    schema: BreakNodeSchema,
 };

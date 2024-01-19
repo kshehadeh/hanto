@@ -1,4 +1,4 @@
-import type { TextAttributes } from "../handlers/text-handlers";
+import type { TextNode } from "../types";
 import { TerminalStyle, escapeCodeFromName } from "./escape-code-from-name";
 import { toTitleCase } from "./to-title-case";
 
@@ -8,7 +8,7 @@ import { toTitleCase } from "./to-title-case";
  * @param properties The text attributes.
  * @returns An object containing the escape codes for turning on and off the specified text attributes.
  */
-export function getTextEscapeCodesFromProperties(properties: TextAttributes): {on: string, off: string} {
+export function getTextEscapeCodesFromProperties(properties: TextNode): {on: string, off: string} {
     const on: TerminalStyle[] = [];
     const off: TerminalStyle[] = [];
     if (properties.fg) {
@@ -42,9 +42,9 @@ export function getTextEscapeCodesFromProperties(properties: TextAttributes): {o
 }
 
 export function colorToTerminalStyle(color: string, foreground: boolean): TerminalStyle {
-    if (foreground) {
-        return TerminalStyle[`fg${toTitleCase(color)}`];
+    if (foreground) {                
+        return TerminalStyle[`fg${toTitleCase(color)}` as keyof typeof TerminalStyle];
     } else {
-        return TerminalStyle[`bg${toTitleCase(color)}`];
+        return TerminalStyle[`bg${toTitleCase(color)}` as keyof typeof TerminalStyle];
     }
 }

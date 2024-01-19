@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { TerminalStyle, escapeCodeFromName } from "./escape-code-from-name";
 import { colorToTerminalStyle, getTextEscapeCodesFromProperties } from './get-text-escape-codes-from-properties';
-import type { TextAttributes } from '../handlers/text-handlers';
+import type { TextNode } from '../types';
 
 describe('colorToTerminalStyle', () => {
     it('should return foreground terminal style for valid color', () => {
@@ -21,9 +21,10 @@ describe('colorToTerminalStyle', () => {
 
 describe('getTextEscapeCodesFromProperties', () => {
     it('should return the correct escape codes for text attributes', () => {
-        const properties: TextAttributes = {
-            fg: 'red',
-            bg: 'blue',
+        const node: TextNode = {
+            node: 'h1' as const,
+            fg: 'red' as const,
+            bg: 'blue' as const,
             bold: true,
             underline: 'single',
             italics: true,
@@ -32,27 +33,28 @@ describe('getTextEscapeCodesFromProperties', () => {
             on: escapeCodeFromName([TerminalStyle.fgRed, TerminalStyle.bgBlue, TerminalStyle.bold, TerminalStyle.underline, TerminalStyle.italic]),
             off: escapeCodeFromName([TerminalStyle.fgDefault, TerminalStyle.bgDefault, TerminalStyle.boldOff, TerminalStyle.underlineOff, TerminalStyle.italicOff]),
         };
-        expect(getTextEscapeCodesFromProperties(properties)).toEqual(expectedOutput);
+        expect(getTextEscapeCodesFromProperties(node)).toEqual(expectedOutput);
     });
 
     it('should return the correct escape codes when some attributes are missing', () => {
-        const properties: TextAttributes = {
-            fg: 'green',
+        const node: TextNode = {
+            node: 'h1' as const,
+            fg: 'green' as const,
             bold: true,
         };
         const expectedOutput = {
             on: escapeCodeFromName([TerminalStyle.fgGreen, TerminalStyle.bold]),
             off: escapeCodeFromName([TerminalStyle.fgDefault, TerminalStyle.boldOff]),
         };
-        expect(getTextEscapeCodesFromProperties(properties)).toEqual(expectedOutput);
+        expect(getTextEscapeCodesFromProperties(node)).toEqual(expectedOutput);
     });
 
     it('should return empty escape codes when no attributes are provided', () => {
-        const properties: TextAttributes = {};
+        const node: TextNode = {} as TextNode;
         const expectedOutput = {
             on: '',
             off: '',
         };
-        expect(getTextEscapeCodesFromProperties(properties)).toEqual(expectedOutput);
+        expect(getTextEscapeCodesFromProperties(node)).toEqual(expectedOutput);
     });
 });

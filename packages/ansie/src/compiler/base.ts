@@ -1,9 +1,4 @@
-import { z } from 'zod';
 import type { AnsieNode } from './types';
-
-export const BaseNodeSchema = z.object({
-    node: z.string(),
-});
 
 /**
  * Represents a compiler error.

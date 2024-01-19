@@ -15,16 +15,34 @@ import { compile } from './src/compiler';
 import pkg from './package.json';
 import { parseString } from './src/parser';
 
-async function readStdin(): Promise<string> {
+function readStdinWithTimeout(timeout: number): Promise<string> {
     return new Promise((resolve, reject) => {
-        let data = '';
-        process.stdin.on('data', chunk => data += chunk);
-        process.stdin.on('end', () => resolve(data));
-        process.stdin.on('error', reject);
+        let inputData = '';
+
+        // Set a timeout to abort reading
+        const timer = setTimeout(() => {
+            process.stdin.pause();
+            resolve('');
+        }, timeout);
+
+        process.stdin.on('data', (data) => {
+            inputData += data;
+        });
+
+        process.stdin.on('end', () => {
+            clearTimeout(timer);
+            resolve(inputData);
+        });
+
+        process.stdin.on('error', (err) => {
+            clearTimeout(timer);
+            reject(err);
+        });
+
+        process.stdin.resume();
     });
 }
-
-const stdInput = await readStdin();
+const stdInput = await readStdinWithTimeout(1);
 
 const y = yargs(hideBin(process.argv))
     .scriptName('ansie')
@@ -69,8 +87,7 @@ const y = yargs(hideBin(process.argv))
                 throw new Error(`The input file ${argv.input} does not exist`);
             }
         }
-        
-
+    
         return true;
     });
 
@@ -95,7 +112,7 @@ if (argv.help) {
         if (argv.ast) {
             output = JSON.stringify(parseString(input), null, 4);
         } else {
-            output = compile(input);
+            output = compile(input) || '';
         }
 
         if (output) {

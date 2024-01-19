@@ -1,12 +1,10 @@
-import type { SpaceAttributes } from "../handlers/text-handlers";
+import type { SpaceNode } from "../types";
 
-
-
-export function getSpacingFromProperties(props: SpaceAttributes) {
-    const left = props.marginLeft || props.margin || 0;
-    const right = props.marginRight || props.margin || 0;
-    const top = props.marginTop || props.margin || 0;
-    const bottom = props.marginBottom || props.margin || 0;
+export function getSpacingFromProperties(node: SpaceNode) {
+    const left = node.marginLeft || node.margin || 0;
+    const right = node.marginRight || node.margin || 0;
+    const top = node.marginTop || node.margin || 0;
+    const bottom = node.marginBottom || node.margin || 0;
 
     const vpre = top ? '\n'.repeat(top) : '';
     const vpost = bottom ? '\n'.repeat(bottom) : '';

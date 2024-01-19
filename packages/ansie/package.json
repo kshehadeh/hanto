@@ -1,6 +1,6 @@
 {
     "name": "ansie",
-    "version": "0.1.1-9",
+    "version": "0.1.1-10",
     "module": "dist/node/index.js",
     "type": "module",
     "homepage": "https://github.com/kshehadeh/hanto/blob/main/packages/ansie/README.md",
@@ -45,6 +45,7 @@
         "ver:maj": "npm version major",
         "bld": "bun test && bun clean && bun bld:quick",
         "bld:quick": "bun ./scripts/build/build.ts",
+        "bld:types": "tsc -p ./configs/tsconfig.types.json",
         "pub": "bun run bld && npm publish",
         "pub:dry": "bun run bld && npm publish --dry-run"
     },
@@ -59,9 +60,7 @@
     "peerDependencies": {
         "typescript": "^5.0.0"
     },
-    "dependencies": {
-        "zod": "^3.22.4"
-    },
+    "dependencies": {},
     "eslintIgnore": [
         "generated-parser.js"
     ]

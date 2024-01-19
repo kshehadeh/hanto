@@ -1,30 +1,27 @@
-import { z } from 'zod';
 import { parseString } from '../parser';
 
-import { AstSchema, NodeSchema, type AnsieNode } from './types';
+import { type AnsieNode, type Ast } from './types';
 import { CompilerError, type CompilerFormat } from './base';
 import { BreakNodeHandler } from './handlers/break-handler';
 import { H1NodeHandler, H2NodeHandler, H3NodeHandler, BodyNodeHandler, ParagraphNodeHandler, DivNodeHandler, SpanNodeHandler } from './handlers/text-handlers';
 import { RawTextNodeHandler } from './handlers/raw-text-handler';
 
-export interface NodeHandler<T extends z.infer<typeof NodeSchema>> {    
+export interface NodeHandler<T extends AnsieNode> {    
     handleEnter(node: T, stack: AnsieNode[], format: CompilerFormat): string;
     handleExit(node: T, stack: AnsieNode[], format: CompilerFormat): string;
-    isType(node: z.infer<typeof NodeSchema>): node is T;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    schema: z.ZodObject<any, any>;
+    isType(node: AnsieNode): node is T;
 }
 
 class Compiler {
-    private _ast: z.infer<typeof AstSchema>;
+    private _ast: Ast;
     private _stack: AnsieNode[] = [];
-    private _handlers: NodeHandler<z.infer<typeof NodeSchema>>[] = [];
+    private _handlers: NodeHandler<AnsieNode>[] = [];
 
     /**
      * The compiler takes the AST from the parser and compiles it into a string
      * @param ast Takes the AST from the compiled markup and stores for future operations.
      */
-    constructor(ast: z.infer<typeof AstSchema>) {
+    constructor(ast: Ast) {
         this._ast = ast;
 
         this._handlers = [
@@ -51,7 +48,7 @@ class Compiler {
         }, '');
     }
 
-    protected handleStateEnter(state: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
+    protected handleStateEnter(state: AnsieNode, format: CompilerFormat = 'ansi') {
         for (const handler of this._handlers) {
             if (handler.isType(state)) {
                 return handler.handleEnter(state, this._stack, format);
@@ -61,7 +58,7 @@ class Compiler {
         throw new CompilerError(`Invalid node type: ${state}`, state, this._stack, true);
     }
 
-    protected handleStateExit(state: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
+    protected handleStateExit(state: AnsieNode, format: CompilerFormat = 'ansi') {
         for (const handler of this._handlers) {
             if (handler.isType(state)) {
                 return handler.handleExit(state, this._stack, format);
@@ -71,7 +68,7 @@ class Compiler {
         throw new CompilerError(`Invalid node type: ${state}`, state, this._stack, true);
     }
 
-    private _push(state: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
+    private _push(state: AnsieNode, format: CompilerFormat = 'ansi') {
         this._stack.push(state);
         return this.handleStateEnter(state, format);
     }
@@ -81,7 +78,7 @@ class Compiler {
         return this.handleStateExit(old!, format);
     }
 
-    private _compileNode(node: z.infer<typeof NodeSchema>, format: CompilerFormat = 'ansi') {
+    private _compileNode(node: AnsieNode, format: CompilerFormat = 'ansi'): string {
         const strings = [];
 
         try {
@@ -107,6 +104,8 @@ class Compiler {
                 }
             }
         }
+
+        return ''
     }
 }
 
