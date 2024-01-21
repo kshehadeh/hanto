@@ -1,3 +1,4 @@
+import type { ValidTags } from "../compiler/types";
 
 export interface AnsieStyle {
     font?: {
@@ -19,7 +20,8 @@ export interface AnsieStyle {
     }
 
     list?: {
-        prefix: string;
+        bullet?: string;
+        indent?: number;
     },
 
 }
@@ -40,6 +42,18 @@ export const body: AnsieStyle = {
         marginRight: 0,
         marginTop: 0,
         marginBottom: 0,
+    },
+};
+
+export const text: AnsieStyle = body;
+
+export const brk: AnsieStyle = {
+    spacing: {
+        margin: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginTop: 0,
+        marginBottom: 1,
     },
 };
 
@@ -110,9 +124,10 @@ export const p: AnsieStyle = {
 export const span: AnsieStyle = {
 };
 
-export const list: AnsieStyle = {
+export const li: AnsieStyle = {
     list: {
-        prefix: '* ',
+        bullet: '* ',
+        indent: 1,
     },
     spacing: {
         margin: 0,
@@ -134,14 +149,16 @@ export const div: AnsieStyle = {
 };
 
 export interface AnsieTheme {
-    h1: AnsieStyle;
-    h2: AnsieStyle;
-    h3: AnsieStyle;
-    body: AnsieStyle;
-    div: AnsieStyle;
-    span: AnsieStyle;
-    list: AnsieStyle;
-    p: AnsieStyle
+    [ValidTags.h1]: AnsieStyle;
+    [ValidTags.h2]: AnsieStyle;
+    [ValidTags.h3]: AnsieStyle;
+    [ValidTags.body]: AnsieStyle;
+    [ValidTags.div]: AnsieStyle;
+    [ValidTags.span]: AnsieStyle;
+    [ValidTags.li]: AnsieStyle;
+    [ValidTags.p]: AnsieStyle
+    [ValidTags.text]: AnsieStyle;
+    [ValidTags.break]: AnsieStyle;
 }
 
 export const defaultTheme: AnsieTheme = {
@@ -150,7 +167,9 @@ export const defaultTheme: AnsieTheme = {
     h3,
     body,
     p,
-    list,
+    li,
     span,
-    div
+    div,
+    break: brk,
+    text
 };

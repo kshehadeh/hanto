@@ -1,6 +1,7 @@
 import { ComposerNode, type NodeParams } from ".";
 import { compile } from "../../compiler";
 import { CompilerError } from "../../compiler/base";
+import { ValidTags } from "../../compiler/types";
 
 export interface MarkupNodeParams extends NodeParams {
     content: string;
@@ -14,8 +15,12 @@ export interface MarkupNodeParams extends NodeParams {
  * @returns 
  */
 export class MarkupComponentNode extends ComposerNode {
-    node = 'raw' as const;
-    markup: string;
+    // NOTE: Markup nodes are not represented in the AST.  They are only used in the composer.
+    //     This is because the markup is already compiled and validated before it is passed
+    //     to the composer.  This is a special case where we are allowing the composer to
+    //     handle the markup directly.
+    node = ValidTags.text;
+    markup: string | undefined = '';
 
     constructor(params: MarkupNodeParams) {
         super(params);     
@@ -33,6 +38,6 @@ export class MarkupComponentNode extends ComposerNode {
     }
 
     toString() {
-        return this.markup;
+        return this.markup ?? '';
     }
 }

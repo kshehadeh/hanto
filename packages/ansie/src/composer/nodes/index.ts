@@ -1,3 +1,4 @@
+import type { ValidTags } from '../../compiler/types';
 import { defaultTheme, type AnsieTheme, type AnsieStyle } from '../styles';
 
 export interface NodeParams {
@@ -6,6 +7,8 @@ export interface NodeParams {
     style?: AnsieStyle;
     [key: string]: unknown;
 }
+
+export type BundleTag = 'bundle';
 
 /**
  * The base class for all composition nodes.  This store information about the theme, style and 
@@ -32,18 +35,18 @@ export interface NodeParams {
  * 
  */
 export abstract class ComposerNode {
-    abstract node: string;
+    abstract node: ValidTags;
 
     _theme: AnsieTheme;
     _content: ComposerNode[];
     _style: AnsieStyle;
     constructor(params: NodeParams = {}) {
-        this._content = ComposerNode.create(params.nodes) || [];        
-        this._theme = params.theme || defaultTheme;
-        this._style = params.style || {};
+        this._content = params.nodes ? ComposerNode.create(params.nodes) : [];        
+        this._theme = params.theme ?? defaultTheme;
+        this._style = params.style ?? {};
     }
 
-    toString() {
+    toString(): string {
         return this._content?.map(c => c.toString()).join('') || '';
     }
 
@@ -91,13 +94,13 @@ export abstract class ComposerNode {
     static create(node: ComposerNodeCompatible): ComposerNode[] {
         if (Array.isArray(node)) {
             // If we got an array then call this function recursively
-            return node.map(n => ComposerNode.create(n).at(0)).filter(n => !!n);
+            return node.map(n => ComposerNode.create(n).at(0)).filter((n): n is ComposerNode => !!n);
         } else if (node instanceof ComposerNode) {
             // If we got a node then just return it as is
             return [node];
         } else {
             // If we got anything else then we can't create a node from it.  .
-            return undefined;
+            return [];
         }
     }
 }

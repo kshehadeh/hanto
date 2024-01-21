@@ -2,20 +2,27 @@ import { parseString } from '../parser';
 
 import { type AnsieNode, type Ast } from './types';
 import { CompilerError, type CompilerFormat } from './base';
-import { BreakNodeHandler } from './handlers/break-handler';
 import { H1NodeHandler, H2NodeHandler, H3NodeHandler, BodyNodeHandler, ParagraphNodeHandler, DivNodeHandler, SpanNodeHandler } from './handlers/text-handlers';
+import { BreakNodeHandler } from './handlers/break-handler';
 import { RawTextNodeHandler } from './handlers/raw-text-handler';
+import { ListItemNodeHandler } from './handlers/list-handler';
 
-export interface NodeHandler<T extends AnsieNode> {    
-    handleEnter(node: T, stack: AnsieNode[], format: CompilerFormat): string;
-    handleExit(node: T, stack: AnsieNode[], format: CompilerFormat): string;
-    isType(node: AnsieNode): node is T;
-}
+const AvailableHandlers = [
+    RawTextNodeHandler,
+    BreakNodeHandler,
+    H1NodeHandler,
+    H2NodeHandler,
+    H3NodeHandler,
+    BodyNodeHandler,
+    ParagraphNodeHandler,
+    DivNodeHandler,
+    SpanNodeHandler,
+    ListItemNodeHandler,
+];
 
 class Compiler {
     private _ast: Ast;
     private _stack: AnsieNode[] = [];
-    private _handlers: NodeHandler<AnsieNode>[] = [];
 
     /**
      * The compiler takes the AST from the parser and compiles it into a string
@@ -23,18 +30,6 @@ class Compiler {
      */
     constructor(ast: Ast) {
         this._ast = ast;
-
-        this._handlers = [
-            RawTextNodeHandler,
-            BreakNodeHandler,
-            H1NodeHandler,
-            H2NodeHandler,
-            H3NodeHandler,
-            BodyNodeHandler,
-            ParagraphNodeHandler,
-            DivNodeHandler,
-            SpanNodeHandler,
-        ];
     }
 
     /**
@@ -49,7 +44,7 @@ class Compiler {
     }
 
     protected handleStateEnter(state: AnsieNode, format: CompilerFormat = 'ansi') {
-        for (const handler of this._handlers) {
+        for (const handler of AvailableHandlers) {
             if (handler.isType(state)) {
                 return handler.handleEnter(state, this._stack, format);
             }            
@@ -59,7 +54,7 @@ class Compiler {
     }
 
     protected handleStateExit(state: AnsieNode, format: CompilerFormat = 'ansi') {
-        for (const handler of this._handlers) {
+        for (const handler of AvailableHandlers) {
             if (handler.isType(state)) {
                 return handler.handleExit(state, this._stack, format);
             }
@@ -112,21 +107,25 @@ class Compiler {
 
 
 export function compile(markup: string, format: CompilerFormat = 'ansi') {
-    const ast = parseString(markup);
+    const ast = parseString(markup);    
     if (ast) {
         const compiler = new Compiler(ast);
         return compiler.compile(format);
+    } else {
+        return ''
     }
 }
 
 if (process.argv[1].includes('compiler')) {
 
-    console.log(compile(`<body>
-    <h1 fg="red" marginBottom="1">H1 RED FOREGROUND</h1>
-        <h2 fg="red" bg="blue" margin="5">RED FOREGROUND AND BLUE BACKGROUND</h2>
-        <p fg="blue" marginTop=1>This is a paragraph</p>
-        <p underline="single" marginTop=1 marginBottom=1>Underlined text with newline</p>
-        <p underline="double" bold marginTop=2 marginBottom=1>Underlined text with newline</p>
-    </body>`));
+    // console.log(compile(`<body>
+    // <h1 fg="red" marginBottom="1">H1 RED FOREGROUND</h1>
+    //     <h2 fg="red" bg="blue" margin="5">RED FOREGROUND AND BLUE BACKGROUND</h2>
+    //     <p fg="blue" marginTop="1">This is a paragraph</p>
+    //     <p underline="single" marginTop="1" marginBottom="1">Underlined text with newline</p>
+    //     <p underline="double" bold marginTop="2" marginBottom="1">Underlined text with newline</p>
+    // </body>`));
+
+    console.log(compile('<h1 underline="double" bold="true" fg="blue" marginTop="1" marginBottom="1">Title</h1><h2 underline="single" bold="true" fg="default" marginTop="1" marginBottom="1">A subtitle</h2><p marginTop="1" marginBottom="1">Paragraph</p>'))
 
 }

@@ -1,6 +1,5 @@
-import { type NodeHandler } from '..';
 import { CompilerError, type CompilerFormat } from '../base';
-import type { AnsieNode, BreakNode } from '../types';
+import type { AnsieNode, BreakNode, NodeHandler } from '../types';
 
 //// Break Node - This is a node that represents a line break
 
@@ -16,7 +15,7 @@ export const BreakNodeHandler: NodeHandler<BreakNode> = {
     },
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    handleExit(node: BreakNode, stack: AnsieNode[], format: CompilerFormat = 'ansi') {
+    handleExit() {
         return '';
     },
 

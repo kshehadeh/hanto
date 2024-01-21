@@ -1,7 +1,4 @@
 import { CompilerError, type CompilerFormat } from '../base';
-import { getTextEscapeCodesFromProperties } from '../utilities/get-text-escape-codes-from-properties';
-import type { NodeHandler } from '..';
-import { getSpacingFromProperties } from '../utilities/get-spacing-from-properties';
 import {
     type AnsieNode,
     type H1Node,
@@ -11,11 +8,22 @@ import {
     type SpanNode,
     type ParagraphNode,
     type DivNode,
-    type SpaceNode,
-    isAttribute
+    type NodeHandler,
 } from '../types';
 
-//// ATTRIBUTE SETS - We organize attributes into types for ease of use and to restrict certain tags to only have certain attributes
+import {
+    renderSpaceAttributesStart,
+    renderSpaceAttributesEnd,
+} from '../utilities/render-space-attributes';
+import {
+    renderTextAttributesStart,
+    renderTextAttributesEnd,
+} from '../utilities/render-text-attributes';
+import {
+    renderNodeAsMarkupStart,
+    renderNodeAsMarkupEnd,
+} from '../utilities/render-node-as-markup';
+
 /////////
 
 /**
@@ -28,19 +36,19 @@ function buildStart(
     node: AnsieNode,
     stack: AnsieNode[],
     format: CompilerFormat,
-) {
-    if (format === 'ansi') {
-        return `${renderSpaceAttributesStart(node, format)}${renderTextAttributesStart(node, format)}`;
+): string {
+    if (format === "ansi") {        
+        return renderSpaceAttributesStart(node, format) + renderTextAttributesStart(node, format);
     } else if (format === 'markup') {
-        const attribs = Object.entries(node)
-            .filter(([key]) => isAttribute(key))
-            .map(([key, value]) => `${key}="${value}"`)
-            .join(' ');
-
-        return `<${node.node}${attribs ? ` ${attribs}` : ''}>`;
+        return renderNodeAsMarkupStart(node);
+    } else {
+        throw new CompilerError(
+            `Invalid format: ${format}`,
+            node,
+            stack,
+            false,
+        );
     }
-
-    throw new CompilerError(`Invalid format: ${format}`, node, stack, false);
 }
 
 /**
@@ -49,117 +57,31 @@ function buildStart(
  * @param format
  * @returns
  */
-function buildEnd(node: AnsieNode, stack: AnsieNode[], format: CompilerFormat) {
+function buildEnd(
+    node: AnsieNode,
+    stack: AnsieNode[],
+    format: CompilerFormat,
+): string {
     if (format === 'ansi') {
         return `${renderTextAttributesEnd(node, format)}${renderSpaceAttributesEnd(node, format)}`;
     } else if (format === 'markup') {
-        return `</${node.node}>`;
+        return renderNodeAsMarkupEnd(node);
+    } else {
+        throw new CompilerError(
+            `Invalid format: ${format}`,
+            node,
+            stack,
+            false,
+        );
     }
-
-    throw new CompilerError(`Invalid format: ${format}`, node, stack, false);
-}
-
-/**
- * Renders the space attributes for a node prepending the appropriate spacing escape codes.
- * @param attributes
- * @param format
- * @returns
- */
-function renderSpaceAttributesStart(
-    node: SpaceNode,
-    format: CompilerFormat = 'ansi',
-) {
-    if (format === 'ansi') {
-        return getSpacingFromProperties(node).on;
-    } else if (format === 'markup') {
-        return Object.entries(node)
-            .filter(([key]) => isAttribute(key))
-            .map(([key, value]) => `${key}="${value}"`)
-            .join(' ');
-    }
-}
-
-/**
- * Renders the space attributes for a node appending the appropriate spacing escape codes.
- * @param attributes
- * @param format
- * @returns
- */
-function renderSpaceAttributesEnd(
-    attributes: AnsieNode,
-    format: CompilerFormat = 'ansi',
-) {
-    if (format === 'ansi') {
-        return getSpacingFromProperties(attributes).off;
-    } else if (format === 'markup') {
-        return '';
-    }
-}
-
-/**
- * Renders the text attributes for a node prepending the appropriate text escape codes.
- * @param attributes
- * @param format
- * @returns
- */
-function renderTextAttributesStart(
-    attributes: AnsieNode,
-    format: CompilerFormat = 'ansi',
-) {
-    if (format === 'ansi') {
-        return getTextEscapeCodesFromProperties(attributes).on;
-    } else if (format === 'markup') {
-        return Object.entries(attributes)
-            .filter(([key]) => isAttribute(key))
-            .map(([key, value]) => `${key}="${value}"`)
-            .join(' ');
-    }
-}
-
-/**
- * Renders the text attributes for a node appending the appropriate text escape codes.
- * @param attributes
- * @param format
- * @returns
- */
-function renderTextAttributesEnd(
-    attributes: AnsieNode,
-    format: CompilerFormat = 'ansi',
-) {
-    if (format === 'ansi') {
-        return getTextEscapeCodesFromProperties(attributes).off;
-    } else if (format === 'markup') {
-        return '';
-    }
-}
-
-/**
- * Builds a node handler for a node setting the schema and the isType function.
- * @param tagName
- * @param schema
- * @returns
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function buildFormattedTextHandler<T extends AnsieNode>(
-    tagName: string,
-) {
-    return {
-        handleEnter: () => {
-            throw new Error('Not implemented');
-        },
-        handleExit: () => {
-            throw new Error('Not implemented');
-        },
-        isType: (node: unknown): node is T =>
-            (node as AnsieNode).node === tagName,
-    } satisfies NodeHandler<T>;
 }
 
 ////// Node Handlers - These are the handlers for the various semantic elements that can be used in the markup
 
 ////// H1 Node - This is the handler for the <h1> element
 export const H1NodeHandler: NodeHandler<H1Node> = {
-    ...buildFormattedTextHandler<H1Node>('h1'),
+    isType: (node: unknown): node is H1Node =>
+        (node as AnsieNode).node === 'h1',
     handleEnter: (
         node: H1Node,
         stack: AnsieNode[],
@@ -174,7 +96,8 @@ export const H1NodeHandler: NodeHandler<H1Node> = {
 
 ////// H2 Node - This is the handler for the <h2> element
 export const H2NodeHandler: NodeHandler<H2Node> = {
-    ...buildFormattedTextHandler<H2Node>('h2'),
+    isType: (node: unknown): node is H2Node =>
+        (node as AnsieNode).node === 'h2',
     handleEnter: (
         node: H2Node,
         stack: AnsieNode[],
@@ -189,7 +112,8 @@ export const H2NodeHandler: NodeHandler<H2Node> = {
 
 ////// H3 Node - This is the handler for the <h3> element
 export const H3NodeHandler: NodeHandler<H3Node> = {
-    ...buildFormattedTextHandler<H3Node>('h3'),
+    isType: (node: unknown): node is H3Node =>
+        (node as AnsieNode).node === 'h3',
     handleEnter: (
         node: H3Node,
         stack: AnsieNode[],
@@ -204,7 +128,8 @@ export const H3NodeHandler: NodeHandler<H3Node> = {
 
 ////// Body Node - This is the handler for the <body> element
 export const BodyNodeHandler: NodeHandler<BodyNode> = {
-    ...buildFormattedTextHandler<BodyNode>('body'),
+    isType: (node: unknown): node is BodyNode =>
+        (node as AnsieNode).node === 'body',
     handleEnter: (
         node: BodyNode,
         stack: AnsieNode[],
@@ -219,7 +144,8 @@ export const BodyNodeHandler: NodeHandler<BodyNode> = {
 
 ////// Span Node - This is the handler for the <span> element which does not have any semantic meaning but is used for altering the formatting of text
 export const SpanNodeHandler: NodeHandler<SpanNode> = {
-    ...buildFormattedTextHandler<SpanNode>('span'),
+    isType: (node: unknown): node is SpanNode =>
+        (node as AnsieNode).node === 'span',
     handleEnter: (
         node: SpanNode,
         stack: AnsieNode[],
@@ -234,7 +160,8 @@ export const SpanNodeHandler: NodeHandler<SpanNode> = {
 
 ////// P Node - This is the handler for the <p> element which is used for paragraph separation
 export const ParagraphNodeHandler: NodeHandler<ParagraphNode> = {
-    ...buildFormattedTextHandler<ParagraphNode>('p'),
+    isType: (node: unknown): node is ParagraphNode =>
+        (node as AnsieNode).node === 'p',
     handleEnter: (
         node: ParagraphNode,
         stack: AnsieNode[],
@@ -249,7 +176,8 @@ export const ParagraphNodeHandler: NodeHandler<ParagraphNode> = {
 
 ////// Div Node - This is the handler for the <div> element which is used for grouping content
 export const DivNodeHandler: NodeHandler<DivNode> = {
-    ...buildFormattedTextHandler<DivNode>('div'),
+    isType: (node: unknown): node is DivNode =>
+        (node as AnsieNode).node === 'div',
     handleEnter: (
         node: DivNode,
         stack: AnsieNode[],
@@ -265,8 +193,4 @@ export const DivNodeHandler: NodeHandler<DivNode> = {
 export const _testableFunctions = {
     buildStart,
     buildEnd,
-    renderSpaceAttributesStart,
-    renderSpaceAttributesEnd,
-    renderTextAttributesStart,
-    renderTextAttributesEnd,
 };

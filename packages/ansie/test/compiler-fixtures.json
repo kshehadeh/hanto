@@ -7,8 +7,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title",
-            "content": []
+            "value": "title"
           }
         ]
       }
@@ -16,174 +15,132 @@
     "output": "title"
   },
   {
-    "input": "<h1 bold>title with bold</h1>",
+    "input": "<h1 bold>title with bold - inferred</h1>",
     "ast": [
       {
         "node": "h1",
-        "bold": true,
+        "bold": "true",
         "content": [
           {
             "node": "text",
-            "value": "title with bold",
-            "content": []
+            "value": "title with bold - inferred"
           }
         ]
       }
     ],
-    "output": "\u001b[1mtitle with bold\u001b[22m"
+    "output": "\u001b[1mtitle with bold - inferred\u001b[22m"
   },
   {
-    "input": "<h1 bold=\"true\">title with bold</h1>",
+    "input": "<h1 bold=\"true\">title with bold - true</h1>",
     "ast": [
       {
         "node": "h1",
-        "bold": true,
+        "bold": "true",
         "content": [
           {
             "node": "text",
-            "value": "title with bold",
-            "content": []
+            "value": "title with bold - true"
           }
         ]
       }
     ],
-    "output": "\u001b[1mtitle with bold\u001b[22m"
+    "output": "\u001b[1mtitle with bold - true\u001b[22m"
   },
   {
-    "input": "<h1 bold=\"yes\">title with bold</h1>",
+    "input": "<h1 bold=\"yes\">title with bold - yes</h1>",
     "ast": [
       {
         "node": "h1",
-        "bold": true,
+        "bold": "yes",
         "content": [
           {
             "node": "text",
-            "value": "title with bold",
-            "content": []
+            "value": "title with bold - yes"
           }
         ]
       }
     ],
-    "output": "\u001b[1mtitle with bold\u001b[22m"
+    "output": "\u001b[1mtitle with bold - yes\u001b[22m"
   },
   {
-    "input": "<h1 bold=\"false\">title without bold</h1>",
+    "input": "<h1 bold=\"false\">title without bold - false</h1>",
     "ast": [
       {
         "node": "h1",
-        "bold": false,
+        "bold": "false",
         "content": [
           {
             "node": "text",
-            "value": "title without bold",
-            "content": []
+            "value": "title without bold - false"
           }
         ]
       }
     ],
-    "output": "title without bold"
+    "output": "\u001b[1mtitle without bold - false\u001b[22m"
   },
   {
-    "input": "<h1 bold=\"no\">title without bold</h1>",
+    "input": "<h1 bold=\"no\">title without bold - no</h1>",
     "ast": [
       {
         "node": "h1",
-        "bold": false,
+        "bold": "no",
         "content": [
           {
             "node": "text",
-            "value": "title without bold",
-            "content": []
+            "value": "title without bold - no"
           }
         ]
       }
     ],
-    "output": "title without bold"
+    "output": "\u001b[1mtitle without bold - no\u001b[22m"
   },
   {
-    "input": "<h1 underline>title with underline</h1>",
+    "input": "<h1 underline>title with underline - inferred</h1>",
     "ast": [
       {
         "node": "h1",
-        "underline": true,
+        "underline": "true",
         "content": [
           {
             "node": "text",
-            "value": "title with underline",
-            "content": []
+            "value": "title with underline - inferred"
           }
         ]
       }
     ],
-    "output": "title with underline\u001b[24m"
+    "output": "title with underline - inferred\u001b[24m"
   },
   {
-    "input": "<h1 underline=\"true\">title with underline</h1>",
+    "input": "<h1 underline=\"true\">title with underline - true</h1>",
     "ast": [
       {
         "node": "h1",
-        "underline": true,
+        "underline": "true",
         "content": [
           {
             "node": "text",
-            "value": "title with underline",
-            "content": []
+            "value": "title with underline - true"
           }
         ]
       }
     ],
-    "output": "title with underline\u001b[24m"
+    "output": "title with underline - true\u001b[24m"
   },
   {
-    "input": "<h1 underline=\"yes\">title with underline</h1>",
+    "input": "<h1 underline=\"yes\">title with underline - yes</h1>",
     "ast": [
       {
         "node": "h1",
-        "underline": true,
+        "underline": "yes",
         "content": [
           {
             "node": "text",
-            "value": "title with underline",
-            "content": []
+            "value": "title with underline - yes"
           }
         ]
       }
     ],
-    "output": "title with underline\u001b[24m"
-  },
-  {
-    "input": "<h1 underline=\"false\">title without underline</h1>",
-    "ast": [
-      {
-        "node": "h1",
-        "underline": false,
-        "content": [
-          {
-            "node": "text",
-            "value": "title without underline",
-            "content": []
-          }
-        ]
-      }
-    ],
-    "output": "title without underline"
-  },
-  {
-    "input": "<h1 underline=\"no\">title without underline</h1>",
-    "ast": [
-      {
-        "node": "h1",
-        "underline": false,
-        "content": [
-          {
-            "node": "text",
-            "value": "title without underline",
-            "content": []
-          }
-        ]
-      }
-    ],
-    "output": "title without underline"
+    "output": "title with underline - yes\u001b[24m"
   },
   {
     "input": "<h1 underline=\"single\">title with single underline</h1>",
@@ -194,8 +151,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with single underline",
-            "content": []
+            "value": "title with single underline"
           }
         ]
       }
@@ -211,8 +167,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with double underline",
-            "content": []
+            "value": "title with double underline"
           }
         ]
       }
@@ -220,7 +175,39 @@
     "output": "\u001b[21mtitle with double underline\u001b[24m"
   },
   {
-    "input": "<h1 underline=\"none\">title without underline</h1>",
+    "input": "<h1 underline=\"false\">title without underline - false</h1>",
+    "ast": [
+      {
+        "node": "h1",
+        "underline": "false",
+        "content": [
+          {
+            "node": "text",
+            "value": "title without underline - false"
+          }
+        ]
+      }
+    ],
+    "output": "title without underline - false\u001b[24m"
+  },
+  {
+    "input": "<h1 underline=\"no\">title without underline - no</h1>",
+    "ast": [
+      {
+        "node": "h1",
+        "underline": "no",
+        "content": [
+          {
+            "node": "text",
+            "value": "title without underline - no"
+          }
+        ]
+      }
+    ],
+    "output": "title without underline - no\u001b[24m"
+  },
+  {
+    "input": "<h1 underline=\"none\">title without underline - none</h1>",
     "ast": [
       {
         "node": "h1",
@@ -228,25 +215,23 @@
         "content": [
           {
             "node": "text",
-            "value": "title without underline",
-            "content": []
+            "value": "title without underline - none"
           }
         ]
       }
     ],
-    "output": "title without underline\u001b[24m"
+    "output": "title without underline - none\u001b[24m"
   },
   {
     "input": "<h1 italics>title with italics</h1>",
     "ast": [
       {
         "node": "h1",
-        "italics": true,
+        "italics": "true",
         "content": [
           {
             "node": "text",
-            "value": "title with italics",
-            "content": []
+            "value": "title with italics"
           }
         ]
       }
@@ -258,12 +243,11 @@
     "ast": [
       {
         "node": "h1",
-        "italics": true,
+        "italics": "true",
         "content": [
           {
             "node": "text",
-            "value": "title with italics",
-            "content": []
+            "value": "title with italics"
           }
         ]
       }
@@ -275,12 +259,11 @@
     "ast": [
       {
         "node": "h1",
-        "italics": true,
+        "italics": "yes",
         "content": [
           {
             "node": "text",
-            "value": "title with italics",
-            "content": []
+            "value": "title with italics"
           }
         ]
       }
@@ -292,34 +275,32 @@
     "ast": [
       {
         "node": "h1",
-        "italics": false,
+        "italics": "false",
         "content": [
           {
             "node": "text",
-            "value": "title without italics",
-            "content": []
+            "value": "title without italics"
           }
         ]
       }
     ],
-    "output": "title without italics"
+    "output": "\u001b[3mtitle without italics\u001b[23m"
   },
   {
     "input": "<h1 italics=\"no\">title without italics</h1>",
     "ast": [
       {
         "node": "h1",
-        "italics": false,
+        "italics": "no",
         "content": [
           {
             "node": "text",
-            "value": "title without italics",
-            "content": []
+            "value": "title without italics"
           }
         ]
       }
     ],
-    "output": "title without italics"
+    "output": "\u001b[3mtitle without italics\u001b[23m"
   },
   {
     "input": "<h1 fg=\"red\">title with red foreground</h1>",
@@ -330,8 +311,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with red foreground",
-            "content": []
+            "value": "title with red foreground"
           }
         ]
       }
@@ -347,8 +327,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with blue foreground",
-            "content": []
+            "value": "title with blue foreground"
           }
         ]
       }
@@ -364,8 +343,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with green foreground",
-            "content": []
+            "value": "title with green foreground"
           }
         ]
       }
@@ -381,8 +359,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with yellow foreground",
-            "content": []
+            "value": "title with yellow foreground"
           }
         ]
       }
@@ -398,8 +375,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with cyan foreground",
-            "content": []
+            "value": "title with cyan foreground"
           }
         ]
       }
@@ -415,8 +391,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with magenta foreground",
-            "content": []
+            "value": "title with magenta foreground"
           }
         ]
       }
@@ -432,8 +407,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with black foreground",
-            "content": []
+            "value": "title with black foreground"
           }
         ]
       }
@@ -449,8 +423,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with white foreground",
-            "content": []
+            "value": "title with white foreground"
           }
         ]
       }
@@ -466,8 +439,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with gray foreground",
-            "content": []
+            "value": "title with gray foreground"
           }
         ]
       }
@@ -483,8 +455,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-red foreground",
-            "content": []
+            "value": "title with bright-red foreground"
           }
         ]
       }
@@ -500,8 +471,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-blue foreground",
-            "content": []
+            "value": "title with bright-blue foreground"
           }
         ]
       }
@@ -517,8 +487,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-green foreground",
-            "content": []
+            "value": "title with bright-green foreground"
           }
         ]
       }
@@ -534,8 +503,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-yellow foreground",
-            "content": []
+            "value": "title with bright-yellow foreground"
           }
         ]
       }
@@ -551,8 +519,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-cyan foreground",
-            "content": []
+            "value": "title with bright-cyan foreground"
           }
         ]
       }
@@ -568,8 +535,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-magenta foreground",
-            "content": []
+            "value": "title with bright-magenta foreground"
           }
         ]
       }
@@ -585,8 +551,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with red background",
-            "content": []
+            "value": "title with red background"
           }
         ]
       }
@@ -602,8 +567,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with blue background",
-            "content": []
+            "value": "title with blue background"
           }
         ]
       }
@@ -619,8 +583,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with green background",
-            "content": []
+            "value": "title with green background"
           }
         ]
       }
@@ -636,8 +599,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with yellow background",
-            "content": []
+            "value": "title with yellow background"
           }
         ]
       }
@@ -653,8 +615,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with cyan background",
-            "content": []
+            "value": "title with cyan background"
           }
         ]
       }
@@ -670,8 +631,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with magenta background",
-            "content": []
+            "value": "title with magenta background"
           }
         ]
       }
@@ -687,8 +647,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with black background",
-            "content": []
+            "value": "title with black background"
           }
         ]
       }
@@ -704,8 +663,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with white background",
-            "content": []
+            "value": "title with white background"
           }
         ]
       }
@@ -721,8 +679,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with gray background",
-            "content": []
+            "value": "title with gray background"
           }
         ]
       }
@@ -738,8 +695,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-red background",
-            "content": []
+            "value": "title with bright-red background"
           }
         ]
       }
@@ -755,8 +711,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-blue background",
-            "content": []
+            "value": "title with bright-blue background"
           }
         ]
       }
@@ -772,8 +727,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-green background",
-            "content": []
+            "value": "title with bright-green background"
           }
         ]
       }
@@ -789,8 +743,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-yellow background",
-            "content": []
+            "value": "title with bright-yellow background"
           }
         ]
       }
@@ -806,8 +759,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-cyan background",
-            "content": []
+            "value": "title with bright-cyan background"
           }
         ]
       }
@@ -823,8 +775,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with bright-magenta background",
-            "content": []
+            "value": "title with bright-magenta background"
           }
         ]
       }
@@ -841,8 +792,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with red foreground and blue background",
-            "content": []
+            "value": "title with red foreground and blue background"
           }
         ]
       }
@@ -859,8 +809,7 @@
         "content": [
           {
             "node": "text",
-            "value": "title with blue foreground and red background",
-            "content": []
+            "value": "title with blue foreground and red background"
           }
         ]
       }
@@ -872,12 +821,11 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
+        "margin": "1",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -889,13 +837,12 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginTop": 2,
+        "margin": "1",
+        "marginTop": "2",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -907,13 +854,12 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginBottom": 2,
+        "margin": "1",
+        "marginBottom": "2",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -925,13 +871,12 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginLeft": 2,
+        "margin": "1",
+        "marginLeft": "2",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -943,13 +888,12 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginRight": 2,
+        "margin": "1",
+        "marginRight": "2",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -961,16 +905,15 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginTop": 2,
-        "marginBottom": 3,
-        "marginLeft": 4,
-        "marginRight": 5,
+        "margin": "1",
+        "marginTop": "2",
+        "marginBottom": "3",
+        "marginLeft": "4",
+        "marginRight": "5",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -982,17 +925,16 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginTop": 2,
-        "marginBottom": 3,
-        "marginLeft": 4,
-        "marginRight": 5,
+        "margin": "1",
+        "marginTop": "2",
+        "marginBottom": "3",
+        "marginLeft": "4",
+        "marginRight": "5",
         "fg": "red",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -1004,17 +946,16 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginTop": 2,
-        "marginBottom": 3,
-        "marginLeft": 4,
-        "marginRight": 5,
+        "margin": "1",
+        "marginTop": "2",
+        "marginBottom": "3",
+        "marginLeft": "4",
+        "marginRight": "5",
         "bg": "red",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -1026,18 +967,17 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginTop": 2,
-        "marginBottom": 3,
-        "marginLeft": 4,
-        "marginRight": 5,
+        "margin": "1",
+        "marginTop": "2",
+        "marginBottom": "3",
+        "marginLeft": "4",
+        "marginRight": "5",
         "fg": "red",
         "bg": "blue",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -1049,19 +989,18 @@
     "ast": [
       {
         "node": "h1",
-        "margin": 1,
-        "marginTop": 2,
-        "marginBottom": 3,
-        "marginLeft": 4,
-        "marginRight": 5,
+        "margin": "1",
+        "marginTop": "2",
+        "marginBottom": "3",
+        "marginLeft": "4",
+        "marginRight": "5",
         "fg": "red",
         "bg": "blue",
-        "bold": true,
+        "bold": "true",
         "content": [
           {
             "node": "text",
-            "value": "title with margin",
-            "content": []
+            "value": "title with margin"
           }
         ]
       }
@@ -1079,8 +1018,7 @@
             "content": [
               {
                 "node": "text",
-                "value": "title",
-                "content": []
+                "value": "title"
               }
             ]
           }
@@ -1100,8 +1038,7 @@
             "content": [
               {
                 "node": "text",
-                "value": "title",
-                "content": []
+                "value": "title"
               }
             ]
           },
@@ -1110,8 +1047,7 @@
             "content": [
               {
                 "node": "text",
-                "value": "subtitle",
-                "content": []
+                "value": "subtitle"
               }
             ]
           },
@@ -1120,31 +1056,27 @@
             "content": [
               {
                 "node": "text",
-                "value": "Paragraph with ",
-                "content": []
+                "value": "Paragraph with "
               },
               {
                 "node": "span",
                 "content": [
                   {
                     "node": "text",
-                    "value": "span",
-                    "content": []
+                    "value": "span"
                   }
                 ]
               },
               {
                 "node": "text",
-                "value": "and ",
-                "content": []
+                "value": " and "
               },
               {
                 "node": "div",
                 "content": [
                   {
                     "node": "text",
-                    "value": "div",
-                    "content": []
+                    "value": "div"
                   }
                 ]
               }
@@ -1153,6 +1085,61 @@
         ]
       }
     ],
-    "output": "titlesubtitleParagraph with spanand div"
+    "output": "titlesubtitleParagraph with span and div"
+  },
+  {
+    "input": "<h1>Multiple top-level elements</h1><h2>subtitle</h2><p>Paragraph with <span>span</span> and <div>div</div></p>",
+    "ast": [
+      {
+        "node": "h1",
+        "content": [
+          {
+            "node": "text",
+            "value": "Multiple top-level elements"
+          }
+        ]
+      },
+      {
+        "node": "h2",
+        "content": [
+          {
+            "node": "text",
+            "value": "subtitle"
+          }
+        ]
+      },
+      {
+        "node": "p",
+        "content": [
+          {
+            "node": "text",
+            "value": "Paragraph with "
+          },
+          {
+            "node": "span",
+            "content": [
+              {
+                "node": "text",
+                "value": "span"
+              }
+            ]
+          },
+          {
+            "node": "text",
+            "value": " and "
+          },
+          {
+            "node": "div",
+            "content": [
+              {
+                "node": "text",
+                "value": "div"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "output": "Multiple top-level elementssubtitleParagraph with span and div"
   }
 ]

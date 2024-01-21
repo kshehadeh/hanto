@@ -1,6 +1,5 @@
-import { type NodeHandler } from '..';
 import { type CompilerFormat } from '../base';
-import type { AnsieNode, RawTextNode } from '../types';
+import type { AnsieNode, NodeHandler, RawTextNode } from '../types';
 
 //// Raw Text Node - This is a node that represents raw text that should be output as-is with some exceptions (like emoji)
 
@@ -63,7 +62,10 @@ function replaceEmojiCodes(text: string): string {
 }
 
 export const RawTextNodeHandler: NodeHandler<RawTextNode> = {
-    handleEnter(node: RawTextNode, stack: AnsieNode[], format: CompilerFormat = 'ansi') {
+
+    isType: (node: AnsieNode): node is RawTextNode => node.node === 'text',
+    
+    handleEnter(node: RawTextNode, _stack: AnsieNode[], format: CompilerFormat = 'ansi') {
         if (format === 'markup') {
             return node.value
         } else {
@@ -73,11 +75,7 @@ export const RawTextNodeHandler: NodeHandler<RawTextNode> = {
 
     handleExit() {
         return '';
-    },
-
-    isType(node: unknown): node is RawTextNode {
-        return (node as RawTextNode).node === 'text';
-    }
+    },    
 };
 
 export const _testableFunctions = {

@@ -1,19 +1,19 @@
 export default [
     '<h1>title</h1>',
-    '<h1 bold>title with bold</h1>',
-    '<h1 bold="true">title with bold</h1>',
-    '<h1 bold="yes">title with bold</h1>',
-    '<h1 bold="false">title without bold</h1>',
-    '<h1 bold="no">title without bold</h1>',
+    '<h1 bold>title with bold - inferred</h1>',
+    '<h1 bold="true">title with bold - true</h1>',
+    '<h1 bold="yes">title with bold - yes</h1>',
+    '<h1 bold="false">title without bold - false</h1>',
+    '<h1 bold="no">title without bold - no</h1>',
 
-    '<h1 underline>title with underline</h1>',
-    '<h1 underline="true">title with underline</h1>',
-    '<h1 underline="yes">title with underline</h1>',
-    '<h1 underline="false">title without underline</h1>',
-    '<h1 underline="no">title without underline</h1>',
+    '<h1 underline>title with underline - inferred</h1>',
+    '<h1 underline="true">title with underline - true</h1>',
+    '<h1 underline="yes">title with underline - yes</h1>',
     '<h1 underline="single">title with single underline</h1>',
     '<h1 underline="double">title with double underline</h1>',
-    '<h1 underline="none">title without underline</h1>',
+    '<h1 underline="false">title without underline - false</h1>',
+    '<h1 underline="no">title without underline - no</h1>',
+    '<h1 underline="none">title without underline - none</h1>',
 
     '<h1 italics>title with italics</h1>',
     '<h1 italics="true">title with italics</h1>',
@@ -72,4 +72,5 @@ export default [
     '<body><h1>title</h1></body>',
     '<body><h1>title</h1><h2>subtitle</h2><p>Paragraph with <span>span</span> and <div>div</div></p></body>',
 
+    '<h1>Multiple top-level elements</h1><h2>subtitle</h2><p>Paragraph with <span>span</span> and <div>div</div></p>',
 ];

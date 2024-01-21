@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { TerminalStyle, escapeCodeFromName } from "./escape-code-from-name";
 import { colorToTerminalStyle, getTextEscapeCodesFromProperties } from './get-text-escape-codes-from-properties';
-import type { TextNode } from '../types';
+import { ValidTags, type TextNodeBase } from '../types';
 
 describe('colorToTerminalStyle', () => {
     it('should return foreground terminal style for valid color', () => {
@@ -21,13 +21,13 @@ describe('colorToTerminalStyle', () => {
 
 describe('getTextEscapeCodesFromProperties', () => {
     it('should return the correct escape codes for text attributes', () => {
-        const node: TextNode = {
-            node: 'h1' as const,
+        const node: TextNodeBase = {
+            node: ValidTags.h1,
             fg: 'red' as const,
             bg: 'blue' as const,
-            bold: true,
+            bold: "true",
             underline: 'single',
-            italics: true,
+            italics: "true",
         };
         const expectedOutput = {
             on: escapeCodeFromName([TerminalStyle.fgRed, TerminalStyle.bgBlue, TerminalStyle.bold, TerminalStyle.underline, TerminalStyle.italic]),
@@ -37,10 +37,10 @@ describe('getTextEscapeCodesFromProperties', () => {
     });
 
     it('should return the correct escape codes when some attributes are missing', () => {
-        const node: TextNode = {
-            node: 'h1' as const,
+        const node: TextNodeBase = {
+            node: ValidTags.h1,
             fg: 'green' as const,
-            bold: true,
+            bold: "true",
         };
         const expectedOutput = {
             on: escapeCodeFromName([TerminalStyle.fgGreen, TerminalStyle.bold]),
@@ -50,7 +50,7 @@ describe('getTextEscapeCodesFromProperties', () => {
     });
 
     it('should return empty escape codes when no attributes are provided', () => {
-        const node: TextNode = {} as TextNode;
+        const node: TextNodeBase = {} as TextNodeBase;
         const expectedOutput = {
             on: '',
             off: '',

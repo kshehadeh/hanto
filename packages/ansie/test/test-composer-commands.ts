@@ -1,4 +1,4 @@
-import { body, compose, div, h1, h2, h3, p, text, markup, span, list } from "..";
+import { body, compose, div, h1, h2, h3, p, text, markup, span, li } from "..";
 
 export default [
     () => compose([h1('Hello')]).toString(),
@@ -7,7 +7,7 @@ export default [
     () => compose([body('Hello')]).toString(),
     () => compose([p('Hello')]).toString(),
     () => compose([div('Hello')]).toString(),
-    () => compose([list(['List Item 1', 'List Item 2'])]).toString(),
+    () => compose([li('Test')]).toString(),
     () => compose([markup('<h1>Hello</h1>')]).toString(),
     () => compose([span('<h1>Hello</h1>')]).toString(),    
 

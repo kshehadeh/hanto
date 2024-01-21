@@ -10,7 +10,8 @@ console.log('Reading grammar from ', inFile);
 const grammar = readFileSync(inFile, 'utf8');
 const parserSource: string = '/* eslint-disable */\n' + peggy.generate(grammar, {
     output: 'source',
-    format: 'commonjs',    
+    format: 'es',    
+    grammarSource: "ansie-markup.peggy",
 });
 
 const outFile = path.resolve(currentDir, '../../src/parser/generated-parser.js');

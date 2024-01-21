@@ -2,8 +2,7 @@ import { compile } from '../compiler';
 import type { CompilerFormat } from '../compiler/base';
 import { ComposerNode } from './nodes';
 import { BreakComposerNode } from './nodes/break';
-import { BundleComposerNode } from './nodes/bundle';
-import { ListComposerNode } from './nodes/list';
+import { ListItemComposerNode } from './nodes/li';
 import { MarkupComponentNode } from './nodes/markup';
 import {
     ParagraphComposerNode,
@@ -17,21 +16,24 @@ import {
 } from './nodes/text';
 import { defaultTheme, type AnsieTheme, type AnsieStyle } from './styles';
 export class Composer {
-    private _nodes: ComposerNode[] = [];
+    private _body: BodyComposerNode;;
     private _theme: AnsieTheme;
 
     constructor(theme: AnsieTheme) {
         this._theme = theme;
+        this._body = new BodyComposerNode({ theme });
     }
 
-    public add(node: ComposerNode | ComposerNode[]) {
+    public add(node: ComposerNode | ComposerNode[]) {        
         const nodeArr = Array.isArray(node) ? node : [node];
-        nodeArr.forEach(n => (n.theme = this._theme));
-        this._nodes = this._nodes.concat(nodeArr);
+        nodeArr.forEach(n => {
+            n.theme = this._theme
+            this._body.add(n);
+        });
     }
 
     toString() {
-        return this._nodes.map(n => n.toString()).join('');
+        return this._body.toString();
     }
 
     get theme() {
@@ -48,19 +50,17 @@ export class Composer {
 }
 
 
-function generateNodeFromAnyCompatibleType(node: ComposerNodeCompatible) {
+function generateNodeFromAnyCompatibleType(node: ComposerNodeCompatible): ComposerNode {
     if (typeof node === 'string') {
         return text(node);
     } else if (typeof node === 'number') {
         return text(node.toString());
     } else if (typeof node === 'boolean') {
         return text(node.toString());
-    } else if (Array.isArray(node)) {
-        return bundle(node);
     } else if (node instanceof ComposerNode) {
         return node;
     } else {
-        return undefined;
+        return text(`${node}`);        
     }
 }
 
@@ -78,12 +78,9 @@ export function text(text: string, style?: AnsieStyle) {
     return new RawTextComposerNode({ text, style });
 }
 
-export function list(listItems: ComposerNodeCompatible[], style?: AnsieStyle) {
-    return new ListComposerNode({ nodes: listItems.map(generateNodeFromAnyCompatibleType), style });
-}
-
-export function bundle(nodes: ComposerNodeCompatible[], style?: AnsieStyle) {
-    return new BundleComposerNode({ nodes: nodes.map(generateNodeFromAnyCompatibleType), style });
+export function li(nodes: ComposerNodeCompatible | ComposerNodeCompatible[], style?: AnsieStyle) {
+    const n = Array.isArray(nodes) ? nodes : [nodes];
+    return new ListItemComposerNode({ nodes: n.map(generateNodeFromAnyCompatibleType), style });
 }
 
 export function p(nodes: ComposerNodeCompatible | ComposerNodeCompatible[], style?: AnsieStyle) {
@@ -149,12 +146,14 @@ if (process.argv[1].includes('composer')) {
     //     bundle(['Text', span('injected'), 'more text']),
     //     markup('<h1>Raw Markup</h1>')
     // ]).toString()
-    
-    console.log(compose([
-        h1('Title'),
-        h2('A subtitle'),
-        p('Paragraph'),
-    ]).compile())
+
+    // console.log(compose(([h1('Title'), h2('A subtitle'), p('Paragraph')])).toString())
+    console.log(compose(([h1('Title'), h2('A subtitle'), p('Paragraph')])).toString())
+    // console.log(compose([
+    //     h1('Title'),
+    //     h2('A subtitle'),
+    //     p('Paragraph'),
+    // ]).compile())
 
     // const result = compose([
     //     bold(['Title', br()]),

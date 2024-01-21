@@ -1,78 +1,10 @@
 import { readFileSync } from 'fs';
-import { parse } from './generated-parser';
+import { parse } from './generated-parser.js';
 import { type Ast } from '../compiler/types';
-
-// function getParseErrorMessage(issue: ZodIssue, indent = '  '): string {
-//     const path = issue.path.join(' | ');
-//     // Generate a human readable error message from a Zod issue
-//     if (issue.code === 'invalid_type') {
-//         return `Invalid type: Path: ${path} > Expected ${issue.expected} but received ${issue.received}`;
-//     }
-
-//     if (issue.code === 'invalid_union') {
-//         return `Invalid union: Path: ${path} > Union Issues: \n${indent}${issue.unionErrors
-//             .flatMap(f => f.issues)
-//             .map(i => getParseErrorMessage(i, indent))
-//             .join(`\n${indent}`)}`;
-//     }
-
-//     if (issue.code === 'invalid_enum_value') {
-//         return `Invalid enum value: Path: ${path} > Received "${issue.received}" but options are "${issue.options.join(', ')}"`;
-//     }
-
-//     if (issue.code === 'invalid_literal') {
-//         return `Invalid literal: Path: ${path} > Expected "${issue.expected}" but received "${issue.received}"`;
-//     }
-
-//     if (issue.code === 'invalid_arguments') {
-//         return `Invalid arguments: Path: ${path} > \n${indent}${issue.argumentsError.issues.join(`\n${indent}`)}`;
-//     }
-
-//     if (issue.code === 'invalid_return_type') {
-//         return `Invalid return type: Path: ${path} > \n${indent}${issue.returnTypeError.issues.join(`\n${indent}`)}`;
-//     }
-
-//     if (issue.code === 'invalid_date') {
-//         return `Invalid date: Path: ${path} > ${issue.message}`;
-//     }
-
-//     if (issue.code === 'invalid_string') {
-//         return `Invalid string: Path: ${path} > ${issue.message}`;
-//     }
-
-//     if (issue.code === 'too_small') {
-//         return `Too small: Path: ${path} > Minimum is "${issue.minimum}"`;
-//     }
-
-//     if (issue.code === 'too_big') {
-//         return `Too big: Path: ${path} > Maximum is "${issue.maximum}"`;
-//     }
-
-//     if (issue.code === 'invalid_intersection_types') {
-//         return `Invalid intersection types: Path: ${path} > ${issue.message}`;
-//     }
-
-//     if (issue.code === 'not_multiple_of') {
-//         return `Not multiple of: Path: ${path} > Should be multiple of "${issue.multipleOf}"`;
-//     }
-
-//     if (issue.code === 'not_finite') {
-//         return `Not finite: Path: ${path} > ${issue.message}`;
-//     }
-
-//     if (issue.code === 'unrecognized_keys') {
-//         return `Unrecognized keys: Path: ${path} > Keys: ${issue.keys.join(' + ')}`;
-//     }
-
-//     if (issue.code === 'custom') {
-//         return `Custom: Path: ${path} > ${issue.message}`;
-//     }
-
-//     return JSON.stringify(issue);
-// }
+// import { type Stage, type LocationRange, type DiagnosticNote } from 'peggy'
 
 export function parseString(text: string): Ast | null {
-    return parse(text);        
+    return parse(text) as Ast;
 }
 
 export function parseFile(filename: string): Ast | null {
@@ -81,9 +13,12 @@ export function parseFile(filename: string): Ast | null {
 }
 
 if (process.argv[1].includes('parser')) {
-    console.log(JSON.stringify(parseString('<h1 margin="12" fg="red">HELLO</h1>'), null, 2))
-    // console.log(JSON.stringify(parseString('<body bold=true>Hello</body>'), null, 2))
+    // console.log(JSON.stringify(parseString('<h1 underline="double" bold="true" fg="blue" marginTop="1" marginBottom="1">Title</h1><h2 underline="single" bold="true" fg="default" marginTop="1" marginBottom="1">A subtitle</h2><p marginTop="1" marginBottom="1">Paragraph</p>'), null, 2))
+    // console.log(JSON.stringify(parseString('<body><h1 underline="double" bold="true" fg="blue" marginTop="1" marginBottom="1">Title</h1><h2 underline="single" bold="true" fg="default" marginTop="1" marginBottom="1">A subtitle</h2><p marginTop="1" marginBottom="1">Paragraph</p></body>'), null, 2))
     // console.log(JSON.stringify(parseString('<body bold italics underline fg="red" bg="white">Hello</body>'), null, 2))
+    // console.log(JSON.stringify(parseString('<h1 margin="12" fg="red">HELLO</h1>'), null, 2))
+    // console.log(JSON.stringify(parseString('<body bold=true>Hello</body>'), null, 2))
+    
 
     // console.log(JSON.stringify(parseString('<color name="red">Hello</color>'), null, 2))
     // console.log(JSON.stringify(parseString('<bold>Hello</bold>'), null, 2))

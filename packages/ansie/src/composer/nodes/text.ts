@@ -1,6 +1,5 @@
 import { ComposerNode, type NodeParams } from ".";
-import type { RawTextNode } from "../../compiler/handlers/raw-text-handler";
-import type { BodyNode, DivNode, H1Node, H2Node, H3Node, ParagraphNode, SpanNode } from "../../compiler/handlers/text-handlers";
+import { ValidTags, type H1Node, type H2Node, type H3Node, type ParagraphNode, type SpanNode, type DivNode, type RawTextNode, type BodyNode } from "../../compiler/types";
 import type { AnsieStyle } from "../styles";
 
 export interface TextNodeParams extends NodeParams {
@@ -28,44 +27,42 @@ export interface SpaceNodeParams extends NodeParams {
 function buildAttributesFromStyle(style: AnsieStyle): Record<string, string|number|boolean|undefined> {
     const attributes: Record<string, string|number|boolean|undefined> = {};
     if (style.font?.italics) {
-        attributes.italics = style.font.italics;
+        attributes["italics"] = style.font.italics;
     }
     if (style.font?.underline) {
-        attributes.underline = style.font.underline;
+        attributes["underline"] = style.font.underline;
     }
     if (style.font?.bold) {
-        attributes.bold = style.font.bold;
+        attributes["bold"] = style.font.bold;
     }
-    if (style.font?.color.fg) {
-        attributes.fg = style.font.color.fg;
+    if (style.font?.color?.fg) {
+        attributes["fg"] = style.font.color.fg;
     }
-    if (style.font?.color.bg) {
-        attributes.bg = style.font.color.bg;
+    if (style.font?.color?.bg) {
+        attributes["bg"] = style.font.color.bg;
     }
 
     if (style.spacing?.margin) {
-        attributes.margin = style.spacing.margin;
+        attributes["margin"] = style.spacing.margin;
     }
     if (style.spacing?.marginLeft) {
-        attributes.marginLeft = style.spacing.marginLeft;
+        attributes["marginLeft"] = style.spacing.marginLeft;
     }
     if (style.spacing?.marginRight) {
-        attributes.marginRight = style.spacing.marginRight;
+        attributes["marginRight"] = style.spacing.marginRight;
     }
     if (style.spacing?.marginTop) {
-        attributes.marginTop = style.spacing.marginTop;
+        attributes["marginTop"] = style.spacing.marginTop;
     }
     if (style.spacing?.marginBottom) {
-        attributes.marginBottom = style.spacing.marginBottom;
+        attributes["marginBottom"] = style.spacing.marginBottom;
     }
     
     return attributes;
 
 }
 
-export class TextComposerNode extends ComposerNode {
-    node: string;
-
+export abstract class TextComposerNode extends ComposerNode {
     toString() {
         const attributes = buildAttributesFromStyle(this.attrib) || {};
         const attributesString = Object.entries(attributes).map(([key, value]) => `${key}${value ? `="${value}` : ''}"`).join(' ')
@@ -77,75 +74,60 @@ export class TextComposerNode extends ComposerNode {
 // NODE: BODY
 
 export class BodyComposerNode extends TextComposerNode  implements BodyNode {
-    node = 'body' as const;
+    node = ValidTags.body;
 }
 
 
 // NODE: H1
-export class H1ComposerNode extends TextComposerNode implements H1Node{
-    node = 'h1' as const;
+export class H1ComposerNode extends TextComposerNode implements H1Node {
+    node = ValidTags.h1;
 }
 
 // NODE: H2
 
 export class H2ComposerNode extends TextComposerNode implements H2Node {
-    node = 'h2' as const;
+    node = ValidTags.h2;
 }
 
 // NODE: H3
 
 export class H3ComposerNode extends TextComposerNode implements H3Node {
-    node = 'h3' as const;
+    node = ValidTags.h3;
 }
 
 // NODE: P
 
 export class ParagraphComposerNode extends TextComposerNode implements ParagraphNode {
-    node = 'p' as const;
+    node = ValidTags.p;
 }
 
 // NODE: SPAN
 
 export class SpanComposerNode extends TextComposerNode implements SpanNode {
-    node = 'span' as const;
+    node = ValidTags.span;
 }
 
 // NODE: DIV
 
 export class DivComposerNode extends TextComposerNode implements DivNode {
-    node = 'div' as const;
+    node = ValidTags.div;
 }
 
 // NODE: RAW TEXT
-export interface RawTextNodeParams extends NodeParams {
+export interface RawTextNodeParams extends NodeParams {    
     text: string;
 }
 
 export class RawTextComposerNode extends ComposerNode implements RawTextNode {
-    node = 'text' as const;
-    _text: string;
+    node = ValidTags.text;
+    value: string;
 
     constructor(params: RawTextNodeParams) {
         super(params);
-        this._text = params.text;
+        this.value = params.text;
     }
 
     toString() {
-        return this._text;
-    }
-
-    /**
-     * The text node will accept a string as a node.  We use it to allow strings to be passed
-     * in place of nodes in some cases.  For example, if you pass a string to the `bold` function, it will
-     * be interpreted as a `text` node.
-     * @param node
-     * @returns
-     */
-    static createFromAlternateInput(node: unknown): ComposerNode {
-        if (typeof node === 'string') {
-            return new TextComposerNode({text: node});
-        } else {
-            return undefined;
-        }
+        return this.value;
     }
 }

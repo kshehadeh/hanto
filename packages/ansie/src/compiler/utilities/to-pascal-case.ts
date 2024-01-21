@@ -1,5 +1,5 @@
 
-export function toPascalCase(str) {
+export function toPascalCase(str: string) {
     return str
         .replace(new RegExp(/[-_]+/, 'g'), ' ') // Replace underscores/hyphens with spaces
         .replace(new RegExp(/[^\w\s]/, 'g'), '') // Remove all non-word characters

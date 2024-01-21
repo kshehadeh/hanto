@@ -13,9 +13,12 @@ export function recordCompilation(input: string): {
     input: string;
     output: string;
 } {
-    console.log('Recording comilation: ', input);
+    console.log('Recording compilation: ', input);
     const ast = parse(input);
     const output = compile(input);
+    console.log("Result: ", output);
+    console.log("--------------------");
+
     return {
         input,
         ast,
@@ -30,6 +33,7 @@ export function recordComposition(cmd: () => string) {
     // Validate that the markup is valid
     const result = compile(markup);
     console.log("Result: ", result);
+    console.log("--------------------");
 
     return {
         cmd: cmd.toString(),
@@ -63,8 +67,8 @@ rl.question('Do you want to overwrite your fixtures? (y/n) ', (answer) => {
         const compositionResults = compositionFixtures.map(f => recordComposition(f));
         writeFileSync(
             resolve(currentDir, 'composer-fixtures.js'),
-            `// AUTOMATICALLY GENERATED FILE - DO NOT EDIT - RUN yarn fixture:generate TO UPDATE
-import {compose, h1, h2, h3, span, div, p, body, text, markup, list} from '../src/composer'
+            `// AUTOMATICALLY GENERATED FILE - DO NOT EDIT - RUN bun run fixture:generate TO UPDATE
+import {compose, h1, h2, h3, span, div, p, body, text, markup, li} from '../src/composer'
 export default [\n${
                 compositionResults.map(r => {
                 return `    { cmd: ${r.cmd}, markup: "${r.markup.replaceAll('"', '\\"')}" }`}).join(',\n')}
