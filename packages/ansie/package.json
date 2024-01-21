@@ -1,6 +1,6 @@
 {
   "name": "ansie",
-  "version": "0.1.1-11",
+  "version": "0.1.1-12",
   "module": "dist/node/index.js",
   "type": "module",
   "homepage": "https://github.com/kshehadeh/hanto/blob/main/packages/ansie/README.md",

@@ -91,26 +91,59 @@ You can also pipe in the markup to produce the output:
 
 The markup language follows XML rules in that it uses a declarative tag-based system of angle brackets and attributes. The supported tags available today are:
 
-| Name | Attributes         | Description                                                                             |
-| ---- | ------------------ | --------------------------------------------------------------------------------------- |
-| body | {text attributes}  | A semantic tag intended to be a container for multiple other tags - usually at the root |
-| div  | {text attributes } | Content that injects new lines before and after                                         |
-| span | {text attributes } | Content that does not have new lines before and after                                   |
-| p    | {text attributes } | Content that injects new lines before and after                                         |
-| h1   | {text attributes}  | A semantic tag intended to represent the headline of a block of text                    |
-| h2   | {text attributes}  | A semantic tag intended to represent the sub-headline of a block of text                |
-| h3   | {text attributes}  | A semantic tag intended to represent the tertiary headline of a block of text           |
-| br   | *None*             | Injects a newline in the compiled output                                                |
+| Name | Attributes                               | Description                                                                             |
+| ---- | ---------------------------------------- | --------------------------------------------------------------------------------------- |
+| body | {text attributes} & {spacing attributes} | A semantic tag intended to be a container for multiple other tags - usually at the root |
+| div  | {text attributes} & {spacing attributes} | Content that injects new lines before and after                                         |
+| p    | {text attributes} & {spacing attributes} | Content that injects new lines before and after                                         |
+| h1   | {text attributes} & {spacing attributes} | A semantic tag intended to represent the headline of a block of text                    |
+| h2   | {text attributes} & {spacing attributes} | A semantic tag intended to represent the sub-headline of a block of text                |
+| h3   | {text attributes} & {spacing attributes} | A semantic tag intended to represent the tertiary headline of a block of text           |
+| li   | {text attributes} & {spacing attributes} | A semantic tag intended to represent the tertiary headline of a block of text           |
+| span | {text attributes}                        | Content that does not have new lines before and after                                   |
+| br   | {spacing attributes}                     | Injects a newline in the compiled output                                                |
 
 ### Text Attributes
 
-| Name      | Value                                   | Description                                                                                 |
-| --------- | --------------------------------------- | ------------------------------------------------------------------------------------------- |
-| bold      | "false", "true", "yes", "no", undefined | Makes text bold - if `bold` specified but not value then it will assume *true*              |
-| italics   | "false", "true", "yes", "no", undefined | Makes text italicized - if `italics` specified but not value then it will assume *true*     |
-| underline | "single", "double", "none", undefined   | Makes text underlined - if `underline` specified but not value then it will assume *single* |
-| fg        | { fg color }                            | Changes the foreground color of the text                                                    |
-| bg        | { bg color }                            | Changes the background color of the text                                                    |
+| Name      | Value                                                               | Description                                                                                 |
+| --------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| bold      | "false", "true", "yes", "no", undefined                             | Makes text bold - if `bold` specified but not value then it will assume *true*              |
+| italics   | "false", "true", "yes", "no", undefined                             | Makes text italicized - if `italics` specified but not value then it will assume *true*     |
+| underline | "single", "double", "none", "false", "true", "yes", "no", undefined | Makes text underlined - if `underline` specified but not value then it will assume *single* |
+| fg        | { fg color }                                                        | Changes the foreground color of the text                                                    |
+| bg        | { bg color }                                                        | Changes the background color of the text                                                    |
+
+Tags that accept spacing attributes include:
+
+* h1 
+* h2
+* h3
+* body
+* p
+* div
+* span
+* li
+
+### Spacing Attributes
+
+| Name         | Value      | Description                                                                                                                                |
+| ------------ | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| margin       | "[number]" | Zero or more.  Indicates the number of new lines (vertical spacing) or spaces (horizontal spacing) to inject before and after the content. |
+| marginLeft   | "[number]" | Zero or more.  Indicates the number of spaces to inject before the content.                                                                |
+| marginRight  | "[number]" | Zero or more.  Indicates the number of spaces to inject after the content.                                                                 |
+| marginTop    | "[number]" | Zero or more.  Indicates the number of new lines to inject before the content.                                                             |
+| marginBottom | "[number]" | Zero or more.  Indicates the number of new lines to inject after the content.                                                              |
+
+Tags that accept spacing attributes include:
+
+* h1 
+* h2
+* h3
+* body
+* p
+* div
+* br
+* li
 
 ### Free (Raw) Text
 
@@ -249,7 +282,7 @@ Most of these functions take a style object which can be used to override the th
 
 `compose( composition: ComposerNode[] = [],  theme: AnsieTheme = defaultTheme,) => string`
 
-**Parameters**
+#### Parameters
 
 `composition` - An array of nodes that will be iterated over to generate the final markup
 `theme` - An object that defines the styles to use for the various semantic tags that the markup supports.
@@ -314,4 +347,4 @@ which is then run as part of the package's tests.
 `test-markup-strings` is an array of valid markup strings that are used during the `bun run tests:record` script to
 generate the `compiler-fixtures.json` file which contains the inputs and expected outputs.  
 
-**You should only rerecord the fixtures if you are confident that they will generate correct output**
+**Note: You should only rerecord the fixtures if you are confident that they will generate correct output**
