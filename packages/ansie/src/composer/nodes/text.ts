@@ -1,68 +1,45 @@
-import { ComposerNode, type NodeParams } from ".";
+import { ComposerNode, type NodeParams, type SpaceNodeParams, type TextNodeParams } from ".";
 import { ValidTags, type H1Node, type H2Node, type H3Node, type ParagraphNode, type SpanNode, type DivNode, type RawTextNode, type BodyNode } from "../../compiler/types";
-import type { AnsieStyle } from "../styles";
+import { opt } from "../../utilities/opt";
+import { buildAttributesFromStyle } from "../../utilities/build-attributes-from-style";
 
-export interface TextNodeParams extends NodeParams {
-    italics?: boolean;
-    underline?: ('single' | 'double' | 'none') | boolean;
-    bold?: boolean;
-    fg?: string;
-    bg?: string;
-}
-
-export interface SpaceNodeParams extends NodeParams {
-    margin?: number;
-    marginLeft?: number;
-    marginRight?: number;
-    marginTop?: number;
-    marginBottom?: number;
-}
-
-/**
- * Builds a set of attributes from a style object.  This is used to build the attributes for a node tag.  It will
- * only include attributes that are defined in the style object.
- * @param style 
- * @returns 
- */
-function buildAttributesFromStyle(style: AnsieStyle): Record<string, string|number|boolean|undefined> {
-    const attributes: Record<string, string|number|boolean|undefined> = {};
-    if (style.font?.italics) {
-        attributes["italics"] = style.font.italics;
-    }
-    if (style.font?.underline) {
-        attributes["underline"] = style.font.underline;
-    }
-    if (style.font?.bold) {
-        attributes["bold"] = style.font.bold;
-    }
-    if (style.font?.color?.fg) {
-        attributes["fg"] = style.font.color.fg;
-    }
-    if (style.font?.color?.bg) {
-        attributes["bg"] = style.font.color.bg;
-    }
-
-    if (style.spacing?.margin) {
-        attributes["margin"] = style.spacing.margin;
-    }
-    if (style.spacing?.marginLeft) {
-        attributes["marginLeft"] = style.spacing.marginLeft;
-    }
-    if (style.spacing?.marginRight) {
-        attributes["marginRight"] = style.spacing.marginRight;
-    }
-    if (style.spacing?.marginTop) {
-        attributes["marginTop"] = style.spacing.marginTop;
-    }
-    if (style.spacing?.marginBottom) {
-        attributes["marginBottom"] = style.spacing.marginBottom;
-    }
-    
-    return attributes;
-
-}
 
 export abstract class TextComposerNode extends ComposerNode {
+    constructor(params: TextNodeParams & SpaceNodeParams) {
+        super(params);
+
+        // Override the built-in style with the given params
+        this.style = {
+            ...this.style,
+            font: {
+                ...this.style.font,
+                ...opt({
+                    italics: params.italics,
+                    underline: params.underline,
+                    bold: params.bold,    
+                }),
+                color: {
+                    ...this.style.font?.color,
+                    ...opt({
+                        fg: params.fg,
+                        bg: params.bg    
+                    })
+                }
+            },
+
+            spacing: {
+                ...this.style.spacing,
+                ...opt({
+                    margin: params["margin"],
+                    marginLeft: params["marginLeft"],
+                    marginRight: params["marginRight"],
+                    marginTop: params["marginTop"],
+                    marginBottom: params["marginBottom"],
+                })
+            }
+        }
+    }
+
     toString() {
         const attributes = buildAttributesFromStyle(this.attrib) || {};
         const attributesString = Object.entries(attributes).map(([key, value]) => `${key}${value ? `="${value}` : ''}"`).join(' ')

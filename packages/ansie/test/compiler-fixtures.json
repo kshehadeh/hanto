@@ -1069,7 +1069,7 @@
               },
               {
                 "node": "text",
-                "value": " and "
+                "value": "and "
               },
               {
                 "node": "div",
@@ -1085,7 +1085,7 @@
         ]
       }
     ],
-    "output": "titlesubtitleParagraph with span and div"
+    "output": "titlesubtitleParagraph with spanand div"
   },
   {
     "input": "<h1>Multiple top-level elements</h1><h2>subtitle</h2><p>Paragraph with <span>span</span> and <div>div</div></p>",
@@ -1126,7 +1126,7 @@
           },
           {
             "node": "text",
-            "value": " and "
+            "value": "and "
           },
           {
             "node": "div",
@@ -1140,6 +1140,154 @@
         ]
       }
     ],
-    "output": "Multiple top-level elementssubtitleParagraph with span and div"
+    "output": "Multiple top-level elementssubtitleParagraph with spanand div"
+  },
+  {
+    "input": "\n        <h1 bold marginBottom=\"1\">My Console App</h1>\n        <h2 fg=\"gray\" marginBottom=\"1\">A little something I wrote</h2>\n        <p marginBottom=\"1\">\n            In order to used this app, do the following:\n            <li bullet=\"*\" marginBottom=\"1\"> Create a config file</li>\n            <li bullet=\"*\" marginBottom=\"1\"> Run the utility with the -h flag</li>\n            <li bullet=\"*\" marginBottom=\"1\"> etc...</li>\n        </p>\n    ",
+    "ast": [
+      {
+        "node": "h1",
+        "bold": "true",
+        "marginBottom": "1",
+        "content": [
+          {
+            "node": "text",
+            "value": "My Console App"
+          }
+        ]
+      },
+      {
+        "node": "h2",
+        "fg": "gray",
+        "marginBottom": "1",
+        "content": [
+          {
+            "node": "text",
+            "value": "A little something I wrote"
+          }
+        ]
+      },
+      {
+        "node": "p",
+        "marginBottom": "1",
+        "content": [
+          {
+            "node": "text",
+            "value": "\n            In order to used this app, do the following:\n            "
+          },
+          {
+            "node": "li",
+            "bullet": "*",
+            "marginBottom": "1",
+            "content": [
+              {
+                "node": "text",
+                "value": " Create a config file"
+              }
+            ]
+          },
+          {
+            "node": "li",
+            "bullet": "*",
+            "marginBottom": "1",
+            "content": [
+              {
+                "node": "text",
+                "value": " Run the utility with the -h flag"
+              }
+            ]
+          },
+          {
+            "node": "li",
+            "bullet": "*",
+            "marginBottom": "1",
+            "content": [
+              {
+                "node": "text",
+                "value": " etc..."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "output": "\u001b[1mMy Console App\u001b[22m\n\u001b[90mA little something I wrote\u001b[39m\n In order to used this app, do the following: *  Create a config file\n*  Run the utility with the -h flag\n*  etc...\n\n"
+  },
+  {
+    "input": "\n        <body>\n            <h1 marginBottom=\"1\">\n                <span fg=\"red\">title</span>\n            </h1>\n            <p marginBottom=\"1\">\n                <span fg=\"blue\">Paragraph with <span>span</span> and <div>div</div></span>\n            </p>\n        </body>\n    ",
+    "ast": [
+      {
+        "node": "body",
+        "content": [
+          {
+            "node": "text",
+            "value": "\n            "
+          },
+          {
+            "node": "h1",
+            "marginBottom": "1",
+            "content": [
+              {
+                "node": "text",
+                "value": "\n                "
+              },
+              {
+                "node": "span",
+                "fg": "red",
+                "content": [
+                  {
+                    "node": "text",
+                    "value": "title"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "node": "p",
+            "marginBottom": "1",
+            "content": [
+              {
+                "node": "text",
+                "value": "\n                "
+              },
+              {
+                "node": "span",
+                "fg": "blue",
+                "content": [
+                  {
+                    "node": "text",
+                    "value": "Paragraph with "
+                  },
+                  {
+                    "node": "span",
+                    "content": [
+                      {
+                        "node": "text",
+                        "value": "span"
+                      }
+                    ]
+                  },
+                  {
+                    "node": "text",
+                    "value": "and "
+                  },
+                  {
+                    "node": "div",
+                    "content": [
+                      {
+                        "node": "text",
+                        "value": "div"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "output": "  \u001b[31mtitle\u001b[39m\n \u001b[34mParagraph with spanand div\u001b[39m\n"
   }
 ]

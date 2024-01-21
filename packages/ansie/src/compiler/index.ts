@@ -126,6 +126,26 @@ if (process.argv[1].includes('compiler')) {
     //     <p underline="double" bold marginTop="2" marginBottom="1">Underlined text with newline</p>
     // </body>`));
 
-    console.log(compile('<h1 underline="double" bold="true" fg="blue" marginTop="1" marginBottom="1">Title</h1><h2 underline="single" bold="true" fg="default" marginTop="1" marginBottom="1">A subtitle</h2><p marginTop="1" marginBottom="1">Paragraph</p>'))
+    // console.log(compile(`
+    // <h1 bold marginBottom="1">My Console App</h1>
+    // <h2 fg="gray" marginBottom="1">A little something I wrote</h2>
+    // <p marginBottom="1">
+    //     In order to used this app, do the following:
+    //     <li bullet="*" marginBottom="1"> Create a config file</li>
+    //     <li bullet="*" marginBottom="1"> Run the utility with the -h flag</li>
+    //     <li bullet="*" marginBottom="1"> etc...</li>
+    // </p>
+
+    console.log(compile(`    
+    <h1 bold fg="blue" underline="double">My Console App</h1>
+    <h2 bold fg="gray">A little something I wrote</h2>
+    <br/>
+    <p marginBottom="1">
+        In order to used this app, do the following:
+        <li>Create a config file</li>
+        <li>Run the utility with the -h flag</li>
+        <li>etc...</li>
+    </p>
+    `))
 
 }

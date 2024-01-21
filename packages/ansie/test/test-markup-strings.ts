@@ -73,4 +73,25 @@ export default [
     '<body><h1>title</h1><h2>subtitle</h2><p>Paragraph with <span>span</span> and <div>div</div></p></body>',
 
     '<h1>Multiple top-level elements</h1><h2>subtitle</h2><p>Paragraph with <span>span</span> and <div>div</div></p>',
+
+    `
+        <h1 bold marginBottom="1">My Console App</h1>
+        <h2 fg="gray" marginBottom="1">A little something I wrote</h2>
+        <p marginBottom="1">
+            In order to used this app, do the following:
+            <li bullet="*" marginBottom="1"> Create a config file</li>
+            <li bullet="*" marginBottom="1"> Run the utility with the -h flag</li>
+            <li bullet="*" marginBottom="1"> etc...</li>
+        </p>
+    `,
+    `
+        <body>
+            <h1 marginBottom="1">
+                <span fg="red">title</span>
+            </h1>
+            <p marginBottom="1">
+                <span fg="blue">Paragraph with <span>span</span> and <div>div</div></span>
+            </p>
+        </body>
+    `
 ];

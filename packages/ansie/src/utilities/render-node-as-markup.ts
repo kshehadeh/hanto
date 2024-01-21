@@ -1,4 +1,4 @@
-import { type AnsieNode, isAttribute } from '../types';
+import { type AnsieNode, isAttribute } from '../compiler/types';
 
 export function renderNodeAsMarkupStart(node: AnsieNode) {
     const attribs = Object.entries(node)

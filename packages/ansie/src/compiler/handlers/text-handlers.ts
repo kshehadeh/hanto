@@ -14,15 +14,15 @@ import {
 import {
     renderSpaceAttributesStart,
     renderSpaceAttributesEnd,
-} from '../utilities/render-space-attributes';
+} from '../../utilities/render-space-attributes';
 import {
     renderTextAttributesStart,
     renderTextAttributesEnd,
-} from '../utilities/render-text-attributes';
+} from '../../utilities/render-text-attributes';
 import {
     renderNodeAsMarkupStart,
     renderNodeAsMarkupEnd,
-} from '../utilities/render-node-as-markup';
+} from '../../utilities/render-node-as-markup';
 
 /////////
 
@@ -36,9 +36,12 @@ function buildStart(
     node: AnsieNode,
     stack: AnsieNode[],
     format: CompilerFormat,
+    options: {
+        isBlock?: boolean
+    }
 ): string {
     if (format === "ansi") {        
-        return renderSpaceAttributesStart(node, format) + renderTextAttributesStart(node, format);
+        return renderSpaceAttributesStart(node, format, options) + renderTextAttributesStart(node, format);
     } else if (format === 'markup') {
         return renderNodeAsMarkupStart(node);
     } else {
@@ -61,9 +64,12 @@ function buildEnd(
     node: AnsieNode,
     stack: AnsieNode[],
     format: CompilerFormat,
+    options: {
+        isBlock?: boolean
+    }
 ): string {
     if (format === 'ansi') {
-        return `${renderTextAttributesEnd(node, format)}${renderSpaceAttributesEnd(node, format)}`;
+        return `${renderTextAttributesEnd(node, format)}${renderSpaceAttributesEnd(node, format, options)}`;
     } else if (format === 'markup') {
         return renderNodeAsMarkupEnd(node);
     } else {
@@ -86,12 +92,12 @@ export const H1NodeHandler: NodeHandler<H1Node> = {
         node: H1Node,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildStart(node, stack, format),
+    ) => buildStart(node, stack, format, { isBlock: true }),
     handleExit: (
         node: H1Node,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildEnd(node, stack, format),
+    ) => buildEnd(node, stack, format, { isBlock: true }),
 };
 
 ////// H2 Node - This is the handler for the <h2> element
@@ -102,12 +108,12 @@ export const H2NodeHandler: NodeHandler<H2Node> = {
         node: H2Node,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildStart(node, stack, format),
+    ) => buildStart(node, stack, format, { isBlock: true }),
     handleExit: (
         node: H2Node,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildEnd(node, stack, format),
+    ) => buildEnd(node, stack, format, { isBlock: true }),
 };
 
 ////// H3 Node - This is the handler for the <h3> element
@@ -118,12 +124,12 @@ export const H3NodeHandler: NodeHandler<H3Node> = {
         node: H3Node,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildStart(node, stack, format),
+    ) => buildStart(node, stack, format, { isBlock: true }),
     handleExit: (
         node: H3Node,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildEnd(node, stack, format),
+    ) => buildEnd(node, stack, format, { isBlock: true }),
 };
 
 ////// Body Node - This is the handler for the <body> element
@@ -134,12 +140,12 @@ export const BodyNodeHandler: NodeHandler<BodyNode> = {
         node: BodyNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildStart(node, stack, format),
+    ) => buildStart(node, stack, format, { isBlock: true }),
     handleExit: (
         node: BodyNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildEnd(node, stack, format),
+    ) => buildEnd(node, stack, format, { isBlock: true }),
 };
 
 ////// Span Node - This is the handler for the <span> element which does not have any semantic meaning but is used for altering the formatting of text
@@ -150,12 +156,12 @@ export const SpanNodeHandler: NodeHandler<SpanNode> = {
         node: SpanNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildStart(node, stack, format),
+    ) => buildStart(node, stack, format, { isBlock: false }),
     handleExit: (
         node: SpanNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildEnd(node, stack, format),
+    ) => buildEnd(node, stack, format, { isBlock: false }),
 };
 
 ////// P Node - This is the handler for the <p> element which is used for paragraph separation
@@ -166,12 +172,12 @@ export const ParagraphNodeHandler: NodeHandler<ParagraphNode> = {
         node: ParagraphNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildStart(node, stack, format),
+    ) => buildStart(node, stack, format, { isBlock: true }),
     handleExit: (
         node: ParagraphNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildEnd(node, stack, format),
+    ) => buildEnd(node, stack, format, { isBlock: true }),
 };
 
 ////// Div Node - This is the handler for the <div> element which is used for grouping content
@@ -182,12 +188,12 @@ export const DivNodeHandler: NodeHandler<DivNode> = {
         node: DivNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildStart(node, stack, format),
+    ) => buildStart(node, stack, format, { isBlock: true }),
     handleExit: (
         node: DivNode,
         stack: AnsieNode[],
         format: CompilerFormat = 'ansi',
-    ) => buildEnd(node, stack, format),
+    ) => buildEnd(node, stack, format, { isBlock: true }),
 };
 
 export const _testableFunctions = {

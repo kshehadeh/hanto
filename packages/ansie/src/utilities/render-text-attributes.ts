@@ -1,6 +1,6 @@
-import { type CompilerFormat } from '../base';
+import { type CompilerFormat } from '../compiler/base';
 import { getTextEscapeCodesFromProperties } from './get-text-escape-codes-from-properties';
-import { type AnsieNode, isAttribute } from '../types';
+import { type AnsieNode, isAttribute } from '../compiler/types';
 
 /**
  * Renders the text attributes for a node prepending the appropriate text escape codes.
@@ -29,7 +29,7 @@ export function renderTextAttributesStart(
  */
 export function renderTextAttributesEnd(
     attributes: AnsieNode,
-    format: CompilerFormat = 'ansi'
+    format: CompilerFormat = 'ansi',
 ) {
     if (format === 'ansi') {
         return getTextEscapeCodesFromProperties(attributes).off;

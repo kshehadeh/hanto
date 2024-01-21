@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { getSpacingFromProperties } from './get-spacing-from-properties';
-import { ValidTags } from '../types';
+import { ValidTags } from '../compiler/types';
 
 describe('getSpacingFromProperties', () => {
     it('should return correct spacing when all properties are provided', () => {

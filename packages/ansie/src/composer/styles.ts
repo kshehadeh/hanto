@@ -7,7 +7,7 @@ export interface AnsieStyle {
             bg?: string;    
         };    
         bold?: boolean;
-        underline: 'single' | 'double' | 'none';
+        underline?: 'single' | 'double' | 'none' | boolean;
         italics?: boolean;        
     },
 

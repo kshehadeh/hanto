@@ -1,9 +1,9 @@
-import { type CompilerFormat } from '../base';
+import { type CompilerFormat } from '../compiler/base';
 import { getSpacingFromProperties } from './get-spacing-from-properties';
 import {
     type AnsieNode, type SpaceNodeBase,    
     SpaceAttributes
-} from '../types';
+} from '../compiler/types';
 
 /**
  * Renders the space attributes for a node prepending the appropriate spacing escape codes.
@@ -13,10 +13,13 @@ import {
  */
 export function renderSpaceAttributesStart(
     node: SpaceNodeBase,
-    format: CompilerFormat = 'ansi'
+    format: CompilerFormat,
+    options: {
+        isBlock?: boolean
+    }
 ): string {
     if (format === 'ansi') {
-        return getSpacingFromProperties(node).on;
+        return (options.isBlock ? '\n' : '') + getSpacingFromProperties(node).on;
     } else if (format === 'markup') {
         return Object.entries(node)
             .filter(([key]) => Object.keys(SpaceAttributes).includes(key))
@@ -34,7 +37,11 @@ export function renderSpaceAttributesStart(
  */
 export function renderSpaceAttributesEnd(
     attributes: AnsieNode,
-    format: CompilerFormat = 'ansi'
+    format: CompilerFormat,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _options: {
+        isBlock?: boolean
+    }
 ) {
     if (format === 'ansi') {
         return getSpacingFromProperties(attributes).off;

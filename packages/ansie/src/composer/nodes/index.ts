@@ -8,7 +8,26 @@ export interface NodeParams {
     [key: string]: unknown;
 }
 
-export type BundleTag = 'bundle';
+export interface TextNodeParams extends NodeParams {
+    italics?: boolean;
+    underline?: ('single' | 'double' | 'none') | boolean;
+    bold?: boolean;
+    fg?: string;
+    bg?: string;
+}
+
+export interface SpaceNodeParams extends NodeParams {
+    margin?: number;
+    marginLeft?: number;
+    marginRight?: number;
+    marginTop?: number;
+    marginBottom?: number;
+}
+
+export interface ListNodeParams extends NodeParams {
+    bullet?: string;
+    indent?: number;
+}
 
 /**
  * The base class for all composition nodes.  This store information about the theme, style and 

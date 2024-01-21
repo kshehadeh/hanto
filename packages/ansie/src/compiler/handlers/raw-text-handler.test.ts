@@ -1,27 +1,8 @@
 import { describe, expect, it } from 'bun:test';
-import { RawTextNodeHandler, _testableFunctions } from "./raw-text-handler";
+import { RawTextNodeHandler } from "./raw-text-handler";
 import type { CompilerFormat } from '../base';
 import { ValidTags, type AnsieNode } from '../types';
 
-describe('replaceEmojiCodes', () => {
-    it('should replace emoji names with corresponding emojis', () => {
-        const text = "Hello :grin: :heart: :rocket:";
-        const expectedOutput = "Hello 😁 ❤️ 🚀";
-        expect(_testableFunctions.replaceEmojiCodes(text)).toBe(expectedOutput);
-    });
-
-    it('should not replace emoji names that do not exist in the emoji map', () => {
-        const text = "Hello :grin: :unknown_emoji:";
-        const expectedOutput = "Hello 😁 :unknown_emoji:";
-        expect(_testableFunctions.replaceEmojiCodes(text)).toBe(expectedOutput);
-    });
-
-    it('should not replace emoji names if no emoji names are found', () => {
-        const text = "Hello world!";
-        const expectedOutput = "Hello world!";
-        expect(_testableFunctions.replaceEmojiCodes(text)).toBe(expectedOutput);
-    });
-});
 
 describe('RawTextNodeHandler', () => {
     const handler = RawTextNodeHandler;

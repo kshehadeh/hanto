@@ -1,4 +1,4 @@
-import type { SpaceNodeBase } from "../types";
+import type { SpaceNodeBase } from "../compiler/types";
 import { num } from "./num";
 
 export function getSpacingFromProperties(node: SpaceNodeBase): { on: string, off: string } {

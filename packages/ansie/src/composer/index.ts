@@ -16,7 +16,7 @@ import {
 } from './nodes/text';
 import { defaultTheme, type AnsieTheme, type AnsieStyle } from './styles';
 export class Composer {
-    private _body: BodyComposerNode;;
+    private _body: BodyComposerNode;
     private _theme: AnsieTheme;
 
     constructor(theme: AnsieTheme) {

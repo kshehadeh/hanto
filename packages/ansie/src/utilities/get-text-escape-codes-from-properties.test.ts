@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { TerminalStyle, escapeCodeFromName } from "./escape-code-from-name";
 import { colorToTerminalStyle, getTextEscapeCodesFromProperties } from './get-text-escape-codes-from-properties';
-import { ValidTags, type TextNodeBase } from '../types';
+import { ValidTags, type TextNodeBase } from '../compiler/types';
 
 describe('colorToTerminalStyle', () => {
     it('should return foreground terminal style for valid color', () => {

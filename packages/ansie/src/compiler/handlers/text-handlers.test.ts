@@ -9,7 +9,7 @@ describe('buildStart', () => {
         const node = { node: ValidTags.h1, margin: 2, fg: 'blue' as const };
         const format = 'ansi';
         const expectedOutput = '\n\n  \x1b[34m';
-        expect(_testableFunctions.buildStart(node, [], format)).toBe(
+        expect(_testableFunctions.buildStart(node, [], format, {isBlock: false})).toBe(
             expectedOutput,
         );
     });
@@ -18,7 +18,7 @@ describe('buildStart', () => {
         const node = { node: ValidTags.h1, margin: 2, fg: 'blue' as const };
         const format = 'markup';
         const expectedOutput = '<h1 margin="2" fg="blue">';
-        expect(_testableFunctions.buildStart(node, [], format)).toBe(
+        expect(_testableFunctions.buildStart(node, [], format, {isBlock: false})).toBe(
             expectedOutput,
         );
     });
@@ -27,7 +27,7 @@ describe('buildStart', () => {
         const node = { node: ValidTags.h1, fg: 'blue' as const };
         const format = 'ansi';
         const expectedOutput = '\x1b[34m';
-        expect(_testableFunctions.buildStart(node, [], format)).toBe(
+        expect(_testableFunctions.buildStart(node, [], format, {isBlock: false})).toBe(
             expectedOutput,
         );
     });
@@ -36,7 +36,7 @@ describe('buildStart', () => {
         const node = { node: ValidTags.h1, fg: 'blue' as const };
         const format = 'markup';
         const expectedOutput = '<h1 fg="blue">';
-        expect(_testableFunctions.buildStart(node, [], format)).toBe(
+        expect(_testableFunctions.buildStart(node, [], format, {isBlock: false})).toBe(
             expectedOutput,
         );
     });
@@ -45,7 +45,7 @@ describe('buildStart', () => {
         const node = { node: ValidTags.h1, margin: 2, fg: 'blue' as const };
         const format = 'unsupported';        
         expect(
-            () => _testableFunctions.buildStart(node, [], format as CompilerFormat),
+            () => _testableFunctions.buildStart(node, [], format as CompilerFormat, {isBlock: false}),
         ).toThrow();
     });
 });
@@ -55,27 +55,27 @@ describe('buildEnd', () => {
         const node = { node: ValidTags.h1, margin: 2, fg: 'blue' as const };
         const format = 'ansi';
         const expectedOutput = '\x1b[39m  \n\n';
-        expect(_testableFunctions.buildEnd(node, [], format)).toBe(expectedOutput);
+        expect(_testableFunctions.buildEnd(node, [], format, {isBlock: false})).toBe(expectedOutput);
     });
 
     it('should return the closing markup tag for ending text and spacing attributes in markup format', () => {
         const node = { node: ValidTags.h1, margin: 2, fg: 'blue' as const };
         const format = 'markup';
         const expectedOutput = '</h1>';
-        expect(_testableFunctions.buildEnd(node, [], format)).toBe(expectedOutput);
+        expect(_testableFunctions.buildEnd(node, [], format, {isBlock: false})).toBe(expectedOutput);
     });
 
     it('should return the ANSI escape code for ending text attributes in ANSI format', () => {
         const node = { node: ValidTags.h1, fg: 'blue' as const };
         const format = 'ansi';
         const expectedOutput = '\x1b[39m';
-        expect(_testableFunctions.buildEnd(node, [], format)).toBe(expectedOutput);
+        expect(_testableFunctions.buildEnd(node, [], format, {isBlock: false})).toBe(expectedOutput);
     });
 
     it('should return the closing markup tag for ending text attributes in markup format', () => {
         const node = { node: ValidTags.h1, fg: 'blue' as const };
         const format = 'markup';
         const expectedOutput = '</h1>';
-        expect(_testableFunctions.buildEnd(node, [], format)).toBe(expectedOutput);
+        expect(_testableFunctions.buildEnd(node, [], format, {isBlock: false})).toBe(expectedOutput);
     });
 });

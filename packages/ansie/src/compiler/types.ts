@@ -1,6 +1,9 @@
 import type { CompilerFormat } from "./base";
 
 
+// The canonical list of supported tags.  We should never be referring 
+//  to tags as raw strings.  Instead, we should be using this enum.  This 
+//  will help us avoid typos and make it easier to refactor later.
 export enum ValidTags {
     'h1' = 'h1',
     'h2' = 'h2',
@@ -11,7 +14,7 @@ export enum ValidTags {
     'div' = 'div',
     'text' = 'text',
     'li' = 'li',
-    'break' = 'break',
+    'br' = 'br',
 }
 
 export const ValidTagsList = Object.keys(ValidTags);
@@ -114,40 +117,40 @@ export interface BlockAttributes extends SpaceAttributesInterface, TextAttribute
 
 
 export const TagAttributeMap = {
-    'h1': {
+    [ValidTags.h1]: {
         ...TextAttributes,
         ...SpaceAttributes,
     },
-    'h2': {
+    [ValidTags.h2]: {
         ...TextAttributes,
         ...SpaceAttributes,
     },
-    'h3': {
+    [ValidTags.h3]: {
         ...TextAttributes,
         ...SpaceAttributes,
     },
-    'body': {
+    [ValidTags.body]: {
         ...TextAttributes,
         ...SpaceAttributes,
     },
-    'span': {
+    [ValidTags.span]: {
         ...TextAttributes,
     },
-    'p': {
-        ...TextAttributes,
-        ...SpaceAttributes,
-    },
-    'div': {
+    [ValidTags.p]: {
         ...TextAttributes,
         ...SpaceAttributes,
     },
-    'li': {
+    [ValidTags.div]: {
+        ...TextAttributes,
+        ...SpaceAttributes,
+    },
+    [ValidTags.li]: {
         ...TextAttributes,
         ...SpaceAttributes,
         ...ListAttributes,
     },
-    'text': {},
-    'break': {
+    [ValidTags.text]: {},
+    [ValidTags.br]: {
         ...SpaceAttributes,
     },
 }
@@ -156,23 +159,41 @@ export interface RawTextNode extends TextNodeBase {
     value: string;
 }
 
-export interface BreakNode extends SpaceNodeBase {}
+export interface BreakNode extends SpaceNodeBase {
+    node: ValidTags.br;
+}
 
-export interface H1Node extends SpaceNodeBase, TextNodeBase {}
+export interface H1Node extends SpaceNodeBase, TextNodeBase {
+    node: ValidTags.h1;
+}
 
-export interface H2Node extends SpaceNodeBase, TextNodeBase {}
+export interface H2Node extends SpaceNodeBase, TextNodeBase {
+    node: ValidTags.h2;
+}
 
-export interface H3Node extends SpaceNodeBase, TextNodeBase {}
+export interface H3Node extends SpaceNodeBase, TextNodeBase {
+    node: ValidTags.h3;
+}
 
-export interface BodyNode extends SpaceNodeBase, TextNodeBase {}
+export interface BodyNode extends SpaceNodeBase, TextNodeBase {
+    node: ValidTags.body;
+}
 
-export interface SpanNode extends TextNodeBase {}
+export interface SpanNode extends TextNodeBase {
+    node: ValidTags.span;
+}
 
-export interface ParagraphNode extends SpaceNodeBase, TextNodeBase {}
+export interface ParagraphNode extends SpaceNodeBase, TextNodeBase {
+    node: ValidTags.p;
+}
 
-export interface DivNode extends SpaceNodeBase, TextNodeBase {}
+export interface DivNode extends SpaceNodeBase, TextNodeBase {
+    node: ValidTags.div;
+}
 
-export interface ListItemNode extends SpaceNodeBase, TextNodeBase, ListItemNodeBase {}
+export interface ListItemNode extends SpaceNodeBase, TextNodeBase, ListItemNodeBase {
+    node: ValidTags.li;
+}
 
 export type AnsieNode = BaseAnsieNode &
     (
@@ -189,8 +210,8 @@ export type AnsieNode = BaseAnsieNode &
 
 export type Ast = AnsieNode[];
 
-export interface NodeHandler<T extends AnsieNode> {    
+export interface NodeHandler<T extends AnsieNode> {
+    isType(node: unknown): node is T;
     handleEnter(node: T, stack: AnsieNode[], format: CompilerFormat): string;
     handleExit(node: T, stack: AnsieNode[], format: CompilerFormat): string;
-    isType(node: AnsieNode): node is T;
 }

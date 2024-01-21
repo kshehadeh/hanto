@@ -1,4 +1,4 @@
-import type { TextNodeBase } from "../types";
+import type { TextNodeBase } from "../compiler/types";
 import { TerminalStyle, escapeCodeFromName } from "./escape-code-from-name";
 import { toTitleCase } from "./to-title-case";
 

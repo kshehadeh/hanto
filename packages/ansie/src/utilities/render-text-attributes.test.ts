@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { renderTextAttributesEnd, renderTextAttributesStart } from './render-text-attributes';
-import { ValidTags } from '../types';
+import { ValidTags } from '../compiler/types';
 import { renderSpaceAttributesStart, renderSpaceAttributesEnd } from './render-space-attributes';
 
 describe('renderTextAttributesEnd', () => {

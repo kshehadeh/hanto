@@ -1,39 +1,62 @@
-import { type NodeParams, ComposerNode } from ".";
+import { ComposerNode, type ListNodeParams, type SpaceNodeParams, type TextNodeParams } from ".";
 import { ValidTags } from "../../compiler/types";
+import { opt } from "../../utilities/opt";
+import { buildAttributesFromStyle } from "../../utilities/build-attributes-from-style";
 import { DivComposerNode } from "./text";
 
-export interface ListNodeParams extends NodeParams {
-    bullet?: string;
-    indent?: number;
-}
 
 export class ListItemComposerNode extends ComposerNode {
     node = ValidTags.li
     _bullet: string | undefined;
     _indent: number | undefined;
 
-    constructor(params: ListNodeParams) {
+    constructor(params: TextNodeParams & SpaceNodeParams & ListNodeParams) {
         const finalNodes = params?.nodes?.map(n => new DivComposerNode({ nodes: [n] })) ?? [];
-        super({ ...params, nodes: finalNodes });
-        this._bullet = params.bullet ?? undefined;
-        this._indent = params.indent ?? undefined;
-    }
+        super({ ...params, nodes: finalNodes });        
 
-    get indent(): string {
-        const num =  this._indent ?? this._style.list?.indent ?? this._theme?.li?.list?.indent ?? 1;
-        return num ? ' '.repeat(num) : '';
-    }
+        // Override the style bullet with the passed in bullet.
+        this.style = { 
+            ...this.style, 
+            list: { 
+                ...this.style.list, 
+                ...opt({
+                    bullet: params.bullet, 
+                    indent: params.indent     
+                })
+            },
+            font: {
+                ...this.style.font,
+                ...opt({
+                    italics: params.italics,
+                    underline: params.underline,
+                    bold: params.bold,    
+                }),
+                color: {
+                    ...this.style.font?.color,
+                    ...opt({
+                        fg: params.fg,
+                        bg: params.bg,
+                    }),                    
+                }
+            },
+            spacing: {
+                ...this.style.spacing,
+                ...opt({
+                    margin: params["margin"],
+                    marginLeft: params["marginLeft"],
+                    marginRight: params["marginRight"],
+                    marginTop: params["marginTop"],
+                    marginBottom: params["marginBottom"],    
+                })
+            }
 
-    get bullet(): string {
-        return this._bullet ?? this._style.list?.bullet ?? this._theme?.li?.list?.bullet ?? '';
+        };
+
     }
 
     toString() {
-        let str = '';    
-
-        for (const node of this._content) {
-            str += `${this.bullet}${this.indent}${node.toString()}`
-        }
-        return str;
+        const attributes = buildAttributesFromStyle(this.attrib) || {};
+        const attributesString = Object.entries(attributes).map(([key, value]) => `${key}${value ? `="${value}` : ''}"`).join(' ')
+        return `<${this.node} ${attributesString}>${super.toString()}</${this.node}>`;
     }
 }
