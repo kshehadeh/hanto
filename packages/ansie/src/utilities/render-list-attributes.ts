@@ -1,4 +1,4 @@
-import type { CompilerFormat } from "../compiler/base";
+import type { CompilerFormat } from '../compiler/types';
 import { ListAttributes, type ListItemNodeBase } from "../compiler/types";
 import { getListItemFromProperties } from "./get-list-prefix-from-properties";
 

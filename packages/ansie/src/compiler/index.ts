@@ -1,7 +1,7 @@
 import { parseString } from '../parser';
 
 import { AnsieNodeImpl, type AnsieNode, type Ast, ValidTags } from './types';
-import { CompilerError, type CompilerFormat } from './base';
+import { CompilerError, type CompilerFormat } from './types';
 import { BlockTextNodeImpl } from './node/block';
 import { BreakNodeImpl } from './node/break';
 import { RawTextNodeImpl } from './node/raw';

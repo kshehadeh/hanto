@@ -1,4 +1,4 @@
-import { CompilerError, type CompilerFormat } from '../base';
+import { CompilerError, type CompilerFormat } from '../types';
 import { AnsieNodeImpl, type AnsieNode } from '../types';
 import { renderListAttributesEnd, renderListAttributesStart } from '../../utilities/render-list-attributes';
 import { renderNodeAsMarkupEnd, renderNodeAsMarkupStart } from '../../utilities/render-node-as-markup';

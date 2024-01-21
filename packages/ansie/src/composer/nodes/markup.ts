@@ -1,6 +1,6 @@
 import { ComposerNode, type NodeParams } from ".";
 import { compile } from "../../compiler";
-import { CompilerError } from "../../compiler/base";
+import { CompilerError } from '../../compiler/types';
 import { ValidTags } from "../../compiler/types";
 
 export interface MarkupNodeParams extends NodeParams {

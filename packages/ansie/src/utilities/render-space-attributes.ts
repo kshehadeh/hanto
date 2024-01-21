@@ -1,4 +1,4 @@
-import { type CompilerFormat } from '../compiler/base';
+import { type CompilerFormat } from '../compiler/types';
 import { getSpacingFromProperties } from './get-spacing-from-properties';
 import {
     type AnsieNode, type SpaceNodeBase,    

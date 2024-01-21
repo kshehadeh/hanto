@@ -1,6 +1,13 @@
-import type { CompilerFormat } from "./base";
-
-
+/**
+ * This file contains all the types used by the parser and compiler.
+ * 
+ * ‼️ IMPORTANT ‼️
+ * IT'S IMPORTANT THAT THIS FILE IS NOT DEPENDENT ON ANY OTHER FILES IN THE PROJECT.
+ * 
+ * This file is used by the parser and compiler.  It should not be dependent on any other
+ * files in the project.  This is to avoid circular dependencies and any complexities that
+ * may arise from them.
+ */
 // The canonical list of supported tags.  We should never be referring 
 //  to tags as raw strings.  Instead, we should be using this enum.  This 
 //  will help us avoid typos and make it easier to refactor later.
@@ -108,12 +115,19 @@ export type RawTextAttributesKeysType = keyof typeof RawTextAttributes;
 export type RawTextAttributesInterface = {
     [key in (RawTextAttributesKeysType)]?: string;
 };
+///////
 
-
+/**
+ * A union of all the valid attribute keys.
+ */
 export type AllAttributeKeys = keyof typeof TextAttributes | keyof typeof SpaceAttributes | keyof typeof ListAttributes | keyof typeof RawTextAttributes;
 
 ///////
 
+/**
+ * A list of all the valid attribute keys.  This is used by the parser to validate
+ * the attributes for each tag before returning the AST.
+ */
 export const AllAttributeKeysList = [
     ...Object.keys(SpaceAttributes),
     ...Object.keys(TextAttributes),
@@ -121,15 +135,20 @@ export const AllAttributeKeysList = [
     ...Object.keys(RawTextAttributes),
 ];
 
+/**
+ * A type guard to determine if a given key is a valid attribute.
+ * @param key 
+ * @returns 
+ */
 export function isAttribute(key: string): key is AllAttributeKeys {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return AllAttributeKeysList.includes(key as any);
 }
 
-// NOTE: Add new attribute sets here
-export interface BlockAttributes extends SpaceAttributesInterface, TextAttributesInterface { }
-
-
+/**
+ * This is a map of all the valid attributes for each tag.  This is used by the parser to
+ * validate the attributes for each tag before returning the AST. 
+ */
 export const TagAttributeMap = {
     [ValidTags.h1]: {
         ...TextAttributes,
@@ -169,28 +188,6 @@ export const TagAttributeMap = {
     },
 }
 
-// export interface RawTextNode extends TextNodeBase { }
-
-// export interface BreakNode extends SpaceNodeBase { }
-
-// export interface H1Node extends SpaceNodeBase, TextNodeBase {}
-
-// export interface H2Node extends SpaceNodeBase, TextNodeBase {}
-
-// export interface H3Node extends SpaceNodeBase, TextNodeBase {}
-
-// export interface BodyNode extends SpaceNodeBase, TextNodeBase {}
-
-// export interface SpanNode extends TextNodeBase {}
-
-// export interface ParagraphNode extends SpaceNodeBase, TextNodeBase {}
-
-// export interface DivNode extends SpaceNodeBase, TextNodeBase {}
-
-// export interface ListItemNode extends SpaceNodeBase, TextNodeBase, ListItemNodeBase {}
-
-
-
 export type AnsieNode = BaseAnsieNode & 
     SpaceAttributesInterface &
     TextAttributesInterface &
@@ -199,18 +196,18 @@ export type AnsieNode = BaseAnsieNode &
 
 export type Ast = AnsieNode[];
 
-export interface NodeHandler<T extends AnsieNode> {
-    isType(node: unknown): node is T;
-    handleEnter(node: T, stack: AnsieNode[], format: CompilerFormat): string;
-    handleExit(node: T, stack: AnsieNode[], format: CompilerFormat): string;
-}
-
-
+/**
+ * Wrap a node in the AST to provide rendering overridable methods.  It takes
+ * a raw node from the AST produced by the parser.  This is then overridden by
+ * the various node implementations to provide specialized rendering for each
+ * node type.  For example, a <p> tag will render differently than a <span> tag.
+ * 
+ * The _raw property is the original AST node.  It also provides   
+ * 
+ */
 export abstract class AnsieNodeImpl {
     _raw: AnsieNode;
-    content?: AnsieNode | AnsieNode[];
 
-    
     constructor(node: AnsieNode) {
         this._raw = node;        
     }
@@ -219,10 +216,25 @@ export abstract class AnsieNodeImpl {
         return this._raw.node;
     }
 
-    get attributes(): AllAttributeKeys[] {
-        return Object.keys(this._raw).filter(isAttribute);
+    /**
+     * Returns the attributes for this node.  This is a subset of the raw node
+     * that only contains the attributes.  Attributes are anything that is not 
+     * "node" or "content".
+     */
+    get attributes(): Record<AllAttributeKeys, string> {
+        return Object.entries(this._raw).reduce((acc, [key, value]) => {
+            if (isAttribute(key) && typeof value === 'string') {
+                acc[key] = value;
+            }
+            return acc;
+        }, {} as Record<AllAttributeKeys, string>);
     }
 
+    /**
+     * Returns a specific attribute value.
+     * @param key 
+     * @returns 
+     */
     attr(key: AllAttributeKeys): string | undefined {
         return this._raw[key];
     }
@@ -230,3 +242,53 @@ export abstract class AnsieNodeImpl {
     abstract renderStart(stack: AnsieNode[], format: CompilerFormat): string;
     abstract renderEnd(stack: AnsieNode[], format: CompilerFormat): string;
 }
+
+/**
+ * Represents a compiler error.
+ */
+
+export class CompilerError implements Error {
+    name: string = 'CompilerError';
+    message: string;
+    fatal: boolean;
+
+    markupNode: AnsieNode;
+    markupStack: AnsieNode[];
+
+    /**
+     * Creates a new instance of CompilerError.
+     * @param message The error message.
+     * @param markupNode The markup node associated with the error.
+     * @param markupStack The stack of markup nodes leading to the error.
+     * @param fatal Indicates whether the error is fatal or not. Default is false.
+     */
+    constructor(
+        message: string,
+        markupNode: AnsieNode,
+        markupStack: AnsieNode[],
+        fatal: boolean = false
+    ) {
+        this.message = message;
+        this.markupNode = markupNode;
+        this.markupStack = markupStack;
+        this.fatal = fatal;
+    }
+
+    /**
+     * Returns a string representation of the CompilerError.
+     * @returns The string representation of the CompilerError.
+     */
+    toString() {
+        return `${this.name}: ${this.message} (${this.markupNode.node}, ${this.markupStack.map(node => node.node).join(', ')})`;
+    }
+
+    /**
+     * Determines whether the error can be continued or not.
+     * @returns True if the error can be continued, false otherwise.
+     */
+    continue() {
+        return !this.fatal;
+    }
+}
+export type CompilerFormat = 'ansi' | 'markup';
+

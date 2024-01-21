@@ -1,4 +1,4 @@
-import { type CompilerFormat } from '../compiler/base';
+import { type CompilerFormat } from '../compiler/types';
 import { getTextEscapeCodesFromProperties } from './get-text-escape-codes-from-properties';
 import { type AnsieNode, isAttribute } from '../compiler/types';
 

@@ -1,4 +1,4 @@
-import type { CompilerFormat } from '../base';
+import type { CompilerFormat } from '../types';
 import { AnsieNodeImpl, type AnsieNode } from '../types';
 import { RawTextMutator } from '../../utilities/raw-text-mutator';
 

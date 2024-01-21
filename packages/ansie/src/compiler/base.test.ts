@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { CompilerError } from './base';
+import { CompilerError } from './types';
 import { ValidTags, type AnsieNode } from './types';
 
 describe('CompilerError', () => {

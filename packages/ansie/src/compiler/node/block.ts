@@ -1,4 +1,4 @@
-import { CompilerError, type CompilerFormat } from '../base';
+import { CompilerError, type CompilerFormat } from '../types';
 import {
     type AnsieNode,
     AnsieNodeImpl,

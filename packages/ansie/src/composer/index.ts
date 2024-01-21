@@ -1,5 +1,5 @@
 import { compile } from '../compiler';
-import type { CompilerFormat } from '../compiler/base';
+import type { CompilerFormat } from '../compiler/types';
 import { ComposerNode } from './nodes';
 import { BreakComposerNode } from './nodes/break';
 import { ListItemComposerNode } from './nodes/li';
