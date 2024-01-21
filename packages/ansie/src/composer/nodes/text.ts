@@ -1,5 +1,5 @@
 import { ComposerNode, type NodeParams, type SpaceNodeParams, type TextNodeParams } from ".";
-import { ValidTags, type H1Node, type H2Node, type H3Node, type ParagraphNode, type SpanNode, type DivNode, type RawTextNode, type BodyNode } from "../../compiler/types";
+import { ValidTags } from "../../compiler/types";
 import { opt } from "../../utilities/opt";
 import { buildAttributesFromStyle } from "../../utilities/build-attributes-from-style";
 
@@ -50,43 +50,43 @@ export abstract class TextComposerNode extends ComposerNode {
 
 // NODE: BODY
 
-export class BodyComposerNode extends TextComposerNode  implements BodyNode {
+export class BodyComposerNode extends TextComposerNode  {
     node = ValidTags.body;
 }
 
 
 // NODE: H1
-export class H1ComposerNode extends TextComposerNode implements H1Node {
+export class H1ComposerNode extends TextComposerNode {
     node = ValidTags.h1;
 }
 
 // NODE: H2
 
-export class H2ComposerNode extends TextComposerNode implements H2Node {
+export class H2ComposerNode extends TextComposerNode {
     node = ValidTags.h2;
 }
 
 // NODE: H3
 
-export class H3ComposerNode extends TextComposerNode implements H3Node {
+export class H3ComposerNode extends TextComposerNode {
     node = ValidTags.h3;
 }
 
 // NODE: P
 
-export class ParagraphComposerNode extends TextComposerNode implements ParagraphNode {
+export class ParagraphComposerNode extends TextComposerNode {
     node = ValidTags.p;
 }
 
 // NODE: SPAN
 
-export class SpanComposerNode extends TextComposerNode implements SpanNode {
+export class SpanComposerNode extends TextComposerNode {
     node = ValidTags.span;
 }
 
 // NODE: DIV
 
-export class DivComposerNode extends TextComposerNode implements DivNode {
+export class DivComposerNode extends TextComposerNode {
     node = ValidTags.div;
 }
 
@@ -95,7 +95,7 @@ export interface RawTextNodeParams extends NodeParams {
     text: string;
 }
 
-export class RawTextComposerNode extends ComposerNode implements RawTextNode {
+export class RawTextComposerNode extends ComposerNode  {
     node = ValidTags.text;
     value: string;
 

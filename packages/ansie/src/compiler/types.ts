@@ -46,8 +46,8 @@ const booleanValues = ['true', 'false', 'yes', 'no', 'y', 'n', '1', '0'];
 ////// A base node in the AST 
 export type BaseAnsieNode = {
     node: ValidTags;
-    content?: AnsieNode | AnsieNode[];
-};
+    content?: AnsieNode | AnsieNode[];    
+} 
 
 ////// Space Attributes - These are the attributes that can be associated with semantic elements that have a concept of spacing such as <div> and <p>
 
@@ -98,13 +98,27 @@ export type ListAttributesInterface = {
 export type ListItemNodeBase = BaseAnsieNode & ListAttributesInterface;
 ///////
 
+///// Raw Attributes - These are the attributes that can be associated with text-based semantic elements such as <span> and <p>
+export const RawTextAttributes = {
+    value: ['string'],
+};
 
-export type AllAttributeKeys = keyof typeof TextAttributes | keyof typeof SpaceAttributes;
+export type RawTextAttributesKeysType = keyof typeof RawTextAttributes;
+
+export type RawTextAttributesInterface = {
+    [key in (RawTextAttributesKeysType)]?: string;
+};
+
+
+export type AllAttributeKeys = keyof typeof TextAttributes | keyof typeof SpaceAttributes | keyof typeof ListAttributes | keyof typeof RawTextAttributes;
+
+///////
 
 export const AllAttributeKeysList = [
     ...Object.keys(SpaceAttributes),
     ...Object.keys(TextAttributes),
     ...Object.keys(ListAttributes),
+    ...Object.keys(RawTextAttributes),
 ];
 
 export function isAttribute(key: string): key is AllAttributeKeys {
@@ -155,58 +169,33 @@ export const TagAttributeMap = {
     },
 }
 
-export interface RawTextNode extends TextNodeBase {
-    value: string;
-}
+// export interface RawTextNode extends TextNodeBase { }
 
-export interface BreakNode extends SpaceNodeBase {
-    node: ValidTags.br;
-}
+// export interface BreakNode extends SpaceNodeBase { }
 
-export interface H1Node extends SpaceNodeBase, TextNodeBase {
-    node: ValidTags.h1;
-}
+// export interface H1Node extends SpaceNodeBase, TextNodeBase {}
 
-export interface H2Node extends SpaceNodeBase, TextNodeBase {
-    node: ValidTags.h2;
-}
+// export interface H2Node extends SpaceNodeBase, TextNodeBase {}
 
-export interface H3Node extends SpaceNodeBase, TextNodeBase {
-    node: ValidTags.h3;
-}
+// export interface H3Node extends SpaceNodeBase, TextNodeBase {}
 
-export interface BodyNode extends SpaceNodeBase, TextNodeBase {
-    node: ValidTags.body;
-}
+// export interface BodyNode extends SpaceNodeBase, TextNodeBase {}
 
-export interface SpanNode extends TextNodeBase {
-    node: ValidTags.span;
-}
+// export interface SpanNode extends TextNodeBase {}
 
-export interface ParagraphNode extends SpaceNodeBase, TextNodeBase {
-    node: ValidTags.p;
-}
+// export interface ParagraphNode extends SpaceNodeBase, TextNodeBase {}
 
-export interface DivNode extends SpaceNodeBase, TextNodeBase {
-    node: ValidTags.div;
-}
+// export interface DivNode extends SpaceNodeBase, TextNodeBase {}
 
-export interface ListItemNode extends SpaceNodeBase, TextNodeBase, ListItemNodeBase {
-    node: ValidTags.li;
-}
+// export interface ListItemNode extends SpaceNodeBase, TextNodeBase, ListItemNodeBase {}
 
-export type AnsieNode = BaseAnsieNode &
-    (
-        | RawTextNode
-        | BreakNode
-        | H1Node
-        | H2Node
-        | H3Node
-        | BodyNode
-        | SpanNode
-        | ParagraphNode
-        | DivNode
-    );
+
+
+export type AnsieNode = BaseAnsieNode & 
+    SpaceAttributesInterface &
+    TextAttributesInterface &
+    ListAttributesInterface & 
+    RawTextAttributesInterface;
 
 export type Ast = AnsieNode[];
 
@@ -214,4 +203,30 @@ export interface NodeHandler<T extends AnsieNode> {
     isType(node: unknown): node is T;
     handleEnter(node: T, stack: AnsieNode[], format: CompilerFormat): string;
     handleExit(node: T, stack: AnsieNode[], format: CompilerFormat): string;
+}
+
+
+export abstract class AnsieNodeImpl {
+    _raw: AnsieNode;
+    content?: AnsieNode | AnsieNode[];
+
+    
+    constructor(node: AnsieNode) {
+        this._raw = node;        
+    }
+
+    get node(): ValidTags {
+        return this._raw.node;
+    }
+
+    get attributes(): AllAttributeKeys[] {
+        return Object.keys(this._raw).filter(isAttribute);
+    }
+
+    attr(key: AllAttributeKeys): string | undefined {
+        return this._raw[key];
+    }
+
+    abstract renderStart(stack: AnsieNode[], format: CompilerFormat): string;
+    abstract renderEnd(stack: AnsieNode[], format: CompilerFormat): string;
 }

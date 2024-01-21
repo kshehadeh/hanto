@@ -47,13 +47,13 @@ export const body: AnsieStyle = {
 
 export const text: AnsieStyle = body;
 
-export const brk: AnsieStyle = {
+export const br: AnsieStyle = {
     spacing: {
         margin: 0,
         marginLeft: 0,
         marginRight: 0,
         marginTop: 0,
-        marginBottom: 1,
+        marginBottom: 0,
     },
 };
 
@@ -71,7 +71,7 @@ export const h1: AnsieStyle = {
         marginLeft: 0,
         marginRight: 0,
         marginTop: 1,
-        marginBottom: 1,
+        marginBottom: 0,
     }
 };
 
@@ -89,7 +89,7 @@ export const h2: AnsieStyle = {
         marginLeft: 0,
         marginRight: 0,
         marginTop: 1,
-        marginBottom: 1,
+        marginBottom: 0,
     }
 };
 
@@ -107,7 +107,7 @@ export const h3: AnsieStyle = {
         marginLeft: 0,
         marginRight: 0,
         marginTop: 1,
-        marginBottom: 1,
+        marginBottom: 0,
     }
 };
 
@@ -117,7 +117,7 @@ export const p: AnsieStyle = {
         marginLeft: 0,
         marginRight: 0,
         marginTop: 1,
-        marginBottom: 1,
+        marginBottom: 0,
     }
 };
 
@@ -134,7 +134,7 @@ export const li: AnsieStyle = {
         marginLeft: 0,
         marginRight: 0,
         marginTop: 1,
-        marginBottom: 1,
+        marginBottom: 0,
     }
 };
 
@@ -144,7 +144,7 @@ export const div: AnsieStyle = {
         marginLeft: 0,
         marginRight: 0,
         marginTop: 1,
-        marginBottom: 1,
+        marginBottom: 0,
     }
 };
 
@@ -158,7 +158,7 @@ export interface AnsieTheme {
     [ValidTags.li]: AnsieStyle;
     [ValidTags.p]: AnsieStyle
     [ValidTags.text]: AnsieStyle;
-    [ValidTags.break]: AnsieStyle;
+    [ValidTags.br]: AnsieStyle;
 }
 
 export const defaultTheme: AnsieTheme = {
@@ -170,6 +170,6 @@ export const defaultTheme: AnsieTheme = {
     li,
     span,
     div,
-    break: brk,
+    br,
     text
 };

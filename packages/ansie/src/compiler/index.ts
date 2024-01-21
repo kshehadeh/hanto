@@ -1,28 +1,16 @@
 import { parseString } from '../parser';
 
-import { type AnsieNode, type Ast } from './types';
+import { AnsieNodeImpl, type AnsieNode, type Ast, ValidTags } from './types';
 import { CompilerError, type CompilerFormat } from './base';
-import { H1NodeHandler, H2NodeHandler, H3NodeHandler, BodyNodeHandler, ParagraphNodeHandler, DivNodeHandler, SpanNodeHandler } from './handlers/text-handlers';
-import { BreakNodeHandler } from './handlers/break-handler';
-import { RawTextNodeHandler } from './handlers/raw-text-handler';
-import { ListItemNodeHandler } from './handlers/list-handler';
-
-const AvailableHandlers = [
-    RawTextNodeHandler,
-    BreakNodeHandler,
-    H1NodeHandler,
-    H2NodeHandler,
-    H3NodeHandler,
-    BodyNodeHandler,
-    ParagraphNodeHandler,
-    DivNodeHandler,
-    SpanNodeHandler,
-    ListItemNodeHandler,
-];
+import { BlockTextNodeImpl } from './node/block';
+import { BreakNodeImpl } from './node/break';
+import { RawTextNodeImpl } from './node/raw';
+import { ListItemNodeImpl } from './node/list';
+import { InlineTextNodeImpl } from './node/inline';
 
 class Compiler {
     private _ast: Ast;
-    private _stack: AnsieNode[] = [];
+    private _stack: AnsieNodeImpl[] = [];
 
     /**
      * The compiler takes the AST from the parser and compiles it into a string
@@ -43,34 +31,37 @@ class Compiler {
         }, '');
     }
 
-    protected handleStateEnter(state: AnsieNode, format: CompilerFormat = 'ansi') {
-        for (const handler of AvailableHandlers) {
-            if (handler.isType(state)) {
-                return handler.handleEnter(state, this._stack, format);
-            }            
+    private makeNodeImplementation(raw: AnsieNode): AnsieNodeImpl {
+        switch (raw.node) {
+            case ValidTags.body:
+            case ValidTags.h1:
+            case ValidTags.h2:
+            case ValidTags.h3:
+            case ValidTags.div:
+            case ValidTags.p:
+                return new BlockTextNodeImpl(raw);
+            case ValidTags.text:
+                return new RawTextNodeImpl(raw);
+            case ValidTags.br:
+                return new BreakNodeImpl(raw);
+            case ValidTags.span:
+                return new InlineTextNodeImpl(raw);
+            case ValidTags.li:
+                return new ListItemNodeImpl(raw);
+            default:
+                throw new CompilerError(`Invalid node type: ${raw.node}`, raw, this._stack, true);
         }
-
-        throw new CompilerError(`Invalid node type: ${state}`, state, this._stack, true);
-    }
-
-    protected handleStateExit(state: AnsieNode, format: CompilerFormat = 'ansi') {
-        for (const handler of AvailableHandlers) {
-            if (handler.isType(state)) {
-                return handler.handleExit(state, this._stack, format);
-            }
-        }
-
-        throw new CompilerError(`Invalid node type: ${state}`, state, this._stack, true);
     }
 
     private _push(state: AnsieNode, format: CompilerFormat = 'ansi') {
-        this._stack.push(state);
-        return this.handleStateEnter(state, format);
+        const node = this.makeNodeImplementation(state);
+        this._stack.push(node);
+        return node.renderStart(this._stack, format);
     }
 
-    private _pop(format?: 'ansi' | 'markup') {
+    private _pop(format: CompilerFormat = 'ansi') {
         const old = this._stack.pop();
-        return this.handleStateExit(old!, format);
+        return old?.renderEnd(this._stack, format)
     }
 
     private _compileNode(node: AnsieNode, format: CompilerFormat = 'ansi'): string {

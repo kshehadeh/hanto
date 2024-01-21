@@ -18,7 +18,7 @@ describe('renderTextAttributesEnd', () => {
             node: ValidTags.h1,
             fg: 'blue' as const,
             bg: 'red' as const,
-            bold: true,
+            bold: "true",
         };
         const format = 'ansi';
         const expectedOutput = '\x1b[39;49;22m';
@@ -70,7 +70,7 @@ describe('renderTextAttributesStart', () => {
             node: ValidTags.h1,
             fg: 'blue' as const,
             bg: 'red' as const,
-            bold: true,
+            bold: "true",
         };
         const format = 'ansi';
         const expectedOutput = '\x1b[34;41;1m';
@@ -84,9 +84,9 @@ describe('renderSpaceAttributesStart', () => {
     it('should return the ANSI escape code for setting spacing attributes', () => {
         const attributes = { node: ValidTags.h1, margin: "2" };
         const format = 'ansi';
-        const expectedOutput = '\n\n  ';
+        const expectedOutput = '\n\n\n  ';
         expect(
-            renderSpaceAttributesStart(attributes, format),
+            renderSpaceAttributesStart(attributes, format, {isBlock: true}),
         ).toBe(expectedOutput);
     });
 
@@ -100,9 +100,9 @@ describe('renderSpaceAttributesStart', () => {
             marginBottom: "5",
         };
         const format = 'ansi';
-        const expectedOutput = '\n\n\n\n ';
+        const expectedOutput = '\n\n\n\n\n ';
         expect(
-            renderSpaceAttributesStart(attributes, format),
+            renderSpaceAttributesStart(attributes, format, {isBlock: true}),
         ).toBe(expectedOutput);
     });
 
@@ -111,7 +111,7 @@ describe('renderSpaceAttributesStart', () => {
         const format = 'markup';
         const expectedOutput = 'margin="2"';
         expect(
-            renderSpaceAttributesStart(attributes, format),
+            renderSpaceAttributesStart(attributes, format, {isBlock: true}),
         ).toBe(expectedOutput);
     });
 });
@@ -122,32 +122,32 @@ describe('renderSpaceAttributesEnd', () => {
         const format = 'ansi';
         const expectedOutput = '  \n\n';
         expect(
-            renderSpaceAttributesEnd(attributes, format),
+            renderSpaceAttributesEnd(attributes, format, {isBlock: true}),
         ).toBe(expectedOutput);
     });
 
     it('should return the ANSI codes for specific marginXXX attributes over margin when there is contention', () => {
         const attributes = {
             node: ValidTags.h1,
-            margin: 2,
-            marginLeft: 1,
-            marginRight: 3,
-            marginTop: 4,
-            marginBottom: 5,
+            margin: "2",
+            marginLeft: "1",
+            marginRight: "3",
+            marginTop: "4",
+            marginBottom: "5",
         };
         const format = 'ansi';
         const expectedOutput = '   \n\n\n\n\n';
         expect(
-            renderSpaceAttributesEnd(attributes, format),
+            renderSpaceAttributesEnd(attributes, format, {isBlock: true}),
         ).toBe(expectedOutput);
     });
 
     it('should return the markup attributes for setting spacing attributes', () => {
-        const attributes = { node: ValidTags.h1, margin: 2 };
+        const attributes = { node: ValidTags.h1, margin: "2" };
         const format = 'markup';
         const expectedOutput = '';
         expect(
-            renderSpaceAttributesEnd(attributes, format),
+            renderSpaceAttributesEnd(attributes, format, {isBlock: true}),
         ).toBe(expectedOutput);
     });
 });

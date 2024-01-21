@@ -1,9 +1,9 @@
 import { type NodeParams, ComposerNode } from ".";
-import { ValidTags, type BreakNode } from "../../compiler/types";
+import { ValidTags } from "../../compiler/types";
 
 export type BreakNodeParams = NodeParams;
-export class BreakComposerNode extends ComposerNode implements BreakNode{
-    node = ValidTags.break;
+export class BreakComposerNode extends ComposerNode {
+    node = ValidTags.br;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     constructor(_params: NodeParams = {}) {
